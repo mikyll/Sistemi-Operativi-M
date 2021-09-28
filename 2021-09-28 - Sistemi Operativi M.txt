@@ -1,0 +1,115 @@
+ -intro motorsport che non ci interessa *emoji del clown*-
+
+*emoji clown*
+
+Ripassino:
+avevamo introdotto il tema della migrazione live
+meccanismo che consente lo spostamento da un nodo fisico ad un altro
+questo se in modo live può essere fatto senza neanche spegnere la macchina in questione.
+Downtime davvero trascurabile (poco più di 100ms)
+
+operazioni suspend e reSIUMMMMM
+
+la capacità/caratteristica di indipendenza e isolamento dall'ambiente fisico, è il vantaggio principale che ci consente di realizzare in modo molto semplice dal punto di vista tecnico, la migrazione live, ovvero suspend su un nodo e resume su un altro nodo.
+
+Migrazione live
+Come può essere realizzata concretamente.
+Un primo obbiettivo (prioritario) è minimizzare il downtime, perché se ci sono servizi che vogliamo che rimangano disponibili/up per il maggior tempo possibile, il downtime dev'essere minimizzato
+
+altri aspetti da tenere in considerazione:
+- ridurre al minimo il tempo di migrazione, come tempo complessivo che richiede la migrazione
+- occupare meno banda possibile;
+
+naturalmente ci sono dei vantaggi nella realizzazione della migrazione se l'architettura alla quale stiamo facendo riferimento, hanno filesystem in comune (es. cluster), ovvero condividono gli stessi dischi.
+
+Questo è un vantaggio nella migrazione
+
+soluzione più diffusa al giorno d'oggi si basa su un meccanismo di precopia, che viene attuata in uan serie di passi:
+1) fase iniziale in cui si capisce quali nodi sono interessati;
+2) finita la fase iniziale inizia la reservation: viene riservato un contenitore vuoto nel server di destinazione (riservato il posto per la macchina da migrare);
+3) la VM chiaramente avrà un file immagine (tipicamente un file di stato mappato sui registri CPU) - inizia dunque una precopia interattiva di tutte le pagine allocate nell'host di partenza, per la macchina da migrare. Ovviamente non è detto che vengano copiate una volta sola (se la macchina è in esecuzione, è possibile che nel mentre le pagine cambino - dunque ci può essere una seconda copia, in cui vengono copiate però solo le "dirty pages", ovvero le pagine modificate tra un'iterazione e l'altra - fino a quando il numero di queste arriva ad una certa soglia data. Quando ci si accorge che il numero è inferiore a questa soglia (particolarmente piccola), si ferma il processo di copia interattiva);
+4) Raggiunta questa soglia (Quando rimangono poche pagine), si applica la suspend sulla macchina d'origine (in seguito avverrà resume sulla macchina di destinazione);
+5) a questo punto la copia sul nodo di destinazione è completa, dunque si può procedere con una commit (ovvero ci si affranca completamente dal nodo di origine, dal quale la VM viene eliminata completamente);
+6) fatta la commit si procede con la resume sul nodo B, in cui si trova una macchina pronta a ripartire, completa sia come immagine sul file system, che come stato presente nei registri.
+
+NB: la prima iterazione della precopia è quella che richiede pià tempo, ovviamente quelle successive richiedono meno tempo perché salvano solo le dirty pages.
+
+Precopia oggi più diffusa, ma ci sono anche altre modalità
+
+es: postcopy
+si spegne la macchina, si copia tutta e si reboota sul nodo di destinazione.
+Downtime più alto, ma
+
+
+piccolo approfondimento su xen
+progetto di xen nasce in ambito accademico a Cambridge.
+nasce come hypervisor (VMM paravirtualizzato), richiede che le VM che girano sopra xen abbiano un kernel adattato all'interfaccia che xen offre ai propri utilizzatori.
+Dal punto di vista commerciale ha limitato la gamma di kernel installabili, per quanto riguarda i SO proprietari, nonostante un tentativo di porting dei sistemi operativi ad esempio Windows, non è stato portato a termine
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
