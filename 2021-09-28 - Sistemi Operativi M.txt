@@ -235,9 +235,9 @@ S2  |               | execute       | read, write   |
 
 
 
-    visto che
+visto che
 
-
+la tabella è un'immagine del sistema di protezione in un certo momento, in quanto lo stato può variare a runtime.
 
 
 
