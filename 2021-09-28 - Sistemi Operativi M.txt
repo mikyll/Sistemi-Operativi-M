@@ -201,11 +201,16 @@ indipendentemente dal modello considerato e politiche adottate, in tutti i siste
 Principio secondo cui ad ogni soggetto devono essere garantiti i diritti d'accesso strettamente necessari per la sua esecuzione.
 
 
+Meccanismi: strumenti messi a disposizione dal sistema di protezione per imporre una determinata politica.
+
+dominio di un certo sogetto S, è formato a coppie: ogni sominio stabilisce per ogni oggetto l'insieme di diritti che il soggetto S può esercitare su un oggetto
 
 
+[...]
 
+Con associazione dinamica, un processo può passare da un dominio ad un'altro in base ai diritti che necessita per svolgere certe attività
 
-
+In questo modo si riesce meglio a soddisfare il principio del privilegio minimo.
 
 
 
