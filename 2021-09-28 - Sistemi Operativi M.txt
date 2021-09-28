@@ -143,19 +143,62 @@ Il VMM chiede al balloon process di gonfiarsi (e di richiedere nuove pagine). Og
 E' purtroppo l'unico modo, perché l'hypervisor non può gestire la paginazione, questa viene gestita dalle varie VM, da come sono strutturate le politiche di quel particolare SO.
 
 
+se la VM si trova in uno stato di sospensione, esiste un tempo "Borrowed Virtual Time" che non va avanti
+
+xen ha il compito di virtualizzare
+
+front-end driver: quello che tipicamente viene installato
+
+
+front-end/back-end driver asynchronous I/O rings
+
+le richieste di accesso ad un particolare device vengono fatte dal guest attraverso il front end, il quale andrà a depositare la richiesta in una struttura dati a "ring", dall'altra parte c'è il back-end che va a prendere le richieste in modo FIFO dal ring.
+
+
+scelta di xen di scorporare l'utilizzo dei driver tramite una struttura del genere (front-end/back-end) è per motivi di portabilità, per disaccoppiare la VM dall'architettura fisica su cui esegue.
+
+
+xen - gestione interruzioni
 
 
 
 
 
+NUOVO PDF - Protezione nei SO
+
+Sicurezza: riguarda l'interfaccia del Sistema verso il mondo esterno.
+
+Protezione: campo d'azione più interno al sistema (insieme di tutte quelle attività volte al controllo dell'accesso alle risorse -sia fisiche che soprattutto logiche-) Una volta superato il controllo di sicurezza sono autorizzato al controllo del sistema all'interno del quale ci sono
+Opportuno controllo su ciò che gli utenti possono o non possono fare all'interno del sistema
+
+
+Protezione
+necessario esercitare un opportuno controllo su quali operazioni l'utente può eseguire e a quali risorse esso possa accedere
+
+modello di protezione stabilisce soggetti, oggetti, diritti
+
+un soggetto può essere ad esempio un utente, un processo
+
+oggetto: risorse fisiche e logiche a cui si può accedere (es: file, processo -il processo può essere sia oggetto che soggetto, in quanto può anche essere qualcosa su cui si possono avere dei diritti di accesso-)
+
+es diritti di accesso linux: lettura, scrittura, esecuzione.
+
+ad ogni soggetto è associato un dominio di protezione, unico per ogni soggetto.
+
+in un sistema di protezione spesso i soggetti sono associati agli utenti, quindi di solito i processi sono oggetti.
+
+su unix i processi hanno anche uno UID, ovvero l'id dell'utente che l'ha generato
 
 
 
 
+politiche si classificano in diverse tipologie (3):
+- DAC
+- MAC
+- RBAC
 
-
-
-
+indipendentemente dal modello considerato e politiche adottate, in tutti i sistemi di protezione di solito si assume il cosiddetto principio del privilegio minimo (POLA - Principle Of Least Authority).
+Principio secondo cui ad ogni soggetto devono essere garantiti i diritti d'accesso strettamente necessari per la sua esecuzione.
 
 
 
