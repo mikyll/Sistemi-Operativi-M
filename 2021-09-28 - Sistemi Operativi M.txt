@@ -218,11 +218,24 @@ In questo modo si riesce meglio a soddisfare il principio del privilegio minimo.
 
 
 
+Esempio: UNIX
 
 
 
 
 
+un sistema di protezione, a livello astratto, può essere rappresentato tramite una struttura detta matrice degli accessi, in cui ogni colonna è associata ad una diversa risorsa, ogni riga è associata ad un oggetto.
+
+            O1              O2              O3
+    +---------------+---------------+---------------+
+S1  | read, write   | execute       | write         |
+    +---------------+---------------+---------------+
+S2  |               | execute       | read, write   |
+    +---------------+---------------+---------------+
+
+
+
+    visto che
 
 
 
