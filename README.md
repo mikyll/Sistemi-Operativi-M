@@ -19,6 +19,7 @@
   </ol>
 </details>
 
+<!-- Lezione 2021/09/21-->
 ## 01 - Virtualizzazione
 La virtualizzazione è una tecnologia oggi usatissima. Virtualizzare un sistema di elaborazione (costituito da un insieme di risorse hardware e software) significa presentare all'utilizzatore una visione delle risorse diversa da quella attuale (ad esempio duplicazione della memoria). Questo obbiettivo viene raggiunto mediante un livello intermedio, un layer che svolge appunto il ruolo di intermediario tra utilizzatore (vista logica) e sistema (vista fisica). Solitamente l'intermediario è software, ma talvolta può avere un supporto hardware specifico. Esso permette di eseguire più macchine virtuali su una stessa architettura e ognuna di queste vede le proprie risorse, indipendentemente dalle altre, e da quelle effettive ("reali").
 Poiché le Macchine Virtuali (VM) devono funzionare in modo indipendente senza causare problemi al sistema, la gestione delle risorse dev'essere realizzata in modo appropriato: questo compito è affidato al Virtual Machine Monitor (VMM, detto anche Hypervisor), cha ha compiti molto simili a quelli di un Sistema Operativo (SO), motivo per cui viene trattato in questo corso).
@@ -128,10 +129,44 @@ Sfrutta un'idea simile alla compilazione dinamica: il VMM scansiona il codice de
 
 <img width="34%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/01%20-%20Virtualizzazione/Paravirtualizzazione.png" alt="Paravirtualizzazione"/>
 
-###### Virtualizzazione Pura
-Significa che non costringe l'amministratore (o l'utente) a installare nella macchina virtuale un kernel modificato (che non sia l'originale del Sistema Operativo), dunque è il caso di architetture con supporto nativo alla virtualizzazione, ma anche FTB, in quanto anche lì non c'è bisogno di modificare il kernel.
+##### Architetture virtualizzabili
+Con **virtualizzazione pura**, si intende un'architettura che non costringe l'amministratore (o l'utente) a installare nella macchina virtuale un kernel modificato (che non sia l'originale del Sistema Operativo), dunque è il caso di architetture con supporto nativo alla virtualizzazione, ma anche FTB, in quanto anche lì non c'è bisogno di modificare il kernel.
 **Vantaggi**: non c'è ring compression né ring aliasing (il guest esegue in un ring separato -intermedio- diverso da quello delle applicazioni; il ring deprivileging è risolto tramite trap & emualte (gestione tramite VMM); trasparenza (l'API presentata dall'hypervistor è la stessa offerta dal processore).
 Prodotti virtualizzabili: xen, vmware, kvm.
+
+###### Protezione nell'architettura x86
+
+###### Funzionamento dei VMM nell'architettura x86 classica
+[...]
+
+##### Gestione di VM
+Il compito fondamentale del VMM è quello di gestire le VM (creazione, accensione/spegnimento, eliminazione, migrazione live).
+
+###### Stati di una VM
+Una macchina virtuale può trovarsi nei seguenti stati:
+- **running** (o attiva): la macchina ha superato la fase di bootstrap ed è stata caricata nella *RAM* del server su cui è allocata;
+- **inactive** (powered off): la macchina è spenta ed è rappresentata nel *file system* tramite un file immagine;
+- **paused**: la macchina è in *attesa* di un evento (es: I/O richiesto da un processo nell'ambiente guest);
+- **suspended**: lo stato correnteviene salvato nel file system dal VMM. L'uscita da tale stato avviene tramite un'operazione di *resume*.
+
+suspend: il VMM salva lo stato della VM in memoria secondaria, mettendola in stand by;
+resume: il VMM ripristina lo stato della VM in memoria centrale (lo stato è quello in cui si trovava quando è stata sospesa). Questa ooperazione può avvenire su un nodo diverso da quello della suspend.
+
+<img width="50%" src="" alt="Stati di una VM"/>
+
+###### Migrazione di una VM
+È una funzionalità necessaria soprattutto nei datacenter, per una gestione agile delle VM, a fronte di:
+- variazioni dinamiche del carico (**load balancing**, consolidamento);
+- **manutenzione "online"** dei server, senza dover interrompere i servizi forniti;
+- gestione finalizzata al **risparmio energetico**;
+- **tolleranza ai guasti** e disaster recovery.
+
+Strumento fondamentale per queste procedure è la migrazione, ovvero la possibilità di muovere VM tra server.
+**Migrazione live**: possibilità di spostare una VM da un server fisico ad un altro, senza doverla spegnere. È desiderabile minimizzare il downtime, il tempo di migrazione ed il consumo di banda.
+
+
+
+<!-- Lezione 2021-09-28 -->
 
 ## 02 - Protezione
 
