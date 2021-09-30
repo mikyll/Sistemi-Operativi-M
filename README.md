@@ -135,9 +135,21 @@ Con **virtualizzazione pura**, si intende un'architettura che non costringe l'am
 Prodotti virtualizzabili: xen, vmware, kvm.
 
 ###### Protezione nell'architettura x86
+**Prima generazione**: non avevano nessuna capacità di protezione e non facevano distinzione tra SO e applicazioni, facendo girare entrambe con i medesimi privilegi. Il problema principale era dato dal fatto che, in questo modo, le applicazioni potevano accedere direttamente ai sottosistemi di I/O, allocare memoria senza alcun intervento del SO, con conseguenti problemi di sicurezza e stabilità (es. MS-DOS).
+
+**Seconda generazione**: viene introdotto il concetto di protezione, con la distinzione tra SO, che possiede controllo assoluto sulla macchina fisica sottostante, e le applicazioni, che possono interagire con le risorse fisiche solo facendone richiesta al SO (concetto di ring di protezione).
+
+**Registro CS**: i due bit meno significativi vengono riservati per rappresentare il Livello Corrente di Privilegio (CPL) => 4 possibili ring, a priorità crescente (0 maggiori privilegi, destinato al kernel del SO, ... , 3 minori privilegi, destinato alle applicazioni utente).
+In questo modo si ottiene **protezione della CPU**: non è permesso a ring diversi dallo 0 di eseguire le istruzioni privilegiate, che son destinate solo al kernel del SO, in quanto considerate critiche e potenzialmente pericolose. Una qualsiasi violazione può provocare un'eccezione, gestita immediatamente dal SO, che può reagire, ad esempio, terminando l'applicazione in esecuzione.
+
+**Segmentazione**: ogni segmento è rappresentato da un descrittore (in una tabella) in cui sono indicati il Livello di Protezione richiesto (PL) ed i permessi di accesso (r, w, x).
+In questo modo si ottiene **protezione della memoria**: una violazione dei vincoli di protezione provoca un'eccezione. Ciò accade, ad esempio, se il valore di CLP è maggiore del PL del segmento di codice contenente l'istruzione invocata.
+
 
 ###### Funzionamento dei VMM nell'architettura x86 classica
-[...]
+Anche in questo caso è presente il problema del ring deprivileging, in quanto viene dedicato il ring 0 alla VMM e conseguentemente i SO guest vengono collocati in ring a privilegi ridotti. Vengono comunemente utilizzate 2 tecniche:
+- 0/1/3: il SO viene spostato dal ring 0 (dove nativamente dovrebbe trovarsi) al ring 1, lasciando le applicazioni al ring 3, mentre al ring 0 viene installato il VMM;
+- 0/3/3: il SO viene spostato direttamente al ring 3, dove si trovano anche le applicazioni, mentre sul ring 0 viene installato il VMM. In questa modalità non è possibile generare eccezioni, quindi devono essere intrapresi meccanismi molto sofisticati con un controllo continuo da parte del VMM.
 
 ##### Gestione di VM
 Il compito fondamentale del VMM è quello di gestire le VM (creazione, accensione/spegnimento, eliminazione, migrazione live).
@@ -163,7 +175,6 @@ resume: il VMM ripristina lo stato della VM in memoria centrale (lo stato è que
 
 Strumento fondamentale per queste procedure è la migrazione, ovvero la possibilità di muovere VM tra server.
 **Migrazione live**: possibilità di spostare una VM da un server fisico ad un altro, senza doverla spegnere. È desiderabile minimizzare il downtime, il tempo di migrazione ed il consumo di banda.
-
 
 
 <!-- Lezione 2021-09-28 -->
