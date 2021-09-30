@@ -152,7 +152,7 @@ Una macchina virtuale può trovarsi nei seguenti stati:
 suspend: il VMM salva lo stato della VM in memoria secondaria, mettendola in stand by;
 resume: il VMM ripristina lo stato della VM in memoria centrale (lo stato è quello in cui si trovava quando è stata sospesa). Questa ooperazione può avvenire su un nodo diverso da quello della suspend.
 
-<img width="50%" src="" alt="Stati di una VM"/>
+<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/01%20-%20Virtualizzazione/Stati%20di%20una%20VM.png" alt="Stati di una VM"/>
 
 ###### Migrazione di una VM
 È una funzionalità necessaria soprattutto nei datacenter, per una gestione agile delle VM, a fronte di:
