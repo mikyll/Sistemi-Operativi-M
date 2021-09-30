@@ -1,4 +1,8 @@
-# Sistemi-Operativi-M
+<h1 align="center"> Sistemi Operativi M</h1>
+
+<p align="center">
+  Appunti del corso Sistemi Operativi M (72947), anno 2021-2022. <!--A cura di [Michele Righi](https://github.com/mikyll) e [Karina Chichifoi](https://github.com/TryKatChup).-->
+</p>
 
 <details open="open">
   <summary><h2 style="display: inline-block">Indice</h2></summary>
