@@ -13,8 +13,8 @@
         <li><a href="#virtualizzazione-di-un-sistema-di-elaborazione">Virtualizzazione di un sistema di elaborazione</a></li>
         <li><a href="#emulazione">Emulazione</a>
           <ul>
-            <li><a href="interpretazione">Interpretazione</a>
-            <li><a href="compilazione-dinamica">Compilazione Dinamica</a>
+            <li><a href="#interpretazione">Interpretazione</a>
+            <li><a href="#compilazione-dinamica">Compilazione Dinamica</a>
           </ul>
         </li>
         <li><a href="#tipi-livelli-di-virtualizzazione">Tipi (Livelli) di Virtualizzazione</a></li>
