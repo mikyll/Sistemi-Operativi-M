@@ -37,11 +37,12 @@
             <li><a href="#paravirtualizzazione">Paravirtualizzazione</a></li>
           </ul>
         </li>
-        <li><a href="#architetture-virtualizzabili">Architetture Virtualizzabili</a></li>
-        <ul>
+        <!--<li><a href="#architetture-virtualizzabili">Architetture Virtualizzabili</a>
+          <ul>
             <li><a href="#protezione-nellarchitettura-x86">Protezione nell'architettura x86</a></li>
             <li><a href="#funzionamento-dei-vmm-nellarchitettura-x86-classica">Funzionamento dei VMM nell'architettura x86 classica</a></li>
-        </ul>
+          </ul>
+        </li>-->
         <li><a href="#gestione-di-vm">Gestione di VM</a></li>
         <ul>
             <li><a href="#stati-di-una-vm">Stati di una VM</a></li>
