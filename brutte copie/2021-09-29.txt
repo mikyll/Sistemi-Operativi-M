@@ -1,0 +1,27 @@
+RIPASSINO
+
+Modello di Graham-Denning
+
+definisce gli strumenti necessari per avere un sistema di protezione completo, tramite un certo insieme di comandi.
+8 primitive:
+create object, ...
+
+possibilità di concedere
+
+control autorizza S1 (che possiede quel diritto) a modificare la riga della matrice degli accessi associata ad S2
+
+
+
+
+[...]
+
+
+
+
+
+Protezione e Sicurezza
+
+
+
+
+Sicu

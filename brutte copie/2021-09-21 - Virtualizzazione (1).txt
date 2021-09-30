@@ -1,0 +1,3 @@
+PDF 1 - Virtualizzazione
+
+La virtualizzazione è una tecnologia oggi usatissima. Virtualizzare un sistema di elaborazione (costituito da un insieme di risorse hardware e software) significa presentare all'utilizzatore una visione delle risor
