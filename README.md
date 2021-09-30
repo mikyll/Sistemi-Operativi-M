@@ -26,3 +26,7 @@ Esempi di virtualizzazione:
 
 ### Virtualizzazione di un sistema di elaborazione
 Il VMM è il mediatore unico tra le VM e l'hardware. I suoi compiti sono consentire la condivisione da parte di più macchine virtuali di una singola piattaforma hardware, garantendo isolamento tra di esse e stabilità del sistema. Il VMM deve realizzare una specie di sandbox per ciascuna VM (se ad esempio una va in crash, le altre non devono risentirne).
+
+**Emulazione**: consiste nell'esecuzione di programmi compilati per una particolare architettura (e quindi con un certo set di istruzioni) su un sistema di elaborazione dotato di un diverso insieme di istruzioni. Vengono emulate interamente le singole istruzioni dell'architettura ospitata, consentendo completa interoperabilità tra ambienti eterogenei. Svantaggio: ha problemi di efficienza (basse performance).
+
+**Interpretazione
