@@ -9,9 +9,45 @@
   <ol>
     <li>
       <a href="#01---virtualizzazione">Virtualizzazione</a>
-      <!--<ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>-->
+      <ul>
+        <li><a href="#virtualizzazione-di-un-sistema-di-elaborazione">Virtualizzazione di un sistema di elaborazione</a></li>
+        <li><a href="#emulazione">Emulazione</a>
+          <ul>
+            <li><a href="interpretazione">Interpretazione</a>
+            <li><a href="compilazione-dinamica">Compilazione Dinamica</a>
+          </ul>
+        </li>
+        <li><a href="#tipi-livelli-di-virtualizzazione">Tipi (Livelli) di Virtualizzazione</a></li>
+        <!--<li><a href="#cenni-storici">Cenni Storici</a></li>-->
+        <li><a href="#vantaggi-della-virtualizzazione">Vantaggi della Virtualizzazione</a></li>
+        <li><a href="#realizzazione-del-vmm">Realizzazione del VMM</a>
+          <ul>
+            <!--<li><a href="#vmm-di-sistema">VMM di Sistema</a></li>
+            <li><a href="#vmm-ospitato">VMM Ospitato</a></li>
+            <li><a href="#ring-di-protezione">Ring di Protezione</a>
+              <ul>
+                <li><a href="#ring-deprivileging">Ring Deprivileging</a></li>
+                <li><a href="#ring-compression">Ring Compression</a></li>
+                <li><a href="#ring-aliasing">Ring Aliasing</a></li>
+              </ul>
+            </li>
+            <li><a href="#supporto-hardware-alla-virtualizzazione">Supporto Hardware alla Virtualizzazione</a></li>
+            <li><a href="#realizzazione-del-vmm-in-architetture-non-virtualizzabili">Realizzazione del VMM in Architetture Non Virtualizzabili</a></li>-->
+            <li><a href="#">Fast Binary Translation (FTB)</a></li>
+            <li><a href="#paravirtualizzazione">Paravirtualizzazione</a></li>
+          </ul>
+        </li>
+        <li><a href="#architetture-virtualizzabili">Architetture Virtualizzabili</a></li>
+        <ul>
+            <li><a href="#">Protezione nell'architettura x86</a></li>
+            <li><a href="#">Funzionamento dei VMM nell'architettura x86 classica</a></li>
+        </ul>
+        <li><a href="#emulazione">Gestione di VM</a></li>
+        <ul>
+            <li><a href="#stati-di-una-vm">Stati di una VM</a></li>
+            <li><a href="#migrazione-di-una-vm">Migrazione di una VM</a></li>
+        </ul>
+      </ul>
     </li>
     <li>
       <a href="#02---protezione">Protezione</a>
