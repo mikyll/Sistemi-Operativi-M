@@ -14,81 +14,37 @@ Altri aspetti da tenere in considerazione:
 Naturalmente ci sono dei vantaggi nella realizzazione della migrazione se le architetture alle quali stiamo facendo riferimento hanno file system in comune (es. cluster), ovvero condividono gli stessi dischi.
 -->
 
+Domande:
+-Migrazione live tramite pre-copy
 
 #### Soluzione: precopy
 La soluzione più diffusa al giorno d'oggi si basa su un meccanismo di precopia, che viene attuata in una serie di passi:
+1. **Pre-migrazione**: fase iniziale in cui si capisce quali sono i nodi interessati, ovvero si individua la VM da migrare (nodo A) e l'host di destinazione (nodo B);
+2. **Reservation**: viene riservato un contenitore vuoto nel server di destinazione (reservation del posto per la macchina da migrare);
+3. **Pre-copia iterativa delle pagine**: la VM da migrare chiaramente avrà un file immagine (tipicamente un file di stato mappato sui registri CPU). In questa fase viene eseguita una copia nell'host B di tutte le pagine allocate in memoria sull'host A. Poiché le pagine in memoria, soprattutto se la VM è in esecuzione, possono variare, ovviamente non è detto che vengano copiate una volta sola. Alla successiva iterazione, vengono copiate solo le pagine modificate (*dirty pages*), fino a quando il numero di queste è inferiore ad una certa soglia data;
+4. **Sospensione della VM**: raggiunta la soglia (quando rimangono poche pagine), si applica la suspend sulla macchina d'origine (in seguito avverrà una resume sulla macchina di destinazione);
+5. **Commit**: la copia della VM sul nodo di destinazione è completa, dunque si può procedere con una commit (ovvero ci si affranca completamente dal nodo di origine, dal quale la VM viene eliminata);
+6. **Resume**: viene eseguita la resume sul nodo B, in cui si trova una macchina pronta a ripartire, completa sia come immagine sul file system, sia come stato presente nei registri.
 
+Con questa modalità, si ha downtime solo durante la copia delle ultime dirty pages, ovvero quando si è raggiunta la soglia preimpostata.
+NB: chiaramente la prima iterazione della precopia è quella che richiede più tempo, quelle successive ne richiedono meno perché salvano solo le pagine modificate.
+Sebbene la precopia sia la modalità oggi più diffusa, ne esistono anche altre, ad esempio *post-copy*, in cui la macchina viene sospesa e vengono copiate (non iterativamente) pagine e stato. Così facendo si ottiene un tempo totale di migrazione più basso, ma un downtime dei servizi forniti dalla VM molto più elevato.
 
+### XEN (Approfondimento)
+XEN è un progetto che nasce in ambito accademico a Cambridge. Nasce come hypervisor (VMM paravirtualizzato), richiede che le VM che girano sopra xen abbiano un kernel adattato all'interfaccia che xen offre ai propri utilizzatorii. Per quanto riguarda il porting di Linux ha coinvolto circa 3000 linee di codice del kernel, per adattarlo in modo che potesse dialogare con le API di XEN.
+Dal punto di vista commerciale ha limitato la gamma di kernel installabili, per quanto riguarda i SO proprietari, nonostante un tentativo di porting dei Sistemi Operativi (ad esempio Windows, che non è stato portato a termine).
 
+#### Architettura di XEN
+XEN è costituito da un VMM *hypervisor*, che si appoggia direttamente sull'hardware (virtualizzazione di sistema - quindi è necessario avere spazio e in caso togliere il SO preesistente) e si occupa della virtualizzazione della CPU, della memoria e dei dispositivi di ogni VM. In XEN le macchine virtuali vengono chiamate *domain* e su ogni sistema XEN c'è una VM speciale chiamata *domain 0* che è privilegiata: a livello architetturale è come tutte le altre ma, tramite un'interfaccia di controllo fornita da XEN, può amministrare tutto il sistema. Questa interfaccia è accessibile solo dal domain 0, ed è separata dall'hypervisor stesso, scelta che permette di ottenere una separazione dei meccanismi dalle politiche: all'interno delle applicazioni che consento la configurazione ed il controllo del sistema abbiamo le politiche (espresse dall'utente), che vengono poi implementate e messe in pratica dall'hypervisor. Infatti, tipicamente nel domain 0 girano applicazioni che consentono all'amministratore di configurare il sistema virtualizzato e operando sulla console di questa VM è possibile creare una VM guest (di domain U - utente), eliminarla, migrarla, ecc.
 
-
-la capacità/caratteristica di indipendenza e isolamento dall'ambiente fisico, è il vantaggio principale che ci consente di realizzare in modo molto semplice dal punto di vista tecnico, la migrazione live, ovvero suspend su un nodo e resume su un altro nodo.
-
-Migrazione live
-Come può essere realizzata concretamente.
-Un primo obbiettivo (prioritario) è minimizzare il downtime, perché se ci sono servizi che vogliamo che rimangano disponibili/up per il maggior tempo possibile, il downtime dev'essere minimizzato
-
-altri aspetti da tenere in considerazione:
-- ridurre al minimo il tempo di migrazione, come tempo complessivo che richiede la migrazione
-- occupare meno banda possibile;
-
-naturalmente ci sono dei vantaggi nella realizzazione della migrazione se l'architettura alla quale stiamo facendo riferimento, hanno filesystem in comune (es. cluster), ovvero condividono gli stessi dischi.
-
-Questo è un vantaggio nella migrazione
-
-soluzione più diffusa al giorno d'oggi si basa su un meccanismo di precopia, che viene attuata in uan serie di passi:
-1) fase iniziale in cui si capisce quali nodi sono interessati;
-2) finita la fase iniziale inizia la reservation: viene riservato un contenitore vuoto nel server di destinazione (riservato il posto per la macchina da migrare);
-3) la VM chiaramente avrà un file immagine (tipicamente un file di stato mappato sui registri CPU) - inizia dunque una precopia interattiva di tutte le pagine allocate nell'host di partenza, per la macchina da migrare. Ovviamente non è detto che vengano copiate una volta sola (se la macchina è in esecuzione, è possibile che nel mentre le pagine cambino - dunque ci può essere una seconda copia, in cui vengono copiate però solo le "dirty pages", ovvero le pagine modificate tra un'iterazione e l'altra - fino a quando il numero di queste arriva ad una certa soglia data. Quando ci si accorge che il numero è inferiore a questa soglia (particolarmente piccola), si ferma il processo di copia interattiva);
-4) Raggiunta questa soglia (Quando rimangono poche pagine), si applica la suspend sulla macchina d'origine (in seguito avverrà resume sulla macchina di destinazione);
-5) a questo punto la copia sul nodo di destinazione è completa, dunque si può procedere con una commit (ovvero ci si affranca completamente dal nodo di origine, dal quale la VM viene eliminata completamente);
-6) fatta la commit si procede con la resume sul nodo B, in cui si trova una macchina pronta a ripartire, completa sia come immagine sul file system, che come stato presente nei registri.
-
-NB: la prima iterazione della precopia è quella che richiede pià tempo, ovviamente quelle successive richiedono meno tempo perché salvano solo le dirty pages.
-
-Precopia oggi più diffusa, ma ci sono anche altre modalità
-
-es: postcopy
-si spegne la macchina, si copia tutta e si reboota sul nodo di destinazione.
-Downtime più alto, ma
-
-
-piccolo approfondimento su xen
-progetto di xen nasce in ambito accademico a Cambridge.
-nasce come hypervisor (VMM paravirtualizzato), richiede che le VM che girano sopra xen abbiano un kernel adattato all'interfaccia che xen offre ai propri utilizzatori.
-Dal punto di vista commerciale ha limitato la gamma di kernel installabili, per quanto riguarda i SO proprietari, nonostante un tentativo di porting dei sistemi operativi ad esempio Windows, non è stato portato a termine
-
-clown computing adoro
-
-oggi nella versione che sfrutta supporto nativo da parte del processore, è aperto a qualunque SO
-
-sistema xen costituito da un hypervisor che si appoggia direttamente sull'hw (virtualizzazione di sistema - quindi è necessario avere spazio e in caso togliere il SO preesistente)
-
-le VM vengono chiamate domain (terminologia esatta)
-
-su ogni sistema xen c'è una VM chiamata domain 0 che è provilegiata, a livello architetturale è come tutte le altre, ma è quella mediante la quale si amministra l'intero sistema.
-Operando sulla console di questa VM possiamo dare comandi quali creare, eliminare una VM (domain U - Utente), migrarla, ecc.
-
-nel domain 0 girano tipicamente applicazioni che consentono all'amministrazione di configurare correttamente il sistema virtualizzato
-
-
-
-principio di separazione tra politiche e meccanismi (poolitiche che vengono implementate dall'hypervisor - è lui che mette in atto tutte le operazioni richieste ad esempio dal domain 0).
-
-Realizzazione di xen
-
-Un VMM assomiglia per certi versi al kernel di un SO: deve gestire in modo appropriato l'HW e fornirne un accesso particolare agli utilizzatori (che nel caso di un sistema virtualizzato non sono gli utenti ma le VM)
-
-ogni VM vede una CPU come se fosse a lei esclusivamente dedicata
-
-le risorse vengono condivise grazie all'attività dell'hypervisor. Nel caso della CPU servono ovviamente politiche di scheduling particolari.
-
-Stesso discorso vale per la memoria, che dev'essere in qualche modo messa a disposizione per gli utilizzatori, garantendo i criteri di sicurezza opportuni. Come in un SO tradizionale viene virtualizzata per le VM nonché per i singoli processi.
-
-Altro ruolo importantissimo del VMM è quello della gestione dei dispositivi (quindi I/O)
+#### Realizzazione di XEN
+Un VMM assomiglia per certi versi al kernel di un SO: deve gestire in modo appropriato l'hardware e fornire un accesso particolare agli utilizzatori (che nel caso di un sistema virtualizzato non sono gli utenti ma le VM.
+Ogni VM vede una *CPU* come se fosse a lei esclusivamente dedicata, quando in realtà non è così: le risorse vengono condivise grazie all'attività dell'hypervisor tra tutti gli utilizzatori secondo politiche particolari (ad esempio per quanto riguarda la CPU l'hypervisor dovrà mettere in atto politiche di scheduling particolari).
+Stessa cosa vale per la *memoria*, anch'essa dev'essere in qualche modo messa a disposizione per gli utilizzatori dal VMM, che deve garantire i criteri di sicurezza opportuni.
+Altro compito importantissimo del VMM è quello della gestione dei *dispositivi* (quindi I/O).
 
 qualche cenno:
-intanto facciamo riferimento a xen "paravirtualizzato" (in questi sistemi necessario separare il kernel dal
+Noi facciamo riferimento a XEN "paravirtualizzato": in questi sistemi necessario separare il kernel dalla macchina virtuale e dalle applicazioni, in quanto XEN adotta una configurazione dei ring 0/1/3.
 
 il VMM esegue a ring 0, i sistemi operativi a ring 1, le app a ring 3 (così non abbiamo ring compression)
 
