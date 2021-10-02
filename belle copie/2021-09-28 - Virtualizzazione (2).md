@@ -67,25 +67,11 @@ Per motivi di efficienza, poiché chiaramente nella commutazione tra una VM e l'
 Con questa soluzione, quando viene creato un nuovo processo nello spazio del guest, fra le altre cose dev'essere creata una Tabella delle Pagine (PT) associata a tale processo. Ovviamente, poiché come detto tale operazione non può essere fatta dal kernel del sistema operativo che ospita quel processo (in quanto si trova a ring 1), dev'essere fatta da qualcun'altro. Quindi ciò che succede è che il guest richiede una nuova PT all'hypervisor, il quale la crea e vi aggiunge anche lo spazio riservato a XEN; così facendo XEN registra la tabella e acquisisce il diritto di scrittura esclusivo (i guesto potranno solo leggerle), e ogni volta che il guest di tale TP dovrà aggiornarla, proverà a scriverci generando un trap *protection fault*, che verrà catturata e gestita da XEN, permettendogli di verifcare la correttezza della richiesta ed aggiornare effettivamente, in seguito, la Tabella delle Pagine.
 
 ##### Protezione: Balloon Process
-Politiche sopra (gestione della paginazione), meccanismi sotto (effettiva paginazione con allocazione delle pagine - ovvero della memoria).
-Per com'è gestita la protezione in XEN, l'unica componente capace di allocare memoria è il VMM, ma può farlo solo in seguito a richeiste delle VM guest, in quanto come detto, le politiche si trovano in alto livello (ring 3), mentre i meccanismi a basso livello (ring 0). Poiché però può essere necessario al VMM, in alcuni casi, dover ottenere nuove pagine (es: attivazione nuova VM, dunque acquisire memoria necessaria per allocare lo spazio di indirizzamento di quella macchina virtuale). Questa possibilità, di richiedere pagine il VMM non ce l'ha. Può farlo solo in seguito a richieste da parte dei guest. Per farlo su XEN è stato adottata una soluzione, peculiare per la paravirtualizzazione, chiamata *balloon process*:
+Per com'è gestita la protezione in XEN, l'unica componente capace di allocare memoria è il VMM (ring 0), ma può farlo solo in seguito a richeiste delle VM guest, in quanto come detto, le politiche si trovano in alto livello (ring 3), mentre i meccanismi a basso livello (ring 0). Però, in alcuni casi (es: attivazione nuova VM, operazione per la quale serve acquisire memoria necessaria per allocare lo spazio di indirizzamento di quella macchina virtuale), può essere necessario al VMM dover ottenere nuove pagine. Questa possibilità, ovvero di richiedere pagine, il VMM non ce l'ha. Può farlo solo in seguito a richieste da parte dei guest. Per risolvere questo problema, su XEN è stato adottata una soluzione (peculiare per la paravirtualizzazione) chiamata **balloon process**: in ogni guest c'è un processo in costante esecuzione, che è in grado di dialogare direttamente con l'hypervisor. In caso di necessità di pagine, il VMM può chiedere a tali processi di "gonfiarsi", ovvero richiedere al proprio SO ulteriori pagine. Tale richiesta provoca l'allocazione di nuove pagine al balloon process che, una volta ottenute, le cede al VMM.
 
 
 
 
-
-
-
-Poiché la protezione fa sì che l'unica entità capace di fare aggiornamenti in area di memoria è il VMM (incorpa una serie di meccanismi che vengono sempre guidati dalle politiche dei guest, che stanno sopra), ma la
-
-La possibilità di richiedere pagine il VMM non ce l'ha, perché è qualcosa che è compito del VM (il VMM le crea e basta, ma non le crea da solo, lo fa dopo delle richieste da parte delle VM).
-Per questo motivo esiste un processo chiamato "balloon process", che è sempre attivo, in ciascuna VM, che è in grado di dialogare direttamente con l'hypervisor. Questa è chiaramente un po' una violazione dei principi di virtualizzazione (idea di dare ad ogni VM un ambiente di esecuzione completamente identico, dando l'illusione di trovarsi su una macchina fisica, ma col balloon process, si ha un processo conscio di trovarsi su una VM). Cosa fa?
-Il sistema di paginazione del SO di ogni guest è in grado di reperire pagine su richiesta.
-Problema da risolvere: come dare la possibilità al VMM di acquisire nuove pagine in memoria
-
-Il VMM chiede al balloon process di gonfiarsi (e di richiedere nuove pagine). Ogni volta che si interpella il balloon process acquisisce le pagine ed accede al VMM.
-
-E' purtroppo l'unico modo, perché l'hypervisor non può gestire la paginazione, questa viene gestita dalle varie VM, da come sono strutturate le politiche di quel particolare SO.
 
 
 se la VM si trova in uno stato di sospensione, esiste un tempo "Borrowed Virtual Time" che non va avanti
