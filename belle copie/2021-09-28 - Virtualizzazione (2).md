@@ -29,7 +29,8 @@ La soluzione più diffusa al giorno d'oggi si basa su un meccanismo di precopia,
 
 Con questa modalità, si ha downtime solo durante la copia delle ultime dirty pages, ovvero quando si è raggiunta la soglia preimpostata.
 ```
-NB: chiaramente la prima iterazione della precopia è quella che richiede più tempo, quelle successive ne richiedono meno perché salvano solo le pagine modificate.
+NB: chiaramente la prima iterazione della precopia è quella che richiede più tempo,
+quelle successive ne richiedono meno perché salvano solo le pagine modificate.
 ```
 Sebbene la precopia sia la modalità oggi più diffusa, ne esistono anche altre, ad esempio *post-copy*, in cui la macchina viene sospesa e vengono copiate (non iterativamente) pagine e stato. Così facendo si ottiene un tempo totale di migrazione più basso, ma un downtime dei servizi forniti dalla VM molto più elevato.
 
@@ -55,7 +56,12 @@ I SO guest gestiscono la memoria virtuale mediante la paginazione tradizionale: 
 ##### Protezione: Memory Split
 Com'è strutturato lo spazio di indirizzamento delle singole VM guest? Si adotta un principio di **memory split**.
 ```
-NB: Consideriamo sempre il parallelo con sistema non virtualizzato/sistema virtualizzato: in un sistema virtualizzato, ogni utilizzatore è una VM, quindi ogni entità che si interfaccia col VMM (equivalente del kernel) è una VM. Così come accade nei sistemi non virtualizzati, in cui ogni processo ha un utilizzatore e un suo spazio di indirizzamento, anche nei sistemi virtualizzati ogni VM ha un suo spazio di indirizzamento virtuale (perché siamo in presenza di memoria virtuale).
+NB: Consideriamo sempre il parallelo con sistema non virtualizzato/sistema virtualizzato:
+in un sistema virtualizzato, ogni utilizzatore è una VM, quindi ogni entità che si inter-
+faccia col VMM (equivalente del kernel) è una VM. Così come accade nei sistemi non virtua-
+lizzati, in cui ogni processo ha un utilizzatore e un suo spazio di indirizzamento, anche
+nei sistemi virtualizzati ogni VM ha un suo spazio di indirizzamento virtuale (perché sia-
+mo in presenza di memoria virtuale).
 ```
 Per motivi di efficienza, poiché chiaramente nella commutazione tra una VM e l'altra c'è problema di reperire il codice di XEN, lo spazio di indirizzamento di ogni VM è strutturato a "segmenti": nei primi 64MiB viene allocato XEN (ring 0), poi c'è una parte relativa al Kernel del SO guest (ring 1), poi c'è lo spazio utente, che verrà utilizzato dalle applicazioni (ring 3). I VM guest si occupano delle politiche di gestione della paginazione, mentre i meccanismi, ovvero l'effettiva implementazione della paginazione, sono compito del VMM, in quanto il kernel del SO guest, non può occuparsene, non essendo nel ring privilegiato 0. Ciò garantisce maggiore protezione in quanto si ha separazione tra politiche (a carico dei guest - alto livello) e meccanismi (a carico del VMM - basso livello).
 Con questa soluzione, quando viene creato un nuovo processo nello spazio del guest, fra le altre cose dev'essere creata una Tabella delle Pagine (PT) associata a tale processo. Ovviamente, poiché come detto tale operazione non può essere fatta dal kernel del sistema operativo che ospita quel processo (in quanto si trova a ring 1), dev'essere fatta da qualcun'altro. Quindi ciò che succede è che il guest richiede una nuova PT all'hypervisor, il quale la crea e vi aggiunge anche lo spazio riservato a XEN; così facendo XEN registra la tabella e acquisisce il diritto di scrittura esclusivo (i guesto potranno solo leggerle), e ogni volta che il guest di tale TP dovrà aggiornarla, proverà a scriverci generando un trap *protection fault*, che verrà catturata e gestita da XEN, permettendogli di verifcare la correttezza della richiesta ed aggiornare effettivamente, in seguito, la Tabella delle Pagine.
