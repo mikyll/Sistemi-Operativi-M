@@ -106,30 +106,16 @@ le tabelle delle pagine sono accessibili in lettura però, dalle VM, quindi nell
 
 
 
-Come viene mappata la memoria? Si adotta memory split
+Come viene mappata ogni singola VM? Per motivi di efficienza si adotta il memory split
+Memory split
+Come viene mappata ogni singola VM? Si adotta un principio di memory split. Facciamo sempre il parallelo con sistema non virtualizzato/sistema virtualizzato:
+in un sistema virtualizzato, ogni utilizzatore è una VM, quindi ogni entità che si interfaccia col VMM (equivalente del kernel) è una VM.
+Così come accade nei sistemi non virtualizzati, in cui ogni processo ha un utilizzatore e un suo spazio di indirizzamento, anchenei sistemi virtualizzati ogni VM ha un suo spazio di indirizzamento virtuale (perché siamo in presenza di memoria virtuale).
+Per motivi di efficienza, perché chiaramente nella commutazione tra una VM e l'altra c'è problema di reperire codice di XEN, nello spazio di indirizz di ogni VM viene riservata una parte in cui viene allocato XEN (in cui ogni volta che si commuta tra una VM e l'altra, non c'è bisogno di flushare la tabella delle pagine).
 
-paragone sistema virtualizzato/non
+I guest si occupano della paginazione (gestiscono i page fault - quando c'è bisogno di stabilire cosa fare in seguito a un page fault, quello lo decide il pager del guest (politiche), quando c'è bisogno di scrivere nella PT di un certo processo interessato dal page fault, poiché il kernel non può scrivere nella memoria del VMM all'interno del quale sono allocate le PT, viene delegato l'hypervisor a farlo per la macchina virtuale).
 
-in un sistema virtualizzato ogni utilizzatore è una VM, ognuna ha un suo spazio di indirizzamento virtuale.
-
-Per motivi di efficienza, nello spazio di indirizz della VM viene riservato uno spazio in cui viene allocato xen (ogni volta che si commuta una macchina virtuale dall'altra non è necessario fare un TBN flush.
-
-la situazione è quella nella slide seguente (Protezione)
-
-si ha XEN, poi il kernel della VM, poi lo spazio User dedicato ai processo
-
-
-xen: gestione della memoria
-
-quando c'è bisogno di scrivere nella page table di un processo interessato, poiché il kernel del SO non può scrivere nella memoria del VMM (nelle cosiddette shadow table), viene delegato appunto il VMM per farlo al posto della VM.
-
-
-xen - creazione processo
-Quando nello spazio del guest viene creato un nuovo processo, dev'essere anche creata una nuova tabella delle pagine. La creazione come detto, non può essere fatta dal kernel che ospita quel processo, sempre per motivi di protezione.
-I guest richiedono una nuova TdP (tabella delle pagine) al VMM di xen, che registra la tabella, e acquisisce diritto di scrittura esclusiva su quella tabella. Ogni sucessiva modifica del guest, tenterà di accedere alla tabella delle pagine, generando un page fault (tipo trap), il VMM lo rileva/cattura l'evento e gestisce l'eccezione, eseguendo l'operazione richiesta, se corretta.
-
-
-NB: politiche nei VM, meccanismi nel VMM
+Cosa succede quando viene creato un nuovo processo nello spazio del guest? Fra le altre cose dev'essere creata una PT associata a tale processo. ovviamente la creazione di una nuova PT non può essere fatta dal kernel che ospita quel processo (ring 1), quindi il guest richiede una nuova PT a hypervisor, il quale aggiunge alla PT anche lo spazio riservato a XEN; XEN quindi registra la tabella e naturalmente acquisisce il diritto di scrittura. Ad ogni successiva modifica da parte del guest, che tenterà di accedere alla struttura dati, ma questo darà origine ad una trap (protection fault), evento che verrà catturato e gestito dal VMM.
 
 Poiché la protezione fa sì che l'unica entità capace di fare aggiornamenti in area di memoria è il VMM (incorpa una serie di meccanismi che vengono sempre guidati dalle politiche dei guest, che stanno sopra), ma la
 
