@@ -66,58 +66,15 @@ mo in presenza di memoria virtuale).
 Per motivi di efficienza, poiché chiaramente nella commutazione tra una VM e l'altra c'è problema di reperire il codice di XEN, lo spazio di indirizzamento di ogni VM è strutturato a "segmenti": nei primi 64MiB viene allocato XEN (ring 0), poi c'è una parte relativa al Kernel del SO guest (ring 1), poi c'è lo spazio utente, che verrà utilizzato dalle applicazioni (ring 3). I VM guest si occupano delle politiche di gestione della paginazione, mentre i meccanismi, ovvero l'effettiva implementazione della paginazione, sono compito del VMM, in quanto il kernel del SO guest, non può occuparsene, non essendo nel ring privilegiato 0. Ciò garantisce maggiore protezione in quanto si ha separazione tra politiche (a carico dei guest - alto livello) e meccanismi (a carico del VMM - basso livello).
 Con questa soluzione, quando viene creato un nuovo processo nello spazio del guest, fra le altre cose dev'essere creata una Tabella delle Pagine (PT) associata a tale processo. Ovviamente, poiché come detto tale operazione non può essere fatta dal kernel del sistema operativo che ospita quel processo (in quanto si trova a ring 1), dev'essere fatta da qualcun'altro. Quindi ciò che succede è che il guest richiede una nuova PT all'hypervisor, il quale la crea e vi aggiunge anche lo spazio riservato a XEN; così facendo XEN registra la tabella e acquisisce il diritto di scrittura esclusivo (i guesto potranno solo leggerle), e ogni volta che il guest di tale TP dovrà aggiornarla, proverà a scriverci generando un trap *protection fault*, che verrà catturata e gestita da XEN, permettendogli di verifcare la correttezza della richiesta ed aggiornare effettivamente, in seguito, la Tabella delle Pagine.
 
-----
-Come viene mappata ogni singola VM? Per motivi di efficienza si adotta il memory split
-Memory split
-Come viene mappata ogni singola VM? Si adotta un principio di memory split. Facciamo sempre il parallelo con sistema non virtualizzato/sistema virtualizzato:
-in un sistema virtualizzato, ogni utilizzatore è una VM, quindi ogni entità che si interfaccia col VMM (equivalente del kernel) è una VM.
-Così come accade nei sistemi non virtualizzati, in cui ogni processo ha un utilizzatore e un suo spazio di indirizzamento, anchenei sistemi virtualizzati ogni VM ha un suo spazio di indirizzamento virtuale (perché siamo in presenza di memoria virtuale).
-Per motivi di efficienza, perché chiaramente nella commutazione tra una VM e l'altra c'è problema di reperire codice di XEN, nello spazio di indirizz di ogni VM viene riservata una parte in cui viene allocato XEN (in cui ogni volta che si commuta tra una VM e l'altra, non c'è bisogno di flushare la tabella delle pagine).
-
-I guest si occupano della paginazione (gestiscono i page fault - quando c'è bisogno di stabilire cosa fare in seguito a un page fault, quello lo decide il pager del guest (politiche), quando c'è bisogno di scrivere nella PT di un certo processo interessato dal page fault, poiché il kernel non può scrivere nella memoria del VMM all'interno del quale sono allocate le PT, viene delegato l'hypervisor a farlo per la macchina virtuale).
-
-Cosa succede quando viene creato un nuovo processo nello spazio del guest? Fra le altre cose dev'essere creata una PT associata a tale processo. ovviamente la creazione di una nuova PT non può essere fatta dal kernel che ospita quel processo (ring 1), quindi il guest richiede una nuova PT a hypervisor, il quale aggiunge alla PT anche lo spazio riservato a XEN; XEN quindi registra la tabella e naturalmente acquisisce il diritto di scrittura. Ad ogni successiva modifica da parte del guest, che tenterà di accedere alla struttura dati, ma questo darà origine ad una trap (protection fault), evento che verrà catturato e gestito dal VMM.
-
-
+##### Protezione: Balloon Process
 Politiche sopra (gestione della paginazione), meccanismi sotto (effettiva paginazione con allocazione delle pagine - ovvero della memoria).
 Per com'è gestita la protezione in XEN, l'unica componente capace di allocare memoria è il VMM, ma può farlo solo in seguito a richeiste delle VM guest, in quanto come detto, le politiche si trovano in alto livello (ring 3), mentre i meccanismi a basso livello (ring 0). Poiché però può essere necessario al VMM, in alcuni casi, dover ottenere nuove pagine (es: attivazione nuova VM, dunque acquisire memoria necessaria per allocare lo spazio di indirizzamento di quella macchina virtuale). Questa possibilità, di richiedere pagine il VMM non ce l'ha. Può farlo solo in seguito a richieste da parte dei guest. Per farlo su XEN è stato adottata una soluzione, peculiare per la paravirtualizzazione, chiamata *balloon process*:
----
-
-
-##### Paginazione: Balloon Process
-La paginazione è a carico
 
 
 
 
 
-La componente che si occupa della gestione della memoria virtuale è il pager (quando manca una pagina fa ciò che è necessario affinché quella pagina venga caricata in memoria e resa disponibile). All'interno del pager ci sono delle politiche: se la memoria è piena, il pager deve decidere con politiche sue proprie, di designare una vittima per far posto alla pagina da allocare in memoria centrale.
-Problema: se avviene un page fault, viene notificato a livello hardware. Da un lato a livello alto ci sono le politiche che ne dovrebbero determinare il comportamento, ma il kernel della VM non si trova più a un livello privilegiato, quindi non ha la possibilità di cambiare la memoria e scrivere fisicamente il contenuto delle magine, in quanto questa prerogativa è compito esclusivamente del ring 0. Si ha dunque una tabella delle pagine per ogni processo, ma c'è il problema che il kernel della VM non può aggiornare direttamente il contenuto della tabella delle pagine, dunque in caso della necessità di aggiornamento della tabella delle pagine, bisogna delegare al VMM affinché vada ad aggiornarla.
-Soluzione: si sfrutta il page fault
 
-
-
-
-in un sistema virtualizzato ogni utilizzatore è una VM, ognuna ha un suo spazio di indirizzamento virtuale.
-
-Per motivi di efficienza, nello spazio di indirizz della VM viene riservato uno spazio in cui viene allocato xen (ogni volta che si commuta una macchina virtuale dall'altra non è necessario fare un TBN flush.
-
-la situazione è quella nella slide seguente (Protezione)
-
-si ha XEN, poi il kernel della VM, poi lo spazio User dedicato ai processo
-
-
-xen: gestione della memoria
-
-quando c'è bisogno di scrivere nella page table di un processo interessato, poiché il kernel del SO non può scrivere nella memoria del VMM (nelle cosiddette shadow table), viene delegato appunto il VMM per farlo al posto della VM.
-
-
-xen - creazione processo
-Quando nello spazio del guest viene creato un nuovo processo, dev'essere anche creata una nuova tabella delle pagine. La creazione come detto, non può essere fatta dal kernel che ospita quel processo, sempre per motivi di protezione.
-I guest richiedono una nuova TdP (tabella delle pagine) al VMM di xen, che registra la tabella, e acquisisce diritto di scrittura esclusiva su quella tabella. Ogni sucessiva modifica del guest, tenterà di accedere alla tabella delle pagine, generando un page fault (tipo trap), il VMM lo rileva/cattura l'evento e gestisce l'eccezione, eseguendo l'operazione richiesta, se corretta.
-
-
-NB: politiche nei VM, meccanismi nel VMM
 
 Poiché la protezione fa sì che l'unica entità capace di fare aggiornamenti in area di memoria è il VMM (incorpa una serie di meccanismi che vengono sempre guidati dalle politiche dei guest, che stanno sopra), ma la
 
