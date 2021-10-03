@@ -12,6 +12,7 @@
 <details open="open">
   <summary><h2 style="display: inline-block">Indice</h2></summary>
   <ol>
+<!-- CAPITOLO 1 -->
     <li><a href="#01---virtualizzazione">Virtualizzazione</a>
       <ul>
         <li><a href="#virtualizzazione-di-un-sistema-di-elaborazione">Virtualizzazione di un sistema di elaborazione</a></li>
@@ -72,7 +73,7 @@
 				</li>
       </ul>
     </li>
-		
+<!-- CAPITOLO 2 -->
     <li><a href="#02---protezione">Protezione</a>
       <ul>
         <li><a href="#protezione-modelli-politiche-e-meccanismi">Protezione: Modelli, Politiche e Meccanismi</a>
@@ -83,26 +84,26 @@
 					</ul>
 				</li>
 				<li><a href="#dominio-di-protezione">Dominio di Protezione</a>
-				<ul>
-					<li><a href="#associazione-tra-processo-e-dominio">Associazione tra Processo e Dominio</a>
-						<ul>
-							<li><a href="#esempio-di-cambio-di-dominio">Esempio di cambio di dominio</a></li>
-						</ul>
-				</ul>
+					<ul>
+						<li><a href="#associazione-tra-processo-e-dominio">Associazione tra Processo e Dominio</a>
+							<ul>
+								<li><a href="#esempio-di-cambio-di-dominio">Esempio di cambio di dominio</a></li>
+							</ul>
+					</ul>
+				</li>
+				<li><a href="#matrice-degli-accessi">Matrice degli Accessi</a>
+					<ul>
+						<!--<li><a href="#verifica-del-rispetto-dei-vincoli-di-accesso">Verifica del Rispetto dei Vincoli di Accesso</a></li>-->
+						<li><a href="#modifica-dello-stato-di-protezione">Modifica dello Stato di Protezione</a>
+							<ul>
+								<!--<li><a href="#modello-graham-denning">Modello Graham-Denning</a></li>-->
+								<li><a href="#propagazione-dei-diritti-di-accesso-copy-flag">Propagazione dei Diritti di Accesso (Copy Flag)</a></li>
+							</ul>
+						</li>
+					</ul>
 				</li>
 			</ul>
-			<li><a href="#matrice-degli-accessi">Matrice degli Accessi</a>
-				<ul>
-					<li><a href="#verifica-del-rispetto-dei-vincoli-di-accesso">Verifica del Rispetto dei Vincoli di Accesso</a></li>
-					<li><a href="#modifica-dello-stato-di-protezione">Modifica dello Stato di Protezione</a>
-						<ul>
-							<li><a href="#modello-graham-denning">Modello Graham-Denning</a></li>
-							<li><a href="#propagazione-dei-diritti-di-accesso-copy-flag">Propagazione dei Diritti di Accesso (Copy Flag)</a></li>
-						</ul>
-					</li>
-				</ul>
-			</li>
-    </li>
+		</li>
   </ol>
 </details>
 
