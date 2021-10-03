@@ -55,7 +55,16 @@
             <li><a href="#soluzione-precopy">Soluzione: precopy</a></li>
           </ul>
 	</li>
-        <li><a href="#gestione-di-vm">XEN (Approfondimento)</a></li>
+        <li><a href="#xen">XEN</a>
+          <!--<ul>
+            <li><a href="#architettura">Architettura</a></li>
+            <li><a href="#realizzazione">Realizzazione</a></li>
+            <li><a href="#gestione-della-memoria-e-paginazione">Gestione della Memoria e Paginazione</a></li>
+            <li><a href="#cenni-su-virtualizzazione-della-cpu">Cenni su Virtualizzazione della CPU</a></li>
+            <li><a href="#virtualizzazione-dei-dispositivi-io">Virtualizzazione dei Dispositivi (I/O)</a></li>
+            <li><a href="#gestione-delle-interruzioni">Gestione delle Interruzioni</a></li>
+          </ul>-->
+	</li>
       </ul>
     </li>
     <li>
@@ -245,7 +254,7 @@ quelle successive ne richiedono meno perché salvano solo le pagine modificate.
 ```
 Sebbene la precopia sia la modalità oggi più diffusa, ne esistono anche altre, ad esempio *post-copy*, in cui la macchina viene sospesa e vengono copiate (non iterativamente) pagine e stato. Così facendo si ottiene un tempo totale di migrazione più basso, ma un downtime dei servizi forniti dalla VM molto più elevato.
 
-### XEN (Approfondimento)
+### XEN
 XEN è un progetto che nasce in ambito accademico a Cambridge. Nasce come hypervisor (VMM paravirtualizzato), richiede che le VM che girano sopra xen abbiano un kernel adattato all'interfaccia che xen offre ai propri utilizzatorii. Per quanto riguarda il porting di Linux ha coinvolto circa 3000 linee di codice del kernel, per adattarlo in modo che potesse dialogare con le API di XEN.
 Dal punto di vista commerciale ha limitato la gamma di kernel installabili, per quanto riguarda i SO proprietari, nonostante un tentativo di porting dei Sistemi Operativi (ad esempio Windows, che non è stato portato a termine).
 
