@@ -112,7 +112,7 @@
   <ul>
     <li><a href="#01---virtualizzazione">2021/09/21</a></li>
     <li><a href="#soluzione-precopy">2021/09/28</a></li>
-    <li><a href="#soluzione-precopy">2021/09/29</a></li>
+    <li><a href="#">2021/09/29</a></li>
   </ul>
 </details>
 
