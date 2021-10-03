@@ -2,14 +2,80 @@ RIPASSINO
 
 Modello di Graham-Denning
 
-definisce gli strumenti necessari per avere un sistema di protezione completo, tramite un certo insieme di comandi.
-8 primitive:
-create object, ...
+definisce gli strumenti necessari per avere un sistema di protezione completo, strumenti sintetizzati/elencati da 8 primitive, che possiamo trovare implementate in modo fedele, rispetto all'elenco, in modo più ottimizzato, che limita leggermente le indicazioni di questa lista.
+In particolare c'eravamo concentrati sulla possibilità di concedere o negare dei diritti di accesso a risorse
 
-possibilità di concedere
+
+DIRITTO OWNER
+tipicamente in molti sistemi si prevede viene introdotto un diritto di possesso delle risorse.
+In alcuni sistemi l'idea di concedere/togliere diritti è rappresentato da un particolare diritto in più che prende il nome di "owner" - concetto diutente che possiede un file. Non sempre c'è questo concetto, ma se il sistema lo prevede, significa che c'è il diritto di possesso di una risorsa (es. file).
+
+In una matrice di accesso si traduce nella presenza in ognuna delle colonne di una ed una sola cella nella quale è presente un diritto owner. Per ogni risorsa (dunque per ogni colonna) ci dev'essere uno ed un solo soggetto che è l'owner. Il soggetto nella riga di quella cella risulta essere il proprietario dell'oggetto in questione.
+
 
 control autorizza S1 (che possiede quel diritto) a modificare la riga della matrice degli accessi associata ad S2
 
+Ciò significa che tale soggetto ha un ruolo privilegiato nei confronti di quella risorsa ed è l'unico soggetto capace di revocare o concedere diritti di accesso su quella risorsa ad altri soggetti
+
+owner è l'utente che ha la possibilità di esercitare il copy flag su tutte le celle della colonna a cui appartiene.
+
+Questo vale sia per il concedere un diritto ad altri utenti sia per la revoca (operazione opposta, quella con cui si nega un diritto ad un soggetto che fino a quel momento possedeva un certo diritto d'accesso su quella risorsa)
+
+DIRITTO CONTROL
+Sempre parlando della possibilità di modificare
+
+sia copy flag che owner sono strumenti con cui possiamo modificare il contenuto della matrice degli accessi (possiamo aggiungere o togliere diritti nellee varie caselle).
+Un altro diritto che ci consente di fare ciò è il diritto "control" che viene attribuito ad un soggetto, ma si riferisce non ad un oggetto ma ad un altro soggetto.
+
+nella matrice degli accessi in questo caso sono presenti altre colonne, oltre a quelle degli oggetti, che indicano i soggetti. Se la casella ha il control, autorizza il soggetto che lo possiede a modificare la riga associata al soggetto relativo.
+Es: se S1 ha il diritto di control per S2 (nella riga di S1, c'è il diritto di control rispetto al soggetto S2, dunque nella colonna di S2), significa che S1 può modificare la riga degli accessi di S2 (dunque quella sottostante)
+Se ad esempio S2 ha il diritto write su una risorsa O ma S1 ha il diritto control su S2, allora S1 può revocare il diritto write di S2 su O.
+
+Ad esempio, in un sistema MAC, avremmo l'entità centrale che è l'unica autorizzata a stabilire che cosa si può o non si può fare sulle risorse del sistema. Questa autorità è un soggetto che ha il diritto di control su tutti gli altri soggetti (ha potere assoluto nel senso che può modificare il contenuto della riga associata ad ogni altro soggetto).
+
+Se ci pensiamo bene, una riga della matrice altro non è che il dominio di protezione associato ad un soggetto.
+
+DIRITTO SWITCH
+Principio del privilegio minimo: uno dei modi per garantire il rispetto di questo è prevedere la possibilità di un cambio di dominio a runtime. Quindi un processo che esegue ad esempio nel dominio associato ad S2, se ha bisogno di diversi diritti, può spostarsi nel dominio specifico che gli garantisce questi diritto nuovi di cui ha bisogno.
+Come si può fare? Esiste un tipo di diritto speciale chiamato "switch": esercitando questo diritto, il processo che esegue nel dominio di un certo soggetto, tramite questo diritto può passare ad un nuovo dominio. Aad esempio se un processo esegue nel dominio di S2 e ha il diritto switch, può spostarsi in un'altra riga, cambiando quindi dominio.
+
+Nel mondo UNIX questo diritto di switch è implementato tramite il bit set-uid. Se questo è settato, chi esegue il file può ottenere il dominio del soggetto proprietario.
+
+
+Matrice degli accessi è una notazione astratta che rappresenta lo stato di protezione
+
+parliamo di stato di protezione perché cambia dinamicamente: ogni colonna rappresenta una risorsa (es: un file). E quante volte creiamo o eliminiamo un file? Tantissimo e spessissimo, quindi è ovvio che la forma della matrice cambia dinamicamente, così come il suo contenuto.
+
+
+Realizzazione della amtrice:
+deve tenere conto di 3 cose:
+-dimensione della matrice (quante colonne può avere? Se pensiamo ad un file system centinaia di migliaia di colonne);
+-è una matrice sparsa, ovvero non è detto che in tutte le celle ci siano delle informazioni. Soprattutto se abbiamo tantissimi file, possiamo avere delle celle vuote (non è detto che tutti i soggettiabilitati al sistema abbiano qualche diritto su quel file). Tipicamente è una matrice nella quale ci sia una prevalenza di celle vuote.
+
+Soluzione più naturale ed intuitiva sarebbe riservare nella memoria un'area per la matrice. La rappresentazione concreta però dev'essere ottimizzata sia per quanto riguarda l'occupazione della memoria, sia rispetto all'efficienza nel'accesso e nella gestione delle informazioni di protezione. Quindi esistono 2 approcci:
+- Access Control List (ACL), rappresentazione per colonne. Per ogni oggetto (risorsa) si mantiene una struttura dati che concettualmente rappresenta una colonna della matrice, ma tenendo conto che la colonna, come la matrice, è sparsa, in questa lista si ottengono solo gli elementi significativi, ovvero quelli non vuoti. La struttura associata ad ogni oggetto è una lista in cui ogni elemento è un soggetto che ha un qualche diritto su quell'oggetto.
+- Capability List, rappresentazione per righe. Ad ogni soggetto è associata una lsita che indica quali sono gli oggetti al quale il soggetto può accedere.
+
+ACL: Lista degli Accessi
+La lista degli accessi per ogni oggetto ha una struttura composta da un insieme di elementi, ognuno dei quali contiene la coppia soggetto, insieme dei diritti
+Quando un qualunque soggetto S tenta un'operazione M su un oggetto O, il sistema di protezione va a verificare nella ACL associata ad O se è presente un elemento riferito al soggetto che sta tentando l'accesso e, se esiste, controlla che contenga il diritto per eseguire M.
+In certi casi, per velocizzare l'accesso, viene prevista una lista di default: se è prevista, esistono dei diritti comuni a tutti i soggetti, si va a vedere prima nella lista di default e, se la ricerca non va a buon fine, si va a vedere nello specifico, elemento per elemento. Se la ricerca non ha successo, chiaramente l'accesso viene negato.
+
+UTENTI & GRUPPI
+Molti sistemi per identificare un soggetto prevedono non solo il nome utente ma anche il gruppo a cui appartiene. Un gruppo aggrega un insieme di utenti. È importante sapere che un utente può appartenere anche a più gruppi, ma in un certo istante può appartenere ad un solo gruppo alla volta.
+Sostanzialmente, quando un soggetto <utente, gruppo> tenta accesso a risorsa in un certo modo, l'elemento dell'ACL comprenderà sia nome ID utente che ID gruppo, più l'insieme dei diritti.
+Il tentativo di accesso comporta una ricerca nell'ACL dell'oggetto, cercando se compare il modo con il quale l'utente sta cercando di accedere alla risorsa.
+
+I gruppi esistono tipicamente per una questione di differenziazione dei ruoli, ciascuno dei quali ha diritti diversi.
+In generale, nei sistemi che prevedono i gruppi, è comunque possibile svincolare i soggetti dai gruppi, ovvero senza assegnargli un gruppo alcuno (UID, * <insieme diritti>)
+
+
+CAPABILITY LIST
+Seconda possibilità, ogni elemento di questa lista contiene l'indicazione dell'oggetto e i diritti di accesso che quel soggetto al quale la capability list è associata. Chiaramente non avrà tanti elementi quanti solo le colonne della matrice degli accessi, in quanto come abbiamo detto è una matrice sparsa.
+Tipicamente contiene queste due informazioni. Nella pratica, spesso l'oggetti viene identificato tramite un indirizzo, che ne localizza in memoria, o meglio ne localizza il descrittore, ed ovviamente i diritti che spesso vengono rappresentati in modo compatto tramite una sequenza di bit.
+
+
+slide 39
 
 
 
