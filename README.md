@@ -12,8 +12,7 @@
 <details open="open">
   <summary><h2 style="display: inline-block">Indice</h2></summary>
   <ol>
-    <li>
-      <a href="#01---virtualizzazione">Virtualizzazione</a>
+    <li><a href="#01---virtualizzazione">Virtualizzazione</a>
       <ul>
         <li><a href="#virtualizzazione-di-un-sistema-di-elaborazione">Virtualizzazione di un sistema di elaborazione</a></li>
         <li><a href="#emulazione">Emulazione</a>
@@ -54,7 +53,7 @@
             <li><a href="#migrazione-di-una-vm">Migrazione di una VM</a></li>
             <li><a href="#soluzione-precopy">Soluzione: precopy</a></li>
           </ul>
-	</li>
+				</li>
         <li><a href="#xen">XEN</a>
           <ul>
             <li><a href="#architettura">Architettura</a></li>
@@ -67,13 +66,42 @@
                 <li><a href="#protezione-balloon-process">Protezione: Balloon Process</a></li>
               </ul>
             </li>
-            <li><a href="#gestione-delle-interruzioni">Gestione delle Interruzioni</a>
-          </ul>
-	</li>
+            <li><a href="#gestione-delle-interruzioni">Gestione delle Interruzioni</a></li>
+            <li><a href="#migrazione-live">Migrazione Live</a></li>
+					</ul>
+				</li>
       </ul>
     </li>
-    <li>
-      <a href="#02---protezione">Protezione</a>
+		
+    <li><a href="#02---protezione">Protezione</a>
+      <ul>
+        <li><a href="#protezione-modelli-politiche-e-meccanismi">Protezione: Modelli, Politiche e Meccanismi</a>
+					<ul>
+						<li><a href="#modelli">Modelli</a></li>
+						<li><a href="#politiche">Politiche</a></li>
+						<li><a href="#meccanismi">Meccanismi</a></li>
+					</ul>
+				</li>
+				<li><a href="#dominio-di-protezione">Dominio di Protezione</a>
+				<ul>
+					<li><a href="#associazione-tra-processo-e-dominio">Associazione tra Processo e Dominio</a>
+						<ul>
+							<li><a href="#esempio-di-cambio-di-dominio">Esempio di cambio di dominio</a></li>
+						</ul>
+				</ul>
+				</li>
+			</ul>
+			<li><a href="#matrice-degli-accessi">Matrice degli Accessi</a>
+				<ul>
+					<li><a href="#verifica-del-rispetto-dei-vincoli-di-accesso">Verifica del Rispetto dei Vincoli di Accesso</a></li>
+					<li><a href="#modifica-dello-stato-di-protezione">Modifica dello Stato di Protezione</a>
+						<ul>
+							<li><a href="#modello-graham-denning">Modello Graham-Denning</a></li>
+							<li><a href="#propagazione-dei-diritti-di-accesso-copy-flag">Propagazione dei Diritti di Accesso (Copy Flag)</a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
     </li>
   </ol>
 </details>
@@ -83,6 +111,7 @@
   <ul>
     <li><a href="#01---virtualizzazione">2021/09/21</a></li>
     <li><a href="#soluzione-precopy">2021/09/28</a></li>
+    <li><a href="#soluzione-precopy">2021/09/29</a></li>
   </ul>
 </details>
 
@@ -435,6 +464,6 @@ L'operazione di propagazione può essere realizzata in due modi:
 - **trasferimento** del diritto, il soggetto iniziale perde il diritto di accesso, che viene spostato al nuovo soggetto;
 - **copia** del diritto, il soggetto iniziale mantiene il diritto di accesso, "duplicandolo" al nuovo soggetto.
 
-
+<!-- Lezione 2021-09-29 -->
 
 
