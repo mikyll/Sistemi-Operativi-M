@@ -14,12 +14,6 @@ Altri aspetti da tenere in considerazione:
 Naturalmente ci sono dei vantaggi nella realizzazione della migrazione se le architetture alle quali stiamo facendo riferimento hanno file system in comune (es. cluster), ovvero condividono gli stessi dischi.
 -->
 
-Domande:
--Migrazione live tramite pre-copy
--Descrivere architettura, paginazione, gestione delle interruzioni e dei driver di XEN. Cos'è un balloon process?
--Definizione dei concetti di modelli, politiche e meccanismi di protezione;
--Definire le politiche DAC, MAC, RBAC.
-
 #### Soluzione: precopy
 La soluzione più diffusa al giorno d'oggi si basa su un meccanismo di precopia, che viene attuata in una serie di passi:
 1. **Pre-migrazione**: fase iniziale in cui si capisce quali sono i nodi interessati, ovvero si individua la VM da migrare (nodo A) e l'host di destinazione (nodo B);
