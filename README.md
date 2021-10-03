@@ -56,14 +56,19 @@
           </ul>
 	</li>
         <li><a href="#xen">XEN</a>
-          <!--<ul>
+          <ul>
             <li><a href="#architettura">Architettura</a></li>
             <li><a href="#realizzazione">Realizzazione</a></li>
             <li><a href="#gestione-della-memoria-e-paginazione">Gestione della Memoria e Paginazione</a></li>
             <li><a href="#cenni-su-virtualizzazione-della-cpu">Cenni su Virtualizzazione della CPU</a></li>
             <li><a href="#virtualizzazione-dei-dispositivi-io">Virtualizzazione dei Dispositivi (I/O)</a></li>
-            <li><a href="#gestione-delle-interruzioni">Gestione delle Interruzioni</a></li>
-          </ul>-->
+              <ul>
+                <li><a href="#protezione-memory-split">Protezione: Memory Split</a></li>
+                <li><a href="#protezione-balloon-process">Protezione: Balloon Process</a></li>
+              </ul>
+            </li>
+            <li><a href="#gestione-delle-interruzioni">Gestione delle Interruzioni</a>
+          </ul>
 	</li>
       </ul>
     </li>
@@ -77,6 +82,7 @@
   <summary><h2 style="display: inline-block">Indice per lezioni</h2></summary>
   <ul>
     <li><a href="#01---virtualizzazione">2021/09/21</a></li>
+    <li><a href="#soluzione-precopy">2021/09/28</a></li>
   </ul>
 </details>
 
@@ -313,6 +319,7 @@ Ovviamente, per consentire la comunicazione tra back-end driver e front-end driv
 **Vantaggi**: il driver viene scorporato in due parti, svingolando la VM dal particolare server fisico in cui risiede (il front-end driver della VM rimane lo stesso anche se questa viene spostata su un altro nodo), garantendo *portabilità*; inoltre, mantenendo i driver fuori dall'hypervisor, si ha che esso è più semplificato e leggero.<br/>
 **Svantaggi**: il meccanismo di comunicazionee fra i due tipi di driver appesantisce l'accesso ai dispositivi.
 
+#### Gestione delle Interruzioni
 
 
 ## 02 - Protezione
