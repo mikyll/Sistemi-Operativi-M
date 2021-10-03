@@ -17,6 +17,8 @@ Naturalmente ci sono dei vantaggi nella realizzazione della migrazione se le arc
 Domande:
 -Migrazione live tramite pre-copy
 -Descrivere architettura, paginazione, gestione delle interruzioni e dei driver di XEN. Cos'è un balloon process?
+-Definizione dei concetti di modelli, politiche e meccanismi di protezione;
+-Definire le politiche DAC, MAC, RBAC.
 
 #### Soluzione: precopy
 La soluzione più diffusa al giorno d'oggi si basa su un meccanismo di precopia, che viene attuata in una serie di passi:
@@ -94,118 +96,103 @@ Ovviamente, per consentire la comunicazione tra back-end driver e front-end driv
 **Svantaggi**: il meccanismo di comunicazionee fra i due tipi di driver appesantisce l'accesso ai dispositivi.
 
 #### Gestione delle Interruzioni
-
-
-
-xen - gestione interruzioni
-
-
-
-
-
-NUOVO PDF - Protezione nei SO
-
-Sicurezza: riguarda l'interfaccia del Sistema verso il mondo esterno.
-
-Protezione: campo d'azione più interno al sistema (insieme di tutte quelle attività volte al controllo dell'accesso alle risorse -sia fisiche che soprattutto logiche-) Una volta superato il controllo di sicurezza sono autorizzato al controllo del sistema all'interno del quale ci sono
-Opportuno controllo su ciò che gli utenti possono o non possono fare all'interno del sistema
-
-
-Protezione
-necessario esercitare un opportuno controllo su quali operazioni l'utente può eseguire e a quali risorse esso possa accedere
-
-modello di protezione stabilisce soggetti, oggetti, diritti
-
-un soggetto può essere ad esempio un utente, un processo
-
-oggetto: risorse fisiche e logiche a cui si può accedere (es: file, processo -il processo può essere sia oggetto che soggetto, in quanto può anche essere qualcosa su cui si possono avere dei diritti di accesso-)
-
-es diritti di accesso linux: lettura, scrittura, esecuzione.
-
-ad ogni soggetto è associato un dominio di protezione, unico per ogni soggetto.
-
-in un sistema di protezione spesso i soggetti sono associati agli utenti, quindi di solito i processi sono oggetti.
-
-su unix i processi hanno anche uno UID, ovvero l'id dell'utente che l'ha generato
-
-
-
-
-politiche si classificano in diverse tipologie (3):
-- DAC
-- MAC
-- RBAC
-
-indipendentemente dal modello considerato e politiche adottate, in tutti i sistemi di protezione di solito si assume il cosiddetto principio del privilegio minimo (POLA - Principle Of Least Authority).
-Principio secondo cui ad ogni soggetto devono essere garantiti i diritti d'accesso strettamente necessari per la sua esecuzione.
-
-
-Meccanismi: strumenti messi a disposizione dal sistema di protezione per imporre una determinata politica.
-
-dominio di un certo sogetto S, è formato a coppie: ogni sominio stabilisce per ogni oggetto l'insieme di diritti che il soggetto S può esercitare su un oggetto
-
-
-[...]
-
-Con associazione dinamica, un processo può passare da un dominio ad un'altro in base ai diritti che necessita per svolgere certe attività
-
-In questo modo si riesce meglio a soddisfare il principio del privilegio minimo.
-
-
-
-
-
-
-
-Esempio: UNIX
-
-
-
-
-
-un sistema di protezione, a livello astratto, può essere rappresentato tramite una struttura detta matrice degli accessi, in cui ogni colonna è associata ad una diversa risorsa, ogni riga è associata ad un oggetto.
-
-            O1              O2              O3
-    +---------------+---------------+---------------+
-S1  | read, write   | execute       | write         |
-    +---------------+---------------+---------------+
-S2  |               | execute       | read, write   |
-    +---------------+---------------+---------------+
-
-
-
-visto che
-
-la tabella è un'immagine del sistema di protezione in un certo momento, in quanto lo stato può variare a runtime.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+La gestione delle interruzioni viene virtualizzata in modo molto semplice: ogni interruzione viene gestita direttamente dal SO guest, eccezione fatta per la *page fault*, che richiede accesso al registro CR2, il quale contiene l'indirizzo che ha provocato il page fault. Poiché tale registro è accessibile solo a ring 0, la gestione del page fault deve coinvolgere il VMM: la routine di gesstione eseguita da XEN legge CR2, lo copia in una variabile nello spazio del SO ospitato, al quale viene restituito il controllo per poter gestire il page fault.
+
+#### Migrazione Live
+Il comando di migrazione viene eseguito da un demone di migrazione che si trova nel domain 0 del server di origine della macchina da migrare. La soluzione è basata sulla precopy e le pagine da migrare vengono compresse per ridurre l'occupazione di banda.
+
+
+## 02 - Protezione
+**Sicurezza**: riguarda l'insieme delle *tecniche per regolamentare l'accesso* degli utenti al sistema di elaborazione. La sicurezza impedisce accessi non autorizzati al sistema e i conseguenti tentativi dolosi di alterazione e distruzione dei dati. La sicurezza riguarda l'interfaccia del sistema verso il mondo esterno. Le tecnologie di sicurezza di un sistema informatico realizzano meccanismi per l'identificazione, l'autenticazione e l'autorizzazione di utenti "fidati".<br/>
+**Protezione**: *insieme di attività volte a garantire il controllo dell'accesso* alle risorse logiche e fisiche da parte degli utenti autorizzati all'uso di un sistema di calcolo. Rispetto alla sicurezza ha un campo d'azione più interno al sistema. Per rendere un sistema "sicuro" è necessario stabilire per ogni utente autorizzato quali siano le risorse a cui può accedere e con quali operazioni può farlo. Ciò viene stabilito dal sistema di protezione tramite le tecniche di controllo degli accessi.
+
+### Protezione: Modelli, Politiche e Meccanismi
+In un sistema il controllo degli accessi si esprime tramite la definizione di tre livelli concettuali:
+modelli, politiche e meccanismi.
+
+#### Modelli
+Un modello di protezione definisce i *soggetti*, gli *oggetti* ai quali i soggetti hanno accesso ed i *diritti* di accesso:
+- **soggetti** - rappresentano la parte attiva di un sistema, ovvero le entità che possono richiedere l'accesso alle risorse. Ad esempio: gli utenti o i processi che eseguono per conto degli utenti;
+- **oggetti** - costituiscono la parte passiva di un sistema, ovvero le risorse fisiche e logiche alle quali si può accedere e su cui si può operare. Ad esempio i file, o i processi intesi come risorsa (solitamente in un sistema di protezione i soggetti sono gli utenti, e i processo sono oggetti);
+- **diritti di accesso** - sono le operazioni con le quali è possibile operare sugli oggetti. Ad esempio, in Linux i diritti di accesso sono lettura, scrittura, esecuzione.
+```
+NB: un soggetto può avere diritti di accesso anche per altri soggetti (es: processo che
+controlla un altro processo.
+```
+Ad ogni soggetto è associato un dominio, che rappresenta l'*ambiente di protezione* nel quale il soggetto esegue e specifica i diritti di accesso posseduti da tale soggetto nei confronti di ogni risorsa.
+Un dominio di protezione è unico per ogni soggetto, mentre un soggetto (ad esempio un processo) può cambiere dominio durante la sua esecuzione.
+
+#### Politiche
+Le politiche di protezione definiscono le regole con le quali i soggetti possono accedere agli oggetti. Mentre il modello è qualcosa di insito nel sistema, le politiche generalmente vengono scelte da chi opera su quel sistema. Si classificano in 3 diverse tipologie:
+- **DAC** (Discretional Access Control) - il creatore di un oggetto controolla i diritti di accesso per quell'oggetto (tipologia adottata da UNIX, che fornisce un meccanismo per definire e interpretare per ciascun file i 3 bit di read, write ed execute, per il proprietario, il gruppo e gli altri). La definizione delle politiche è decentralizzata.
+- **MAC** (Mandatory Access Control) - i diritti d'accesso vengono definiti in modo centralizzato. Questa soluzione viene utilizzata in sistemi di alta sicurezza per garantire assoluta confidenzialità e i diritti vengono gestiti da un'entità centrale.
+- **RBAC** (Role Based Access Control) - ad un ruolo vengono assegnati specifici diritti di accesso sulle risorse. Gli utenti possono appartenere a diversi ruoli. I diritti attribuiti ad ogni ruolo vengono assegnati in modo centralizzato.
+**Principio del Privilegio Minimo** (o POLA - Principle Of Least Authority): ad ogni soggetto sono garantiti i diritti di accesso solo agli oggetti strettamente necessari per la sua esecuzione. Questa è una caratteristica desiderabile per tutte le politiche di protezione.
+
+#### Meccanismi
+I meccanismi di protezione sono gli strumenti messi a disposizione dal sistema di protezione per imporre una determinata politica.
+Principi di realizzazione:
+- **flessibilità del sistema di protezione**: i meccanismi di protezione devono essere sufficientemente generali per consentire per consentire l'applicazione di diverse politiche di protezione;
+- **separazione tra meccanismi e politiche**: la politica definisce *cosa va fatto* ed il meccanismo *come va fatto*. È desiderabile la massima indipendenza tra le due componenti.
+
+### Dominio di Protezione
+Un dominio definisce un insieme di coppie, ognuna contenente l'identificatore di un oggetto e l'insieme delle operazioni che il soggetto associato a tale dominio può eseguire su ciascun oggetto (diritti di accesso).
+
+Es: D(S) = {\<o, diritti\> | o è un oggetto, diritti è un insieme di operazioni}
+
+Ogni dominio è associato univocamente ad un soggetto, mentre un soggetto (ad esempio un processo) può eventualmente cambiare dominio durante la sua esecuzione; il soggetto può accedere solo agli oggetti definiti nel suo dominio, utilizzando i diritti specificati dal dominio.
+
+Domini disgiunti o con diritti di accesso in comune: esiste la possibilità per due o più soggetti di effettuare alcune operazioni comuni su un oggetto condiviso. Le operazioni vengono svolte dai processi che operano per conto di soggetti (a cui sono associati i domini).
+```
+NB: in ogni istante della sua esecuzione, il processo esegue in uno ed un solo dominio.
+```
+
+#### Associazione tra Processo e Dominio
+L'associazione tra processo e dominio può essere statica o dinamica.<br/>
+**Statica**: l'insieme delle risorse disponibili ad un processo rimane fisso durante il suo tempo di vita. Osservazioni: questo tipo di associazione non è adatta al Principio del Privilegio Minimo, in quanto l'insieme globale delle risorse che un processo potrà usare può non essere un'informazione disponibile prima della sua esecuzione; inoltre, l'insieme minimo di risorse necessarie ad un processo per garantire tale Principio, può cambiare in modo dinamico durante l'esecuzione.<br/>
+**Dinamica**: l'associazione tra processo e dominio varia durante l'esecuzione del processo. In questo modo si può mettere in pratica il *Principio del Privilegio Minimo*, in quanto in ogni sua fase di esecuzione il processo può acquisire diritti diversi (ovvero solo quelli strettamente necessari). Tuttavia in questo caso *occorre un meccanismo per consentire il passaggio da un dominio all'altro* del processo.
+
+##### Esempio di cambio di dominio
+**Standard dual mode** (kernel/user mode): ci sono due domini (ring) di protezione, quello dell'utente (user mode) e quello del kernel (monitor o kernel mode). Quando un processo deve eseguire un'istruzione privilegiata, chiama una system call ed avviene il cambio di dominio. Questo non realizza la protezione tra utenti, ma solo tra kernel e utente.
+
+**UNIX**: il dominio è associato all'utente. Ogni *processo* è caratterizzato dall'attributo UserID (UID). Il cambio di dominio corrisponde al cambio temporaneo di identità (UID) del processo.
+Ad ogni *file* invece sono associati il proprietario (user-id) ed un bit di dominio (set-uid). Se il un file ha il bit set-uid settato, quando un utente B, diverso dal proprietario A di tale file, ne lancia l'esecuzione, al processo che esegue viene assegnato lo user-id dell'utente B. Così facendo il file entra nel dominio di B.
+
+### Matrice degli Accessi
+Un sistema di protezione può essere rappresentato a livello astratto utilizzando il modello della matrice degli accessi: tale matrice consente di rappresentare il modello e le politiche valide nel sistema considerato.
+- ogni riga rappresenta un soggetto (utente);
+- ogni colonna rappresenta un oggetto (risorsa, file)
+- ogni elemento rappresenta i diritti accordati ai soggetti sugli oggetti.
+Le informazioni contenute nella matrice possono variare nel tempo: le informazioni contenute nella matrice all'istante t rappresentano lo stato di protezione del sistema in t. La matrice degli accessi offre ai meccanismi di protezione le informazioni che consentono di verificare il rispetto dei vincoli di accesso. Il meccanismo associato al modello:
+- ha il compito di verificare se ogni richiesta di accesso che proviene da un processo (che opera in un determinato dominio) è consentita oppure no;
+- autorizza l'esecuzione delle richieste consentite e impedisce quelle vietate;
+- consente di modificare dinamicamente e in modo controllato il cambiamento dello stato di protezione.
+
+#### Verifica del Rispetto dei Vincoli di Accesso
+Il meccanismo consente di assicurare che un processo che opera nel dominio *Di* possa accedere solo agli oggetti specificati nella riga *i* e solo con i diritti di accesso indicati. Quando un'operazione M dev'essere eseguita nel dominio *Di* sull'oggetto *Oj*, il meccanismo consente di controllare che M sia contenuta nella casella *access(i,j)*. In caso affermativo l'operazione può essere eseguita, altrimenti viene restituito un errore.
+
+#### Modifica dello Stato di Protezione
+In base alla politica di protezione adottata, lo stato di protezione può essere modificato da entità differenti:
+- nella politica DAC (es: sistemi UNIX-based) può essere modificato dai soggetti, ovvero gli utenti;
+- nella politica MAC può essere fatto solo dall'entità centrale.
+
+##### Modello Graham-Denning
+Questo modello stabilisce quali sono i comandi che consentono una modifica dello stato di protezione, identificando 8 primitive:
+- create object, aggiunge una colonna;
+- delete object, rimuove una colonna;
+- create subject, aggiunge una riga;
+- delete subject, rimuove una riga;
+- read access right, legge il diritto d'accesso;
+- grant access right, assegna il diritto d'accesso;
+- delete access right, rimuove il diritto d'accesso;
+- transfer access right, propaga il diritto d'accesso.
+
+##### Propagazione dei Diritti di Accesso (Copy Flag)
+La possibilità di copiare un diritto di accesso per un oggetto da un dominio ad un altro nella matrice di accesso è indicata con un asterisco * (*copy flag*).
+Un soggetto *Sa* può trasferire un diritto di accesso *a* (ad esempio 'read') per un oggetto *Ox* ad un altro soggetto *Sb* solo se *Sa* ha accesso a *Ox* con il diritto *a* e tale diritto ha il copy flag (ovvero solo se nella tabella delle matrici, l'elemento *Sa*\\*Ox* contiene *a*\*, ad esempio read*)
+
+*foto dimostrativa*
+
+L'operazione di propagazione può essere realizzata in due modi:
+- trasferimento del diritto, il soggetto iniziale perde il diritto di accesso, che viene spostato al nuovo soggetto;
+- copia del diritto, il soggetto iniziale mantiene il diritto di accesso, "duplicandolo" al nuovo soggetto.
