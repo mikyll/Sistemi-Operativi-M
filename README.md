@@ -87,7 +87,7 @@
 </details>
 
 <!-- Lezione 2021/09/21-->
-## 01 - Virtualizzazione [![Go to lesson](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/icon-document.png)](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/belle%20copie/2021-09-21%20-%20Virtualizzazione%20(1).md "Go to lesson")
+## 01 - Virtualizzazione [![Go to lesson](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/icon-document.png)](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/belle%20copie/2021-09-21%20-%20Virtualizzazione%20(1).md "Go to the single lesson")
 La virtualizzazione è una tecnologia oggi usatissima. Virtualizzare un sistema di elaborazione (costituito da un insieme di risorse hardware e software) significa presentare all'utilizzatore una visione delle risorse diversa da quella attuale (ad esempio duplicazione della memoria). Questo obbiettivo viene raggiunto mediante un livello intermedio, un layer che svolge appunto il ruolo di intermediario tra utilizzatore (vista logica) e sistema (vista fisica). Solitamente l'intermediario è software, ma talvolta può avere un supporto hardware specifico. Esso permette di eseguire più macchine virtuali su una stessa architettura e ognuna di queste vede le proprie risorse, indipendentemente dalle altre, e da quelle effettive ("reali").
 Poiché le Macchine Virtuali (VM) devono funzionare in modo indipendente senza causare problemi al sistema, la gestione delle risorse dev'essere realizzata in modo appropriato: questo compito è affidato al Virtual Machine Monitor (VMM, detto anche Hypervisor), cha ha compiti molto simili a quelli di un Sistema Operativo (SO), motivo per cui viene trattato in questo corso).
 
@@ -244,7 +244,7 @@ Strumento fondamentale per queste procedure è la migrazione, ovvero la possibil
 **Migrazione live**: possibilità di spostare una VM da un server fisico ad un altro, senza doverla spegnere. È desiderabile minimizzare il downtime, il tempo di migrazione ed il consumo di banda.
 
 <!-- Lezione 2021-09-28 -->
-#### Soluzione: precopy
+#### Soluzione: precopy [![Go to lesson](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/icon-document.png)](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/belle%20copie/2021-09-28%20-%20Virtualizzazione%20(2).md "Go to the single lesson")
 La soluzione più diffusa al giorno d'oggi si basa su un meccanismo di precopia, che viene attuata in una serie di passi:
 1. **Pre-migrazione**: fase iniziale in cui si capisce quali sono i nodi interessati, ovvero si individua la VM da migrare (nodo A) e l'host di destinazione (nodo B);
 2. **Reservation**: viene riservato un contenitore vuoto nel server di destinazione (reservation del posto per la macchina da migrare);
