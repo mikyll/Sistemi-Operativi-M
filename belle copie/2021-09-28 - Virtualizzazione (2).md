@@ -34,7 +34,7 @@ quelle successive ne richiedono meno perché salvano solo le pagine modificate.
 ```
 Sebbene la precopia sia la modalità oggi più diffusa, ne esistono anche altre, ad esempio *post-copy*, in cui la macchina viene sospesa e vengono copiate (non iterativamente) pagine e stato. Così facendo si ottiene un tempo totale di migrazione più basso, ma un downtime dei servizi forniti dalla VM molto più elevato.
 
-### XEN (Approfondimento)
+### XEN
 XEN è un progetto che nasce in ambito accademico a Cambridge. Nasce come hypervisor (VMM paravirtualizzato), richiede che le VM che girano sopra xen abbiano un kernel adattato all'interfaccia che xen offre ai propri utilizzatorii. Per quanto riguarda il porting di Linux ha coinvolto circa 3000 linee di codice del kernel, per adattarlo in modo che potesse dialogare con le API di XEN.
 Dal punto di vista commerciale ha limitato la gamma di kernel installabili, per quanto riguarda i SO proprietari, nonostante un tentativo di porting dei Sistemi Operativi (ad esempio Windows, che non è stato portato a termine).
 
@@ -75,8 +75,8 @@ Il VMM definisce un'architettura virtuale simile a quella del processore, nella 
 Il VMM si occupa dello scheduling delle VM, seguendo un algoritmo molto generale (in grado di soddisfare dei vincoli temporali molto stringenti) chiamato *Borrowed Virtual Time*, che si basa sulla nozione di virtual-time: è un tempo che va avanti solo fintanto che la VM è attiva, ovvero se si trova in uno stato di sospensione il tempo si ferma e riprende quando viene attivato. Xen adotta due clock, uno relativo al real-time, l'altro al virtual-time.
 
 #### Virtualizzazione dei dispositivi (I/O)
-Le VM devono poter accedere ai dispositivi che sono disponibili a livello hardware. La scelta di XEN è quella, ovviamente di virtualizzare l'interfaccia di ogni dispositivo, ma farlo tramite due tipi di driver: *back-end driver* e *front-end driver*.
-**Back-end driver** è il driver vero e proprio, che permette, tramite un'interfaccia del VMM chiamata *Safe Hardware Interface*, di comunicare ed utilizzare il dispostivo collegato a livello hardware. Tipicamente viene installato all'interno di una VM particolare che è sempre ancorata al nodo fisico (dominio 0 - solitamente qui vengono installati tutti i driver di ogni dispositivo presente connesso a livello fisico in quel nodo).
+Le VM devono poter accedere ai dispositivi che sono disponibili a livello hardware. La scelta di XEN è quella, ovviamente di virtualizzare l'interfaccia di ogni dispositivo, ma farlo tramite due tipi di driver: *back-end driver* e *front-end driver*.<br/>
+**Back-end driver** è il driver vero e proprio, che permette, tramite un'interfaccia del VMM chiamata *Safe Hardware Interface*, di comunicare ed utilizzare il dispostivo collegato a livello hardware. Tipicamente viene installato all'interno di una VM particolare che è sempre ancorata al nodo fisico (dominio 0 - solitamente qui vengono installati tutti i driver di ogni dispositivo presente connesso a livello fisico in quel nodo).<br/>
 **Front-end driver** è un driver "astratto", generico, non riferito adun dispositivo particolare, che viene installato tipicamente nel kernel del SO di una VM guest. Questo driver, all'occorrenza si collega al back-end driver specifico.
 ```
 NB: non c'è niente che vieti di installare un back-end direttametne su una VM di domain U,
@@ -90,12 +90,10 @@ Ovviamente, per consentire la comunicazione tra back-end driver e front-end driv
 
 <img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/01%20-%20Virtualizzazione/Asynchronous%20IO%20Ring.png" alt="Structure of Asynchronous I/O Rings"/>
 
-
-**Vantaggi**: il driver viene scorporato in due parti, svingolando la VM dal particolare server fisico in cui risiede (il front-end driver della VM rimane lo stesso anche se questa viene spostata su un altro nodo), garantendo *portabilità*; inoltre, mantenendo i driver fuori dall'hypervisor, si ha che esso è più semplificato e leggero.
+**Vantaggi**: il driver viene scorporato in due parti, svingolando la VM dal particolare server fisico in cui risiede (il front-end driver della VM rimane lo stesso anche se questa viene spostata su un altro nodo), garantendo *portabilità*; inoltre, mantenendo i driver fuori dall'hypervisor, si ha che esso è più semplificato e leggero.<br/>
 **Svantaggi**: il meccanismo di comunicazionee fra i due tipi di driver appesantisce l'accesso ai dispositivi.
 
-
-#### Gestione Interruzioni
+#### Gestione delle Interruzioni
 
 
 
