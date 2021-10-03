@@ -133,10 +133,12 @@ se la VM si trova in uno stato di sospensione, esiste un tempo "Borrowed Virtual
 
 xen ha il compito di virtualizzare
 
-front-end driver: quello che tipicamente viene installato
+Front-enddriver - tipicamente installato nel kernel della VM (Astratto) che a sua volta si collega al back end driver, che tipicamente si trova nel domain 0 (ma non sempre, è una macchina che è sempre ancorata al nodo fisico)
 
+Tipicamente all'interno del d0 vengono installati i back end driver di ogni dispositivo presenti a livello fisico in quel nodo. back end driver è un driver che può, su richeista degli utilizzatori,
 
-front-end/back-end driver asynchronous I/O rings
+Non c'è niente che vieti di installare un back-end su una VM di domain != 0, ma può convenire concentrarli tutti nel domain 0, perché siamo certi che quella macchina non si sposterà mai da lì, essendo ancorata all'hardware.
+Installando all'interno delle singole VM guest dei driver astratti semplificati ("generici", non riferiti ad un dispositivo particolare), la VM goda di particolare portabilità.
 
 le richieste di accesso ad un particolare device vengono fatte dal guest attraverso il front end, il quale andrà a depositare la richiesta in una struttura dati a "ring", dall'altra parte c'è il back-end che va a prendere le richieste in modo FIFO dal ring.
 
