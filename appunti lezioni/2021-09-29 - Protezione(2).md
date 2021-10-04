@@ -1,1 +1,258 @@
- 
+<!-- lezione 2021-09-29 -->
+<!--
+RIPASSINO
+
+Modello di Graham-Denning
+
+definisce gli strumenti necessari per avere un sistema di protezione completo, strumenti sintetizzati/elencati da 8 primitive, che possiamo trovare implementate in modo fedele, rispetto all'elenco, in modo più ottimizzato, che limita leggermente le indicazioni di questa lista.
+In particolare c'eravamo concentrati sulla possibilità di concedere o negare dei diritti di accesso a risorse
+-->
+
+DIRITTO OWNER
+tipicamente in molti sistemi si prevede viene introdotto un diritto di possesso delle risorse.
+In alcuni sistemi l'idea di concedere/togliere diritti è rappresentato da un particolare diritto in più che prende il nome di "owner" - concetto diutente che possiede un file. Non sempre c'è questo concetto, ma se il sistema lo prevede, significa che c'è il diritto di possesso di una risorsa (es. file).
+
+In una matrice di accesso si traduce nella presenza in ognuna delle colonne di una ed una sola cella nella quale è presente un diritto owner. Per ogni risorsa (dunque per ogni colonna) ci dev'essere uno ed un solo soggetto che è l'owner. Il soggetto nella riga di quella cella risulta essere il proprietario dell'oggetto in questione.
+
+
+control autorizza S1 (che possiede quel diritto) a modificare la riga della matrice degli accessi associata ad S2
+
+Ciò significa che tale soggetto ha un ruolo privilegiato nei confronti di quella risorsa ed è l'unico soggetto capace di revocare o concedere diritti di accesso su quella risorsa ad altri soggetti
+
+owner è l'utente che ha la possibilità di esercitare il copy flag su tutte le celle della colonna a cui appartiene.
+
+Questo vale sia per il concedere un diritto ad altri utenti sia per la revoca (operazione opposta, quella con cui si nega un diritto ad un soggetto che fino a quel momento possedeva un certo diritto d'accesso su quella risorsa)
+
+DIRITTO CONTROL
+Sempre parlando della possibilità di modificare
+
+sia copy flag che owner sono strumenti con cui possiamo modificare il contenuto della matrice degli accessi (possiamo aggiungere o togliere diritti nellee varie caselle).
+Un altro diritto che ci consente di fare ciò è il diritto "control" che viene attribuito ad un soggetto, ma si riferisce non ad un oggetto ma ad un altro soggetto.
+
+nella matrice degli accessi in questo caso sono presenti altre colonne, oltre a quelle degli oggetti, che indicano i soggetti. Se la casella ha il control, autorizza il soggetto che lo possiede a modificare la riga associata al soggetto relativo.
+Es: se S1 ha il diritto di control per S2 (nella riga di S1, c'è il diritto di control rispetto al soggetto S2, dunque nella colonna di S2), significa che S1 può modificare la riga degli accessi di S2 (dunque quella sottostante)
+Se ad esempio S2 ha il diritto write su una risorsa O ma S1 ha il diritto control su S2, allora S1 può revocare il diritto write di S2 su O.
+
+Ad esempio, in un sistema MAC, avremmo l'entità centrale che è l'unica autorizzata a stabilire che cosa si può o non si può fare sulle risorse del sistema. Questa autorità è un soggetto che ha il diritto di control su tutti gli altri soggetti (ha potere assoluto nel senso che può modificare il contenuto della riga associata ad ogni altro soggetto).
+
+Se ci pensiamo bene, una riga della matrice altro non è che il dominio di protezione associato ad un soggetto.
+
+DIRITTO SWITCH
+Principio del privilegio minimo: uno dei modi per garantire il rispetto di questo è prevedere la possibilità di un cambio di dominio a runtime. Quindi un processo che esegue ad esempio nel dominio associato ad S2, se ha bisogno di diversi diritti, può spostarsi nel dominio specifico che gli garantisce questi diritto nuovi di cui ha bisogno.
+Come si può fare? Esiste un tipo di diritto speciale chiamato "switch": esercitando questo diritto, il processo che esegue nel dominio di un certo soggetto, tramite questo diritto può passare ad un nuovo dominio. Aad esempio se un processo esegue nel dominio di S2 e ha il diritto switch, può spostarsi in un'altra riga, cambiando quindi dominio.
+
+Nel mondo UNIX questo diritto di switch è implementato tramite il bit set-uid. Se questo è settato, chi esegue il file può ottenere il dominio del soggetto proprietario.
+
+
+Matrice degli accessi è una notazione astratta che rappresenta lo stato di protezione
+
+parliamo di stato di protezione perché cambia dinamicamente: ogni colonna rappresenta una risorsa (es: un file). E quante volte creiamo o eliminiamo un file? Tantissimo e spessissimo, quindi è ovvio che la forma della matrice cambia dinamicamente, così come il suo contenuto.
+
+
+Realizzazione della amtrice:
+deve tenere conto di 3 cose:
+-dimensione della matrice (quante colonne può avere? Se pensiamo ad un file system centinaia di migliaia di colonne);
+-è una matrice sparsa, ovvero non è detto che in tutte le celle ci siano delle informazioni. Soprattutto se abbiamo tantissimi file, possiamo avere delle celle vuote (non è detto che tutti i soggettiabilitati al sistema abbiano qualche diritto su quel file). Tipicamente è una matrice nella quale ci sia una prevalenza di celle vuote.
+
+Soluzione più naturale ed intuitiva sarebbe riservare nella memoria un'area per la matrice. La rappresentazione concreta però dev'essere ottimizzata sia per quanto riguarda l'occupazione della memoria, sia rispetto all'efficienza nel'accesso e nella gestione delle informazioni di protezione. Quindi esistono 2 approcci:
+- Access Control List (ACL), rappresentazione per colonne. Per ogni oggetto (risorsa) si mantiene una struttura dati che concettualmente rappresenta una colonna della matrice, ma tenendo conto che la colonna, come la matrice, è sparsa, in questa lista si ottengono solo gli elementi significativi, ovvero quelli non vuoti. La struttura associata ad ogni oggetto è una lista in cui ogni elemento è un soggetto che ha un qualche diritto su quell'oggetto.
+- Capability List (CL), rappresentazione per righe. Ad ogni soggetto è associata una lsita che indica quali sono gli oggetti al quale il soggetto può accedere.
+
+ACL: Lista degli Accessi
+La lista degli accessi per ogni oggetto ha una struttura composta da un insieme di elementi, ognuno dei quali contiene la coppia soggetto, insieme dei diritti
+Quando un qualunque soggetto S tenta un'operazione M su un oggetto O, il sistema di protezione va a verificare nella ACL associata ad O se è presente un elemento riferito al soggetto che sta tentando l'accesso e, se esiste, controlla che contenga il diritto per eseguire M.
+In certi casi, per velocizzare l'accesso, viene prevista una lista di default: se è prevista, esistono dei diritti comuni a tutti i soggetti, si va a vedere prima nella lista di default e, se la ricerca non va a buon fine, si va a vedere nello specifico, elemento per elemento. Se la ricerca non ha successo, chiaramente l'accesso viene negato.
+
+UTENTI & GRUPPI
+Molti sistemi per identificare un soggetto prevedono non solo il nome utente ma anche il gruppo a cui appartiene. Un gruppo aggrega un insieme di utenti. È importante sapere che un utente può appartenere anche a più gruppi, ma in un certo istante può appartenere ad un solo gruppo alla volta.
+Sostanzialmente, quando un soggetto <utente, gruppo> tenta accesso a risorsa in un certo modo, l'elemento dell'ACL comprenderà sia nome ID utente che ID gruppo, più l'insieme dei diritti.
+Il tentativo di accesso comporta una ricerca nell'ACL dell'oggetto, cercando se compare il modo con il quale l'utente sta cercando di accedere alla risorsa.
+
+I gruppi esistono tipicamente per una questione di differenziazione dei ruoli, ciascuno dei quali ha diritti diversi.
+In generale, nei sistemi che prevedono i gruppi, è comunque possibile svincolare i soggetti dai gruppi, ovvero senza assegnargli un gruppo alcuno (UID, * <insieme diritti>)
+
+
+CAPABILITY LIST
+Seconda possibilità, ogni elemento di questa lista contiene l'indicazione dell'oggetto e i diritti di accesso che quel soggetto, al quale la capability list è associata, può esercitare su quell'oggetto. Chiaramente non avrà tanti elementi quanti solo le colonne della matrice degli accessi, in quanto come abbiamo detto è una matrice sparsa.
+Tipicamente contiene queste due informazioni. Nella pratica, spesso l'oggetti viene identificato tramite un indirizzo, che ne localizza in memoria, o meglio ne localizza il descrittore, ed ovviamente i diritti, che spesso vengono rappresentati in modo compatto tramite una sequenza di bit.
+
+slide 39 - min 46:17
+Se abbiamo una CL avremo una struttura rappresentabile come a slide 40
+
+*foto*
+
+È importante, anche per le ACL (in generale), le informazioni relative alla protezione devono essere protette a loro volta damanomissioni. Ci sono vari modi:
+- tipicamente si limita la possibilità di accedere inscrittura a tali scritture al solo kernel del sistema operativo (si sfrutta la protezione alivello hw, modo di esecuzione kernel vs modo di esecuzione utente;
+- se l'hw lo supporta si può utilizzare un'architettura etichettata: a livello hw ogni singola parola ha bit extra (tag) che espirmono la protezione su quella cella di memoria. In questo modo si può progettare la protezione a livello di memoria. Inarchitetture di questo tipo il processore sa che i bit di etichetta non devono essere considerate dalle operazioni logiche di aritmetica che il processore deve eseguire.
+
+
+REVOCA DEI DIRITTI DI ACCESSO
+Revocare significa negare dei diritti precedentemente concessi.
+- revoca **generale** o **selettiva**, ovvero rispettivamente da un certo momento in poi nessuno potrà accedere ad un determinato oggetto, oppure solo alcuni soggetti non potranno più accedervi (ad esempio quelli appartenenti ad un gruppo);
+- revoca **totale** o **parziale**, ovvero rispettivamente riguardante tutti i diritti per l'oggetto, oppure solo un particolare sottoinsieme di diritti;
+- revoca **permanente** o **temporanea**, ovvero rispettivamente il diritto di accesso revocato non sarà più disponibile, oppure potrà essere successivamente riacquistato.
+
+Revoca per un oggetto con ACL:
+la revoca risulta semplice: si fa riferimento alla ACL associata all'oggetto e si cancellano i diritti diaccesso che si vogliono revocare.
+
+Per un oggetto con CL:
+l'operazione risulta un po' più complessa, in quanto è necessario verificare per ogni dominiio se contiene la capability con riferimento all'oggetto considerato.
+
+Cancellare un file significa togliere i diritti su quel file a tutti gli utenti che li possiedono. In ACL cancello semplicecmente l'ACL del sistema, mentre con CL bisogna fare ricerca in tutte le CL per vedere se esiste un elemento riferito a quel file e in caso cancellarlo.
+Sicuramente queste operazioni che riguardano un solo oggetto risultano più costose in sistemi con CL.
+
+Un sistema realizzato esclusivamente con CL può soffrire di questo appesantimento dovuto a operazioni che riguardano revoche che interessano più soggetti e quindi causano overhead (costo computazione maggiore)
+Naturalmente si può fare anche il discorso duale: se si ha la necessità di fare una modifica allo stato di protezione che interessa un particolare soggetto (caso più banale eliminare il soggetto dal sistema - questo comporta una modifica allo stato di protezione, in CL si cancella semplicemente la lsita associata al soggetto; in ACL bisogna fare ricerca in ogni ACL).
+
+Quindi non c'è soluzione assoluta, o migliore dell'altra in toto.
+Nella realtà, ovvero nella maggior parte dei sistemi, solitamente si usa una soluzione ibrida che combina i due metodi.
+
+In UNIX, per ogni risorsa (file, in quanto UNIX è file-centrico, tutte le risorse sono presenti nel filesystem come file) per ogni oggetto viene mantenuta una struttura contenente 12 bit "di protezione". Sono memorizzati sul disco, fanno parte dell'i-node, che è rappresentato sulla memoria di massa all'interno dell'i-list.
+Se ci pensiamo bene sono una forma semplificata di ACL: i 12 bit (9, utente, gruppo e altri) sono una forma semplificata di ACL, esprimono cosa gli utenti possono o non possono fare.
+Si distingue tra l'utente proprietario u, il gruppo, oppure gli altri. Non abbiamo il dettaglio del particolare utente, per questo è semplificata, ma solo utente proprietario.
+Questa particolare struttura viene memorizzata nella memoria secondaria.
+
+È una soluzione ibrida, in quanto ogni volta che un processo cerca di accedere ad un oggetto (file), cosa succede? Il file viene aperto e nella tabella dei file aperti viene caricato un elemento che altro non è che la capability che quel soggetto ha nei confronti di quella risorsa.
+ES: quando cerco di aprire un file in scrittura, viene fatta una verifica sulla ACL (che controlla se posso effettuare quell'operazione). Se la verifica va a buon fine, il file viene aperto e nella tabella dei file aperti viene caricato un elemento che concettualmente rappresenta il diritto di quel processo ad accedere in scrittura sul file, quindi viene aggiunta una capability alla tabella dei file aperti. Di fatto la tabella dei file aperti è una CL.
+La differenza? La ACL si trova in memoria secondaria in modo persistente, la CL è in memoria volatile (e ha vita più breve solitamente), quando il processo finisce di operare sul file, l'elemento viene rimosso e quando il processo termina la tabella dei file aperti viene distrutta.
+Vantaggio: una volta verificato preliminarmente che sia presente il diritto d'accesso, non c'è più bisogno di consultare la ACL, ma si va a guardare la CL.
+
+
+
+Protezione e sicurezza
+Protezione, come detto, riguarda il controllo degli accessi alle risorse interne al sistema.
+Sicurezza riguarda un controllo degli accessi al sistema.
+
+In certi casi la sola protezione del sistema può essere inefficace: se un utente entra nel sistema con intenzioni malevole, riesce a far eseguire ad altri dei programmi che agiscono sulle risorse del sistema (Trojan - Cavalli di Troia programmi che introdotti in qualche modo nel filesystem, una volta che sono lì si induce un utente autorizzato a eseguire quel programma e provocano dei danni, ad esempio la sottrazione di informazioni sensibili)
+
+Soluzione: affiancare al normale sistema di protezione un sistema di sicurezza, che normalmente è strutturato a livelli (struttura multilivello)
+
+
+Stabilisce delle regole più generali rispetto al sistema di protezione, in cui prima di tutto si classificano gli utenti: ad esempio in funzione del loro ruolo.
+Poi classifica, dopo i soggetti, anche gli oggetti (le risorse). In funzione della confidenzialità dell'oggetto, vengono collocate ad un livello diverso di un sistema.
+
+In un sistema di questo tipo l'approccio è quello di tipo MAC.
+
+I modelli di sicurezza multilivello più famosi sono due:
+- Bell-La Padula - obbiettivo di garantire la confidenzialità delle informazioni;
+- Biba - è antitetico al precedente, e ha l'obbiettivo di garantire l'integrità delle informazioni.
+Entrambi aderiscono allo stesso modello multilivello
+
+MODELLI DI SICUREZZA MULTILIVELLO
+In un modello di sicurezza multilivello:
+i soggetti (utenti) e gli oggetti (risorse) sono classificati in livelli (classi di accesso):
+- livelli per i soggetti (**clearance levels**);
+- livelli per gli oggetti (**sensitivity levels**).
+
+Il modello inoltre, fissa delle regole di sicurezza che possono variare a seconda del particolare modello che sto considerando.
+
+Le regole di sicurezza fissano le regole di interazione tra livelli diversi.
+
+Modello Bell-La Padula
+Nato in ambito militare ha come obbiettivo primario garantire la confidenzialità delle informazioni.
+Abbiamo un sistema di protezione (matrice accessi) a cui viene affiancato un modello multilivello che viene gestito con approccio di tipo MAC.
+2 regole di sicurezza che caratterizzano il modello, che stabiliscono il verso di propagazione delle informazioni nel sistema.
+
+4 diversi livelli di sensibilità degli oggetti:
+1. non classificato (+ basso);
+2. confidenziale
+3. segreto
+4. top secret (+ alto)
+
+Questi sono i livelli in cui verranno classificati i documenti.
+
+Se voglio che un documento sia disponibile solo a chi si trova ai vertifici della gerarchia (es. capitano(?)) lo metterò top secret.
+
+4 livelli di autorizzazione (clearance) per i soggetti, come per gli oggetti, hanno gli stessi nomi
+
+Regole di sicurezza (che determinano il flusso di informazione del sistema):
+1. proprietà di semplice sicurezza: un processo in esecuzione ad un livello di sicurezza k può **leggere** oggetti a suo livello o a livelli inferiori;
+2. proprità * (star): un processo in esecuzione a livello di sicurezza k può **scrivere** solo oggetti al suo livello o superiori.
+
+Il flusso delle informazioni è dal basso verso l'alto.
+
+*foto dimostrativa*
+
+esempio di difesa contro Trojan per modello bell-la padula
+
+
+bell-la padula serve a impedire attacchi come questo. Supponiamo che i livelli di sicurezza siano 2: riservato e pubblico.
+Se facciamo in modo che gli utenti siano classificati
+
+Nonostante l'ACL consenta l'accesso in scrittura, la politica di sicurezza lo impedisce (NB: la politica di sicurezza ha precedenza sui meccanismi di protezione).
+
+Il modello Bell-La Padula è stato concepito per mantenere i segreti, non per garantire l'integrità dei dati.
+
+
+MODELLO BIBA
+Obbiettivo: integrità dei dati. Serve per garantire che l'integrità delle informazioni di livello superiore venga in qualche modo preservata.
+
+2 regole anche qui:
+- proprietà di semplice sicurezza: è l'opposto di Bell-La Padula, in quanto stabilisce che un processo in esecuzione al livello di sicurezza k può scrivere solo oggetti al suo livello o a quelli inferiori (nessuna scrittura verso l'alto).
+- proprietà di integrità *: un processo in esecuzione a livello k può leggere solo oggetti al suo livello o a quelli superiori (nessuna lettura verso il basso).
+
+Le informazioni seguono un flusso opposto al modello precedente (in questo caso dall'alto verso il basso);
+
+B-LP e BIBA sono in conflitto tra loro, quindi non possono essere combinati.
+
+
+
+Questi modelli solitamente vengono utilizzati nelle architetture dei sistemi ad alta sicurezza
+
+Sistemi operativi sicuri o fidati
+
+fidati: per cui è possibile fornire e in certi casi dimostrare formalmente, che quel sistema garantisce il rispetto di determinati requisiti o regole.
+
+in questi sistemi è presente un componente chiamato "reference monito": elemento di controllo realizzato dall'hw e dal SO
+ha il compito di imporre il rispetto delle regole di sicurezza
+
+
+Trusted computing base: il RM fa riferimento ad una base di dati fidati (la cosiddetta TCB). Questa base di calcolo fidata contiene delle informazioni che tracciano la classificazione dei soggetti e degli oggetti all'interno del sistema;
+l'architettura di un sistema ad elevata sicurezza
+
+
+Sistemi fidati
+Il reference monitor (RM) deve imporre le regole di sicurezza (che sono ad esempio nel caso del modello Bell-La Padula no read-up e no write-down) ed ha le seguenti proprietà:
+
+- mediazione completa - le regole di sicurezza vengono applicate ad ogni singolo accesso da parte di un soggetto ad un particolare oggetto;
+NB: non è così intuitiva, nei SO comuni, es. derivati da UNIX, le regole di protezione vengono verificate solo a lato apertura del file. Se abbiamo un sistema fidato invece, ad ogni singola operazione (ad esempio di scrittura) viene fatta una verifica da parte del RM;
+
+- isolamento - il RM e la TCB devono essere a loro volta protette da parte di eventuali accessi non autorizzati. Ovvero che siano acceduti solo in modalità privilegiata
+
+- verificabilità - la correttezza del RM dev'essere dimostrata, dev'essere possibile verificare/dimostrare formalmente che il monitor fa quello per cui è stato progettato. Questa proprietà non è semplicissima da applicare.
+
+Tutto questo ci fa capire il motivo per cui quando parliamo di sistema fidato, il RM spesso è implementato anche parzialmente in hw. Ovviamente ha un costo che ad ogni singola iterazione esso debba fare delle verifiche, quindi si tende ad implementarlo in parte a livello hw.
+
+CLASSIFICAZIONE della sicurezza dei sistemi di calcolo
+Ancora oggi molto diffusa, consente di etichettare i sistemi di calcolo sulla base delle caratteristiche di sicurezza.
+Orange Book: riferimento universale per quanto riguarda la classificazione dei sistemi di calcolo in termini di sicurezza. È nato in ambito militare, in cui sono definite le classi di sicurezza e descritte le caratteristiche che un sistema deve avere per appartenere a ciascuna categoria.
+
+(- sicuro) D < C < B < A (+ sicuro)
+
+D: protezione minima
+Non sono presenti meccanismi che consentono di esercitare sicurezza né protezione. Al giorno d'oggi non ne esistono. MS-DOS concepiti come sistemi mono-utente
+
+C: protezione discreta
+Suddivisa in C1 e C2
+C1 - i sistemi prevedono dei meccanismi di:
+- autenticazione degli utenti (i dati di autenticazione sono protetti e non accessibili ad utenti non autorizzati);
+- protezione dei dati e programmi propri di ogni utente;
+- controllo degli accessi a oggetti comuni per gruppi di utenti definiti.
+esempio: UNIX e sistemi derivati
+
+C2 - il controllo degli accessi è fatto su base individuale, non collettiva, al contrario di UNIX.
+esempio: Windows
+
+B: protezione obbligatoria
+B1 - come C2 ma con introduzione dei livelli di sicurezza (modello Bell-La Padula), almeno 2.
+B2 - si estende l'uso di etichette di riservatezza ad ogni risorsa del sistema, anche canali di comunicazione;
+B3 - ...
+
+A: protezione verificata (massima sicurezza)
+A1 e classi superiori
+
+si introduce la capacità di verifica (il RM è verificabile)
+
+categorie superiori comprendono eventuali sistemi progettati in impianti di produzione affidabili, da persone affidabili.
+
+
