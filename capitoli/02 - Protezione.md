@@ -1,3 +1,5 @@
+<h1 align="center">Capitolo 2: Protezione</h1>
+
 <details open="open">
   <summary><h2 style="display: inline-block">Indice</h2></summary>
   <a href="#02---protezione">Protezione</a>
