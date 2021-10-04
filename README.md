@@ -116,7 +116,7 @@
   <ul>
     <li><a href="#01---virtualizzazione">2021/09/21</a></li>
     <li><a href="#soluzione-precopy">2021/09/28</a></li>
-    <li><a href="#">2021/09/29</a></li>
+    <li><a href="#diritto-owner">2021/09/29</a></li>
   </ul>
 </details>
 
@@ -277,7 +277,7 @@ resume: il VMM ripristina lo stato della VM in memoria centrale (lo stato è que
 Strumento fondamentale per queste procedure è la migrazione, ovvero la possibilità di muovere VM tra server.
 **Migrazione live**: possibilità di spostare una VM da un server fisico ad un altro, senza doverla spegnere. È desiderabile minimizzare il downtime, il tempo di migrazione ed il consumo di banda.
 
-<!-- Lezione 2021-09-28 -->
+<!-- Lezione 2021/09/28 -->
 <!--
 RIPASSINO
 Avevamo introdotto il tema della migrazione live, meccanismo che consente lo spostamento della VM da un nodo fisico ad un altro. Questo spostamento, se fatto in modo "live", significa che può essere eseguito senza neanche spegnere la macchina in questione.
@@ -469,7 +469,7 @@ L'operazione di propagazione può essere realizzata in due modi:
 - **trasferimento** del diritto, il soggetto iniziale perde il diritto di accesso, che viene spostato al nuovo soggetto;
 - **copia** del diritto, il soggetto iniziale mantiene il diritto di accesso, "duplicandolo" al nuovo soggetto.
 
-<!-- lezione 2021-09-29 -->
+<!-- lezione 2021/09/29 -->
 ##### Diritto Owner
 Il diritto *owner* realizza il concetto di "proprietario di una risorsa" (oggetto). Il soggetto che possiede tale diritto di accesso, nei sistemi che lo prevedono, ha la possibilità di concedere/revocare un qualunque diritto di accesso sull'oggetto che gli appartiene (ovvero possiede il diritto owner su tale oggetto) ad un qualunque altro soggetto.<br/>
 In una matrice degli accessi, ciò si traduce nella presenza, in ciascuna colonna, di una ed una sola cella nella quale è presente un diritto owner. Per ogni risorsa (dunque per ogni colonna) ci dev'essere un solo soggetto che ne è il proprietario. Ciò significa che tale soggetto ha un ruolo privilegiato nei confronti di quella risorsa ed è l'unico soggetto capace di revocare o concedere diritti di accesso su quella risorsa ad altri soggetti.
