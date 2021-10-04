@@ -265,34 +265,20 @@ verifica da parte del RM.
 - **verificabilità**, ovvero la correttezza del RM dev'essere dimostrata. Dev'essere possibile verificare/dimostrare formalmente che il monitor fa quello per cui è stato progettato. Questa proprietà non è semplicissima da applicare.
 
 ### Classificazione della Sicurezza dei Sistemi di Calcolo
-Ancora oggi molto diffusa, consente di etichettare i sistemi di calcolo sulla base delle caratteristiche di sicurezza.
-Orange Book: riferimento universale per quanto riguarda la classificazione dei sistemi di calcolo in termini di sicurezza. È nato in ambito militare, in cui sono definite le classi di sicurezza e descritte le caratteristiche che un sistema deve avere per appartenere a ciascuna categoria.
-
+*Orange Book* è un documento pubblicato dal Dipartimento della Difesa americano, in cui sono specificate 4 categorie di sicurezza (A, B, C, D, in ordine decrescente), e che consente quindi di etichettare i sistemi di calcolo sulla base delle caratteristiche di sicurezza.
 (- sicuro) D < C < B < A (+ sicuro)
 
-D: protezione minima
-Non sono presenti meccanismi che consentono di esercitare sicurezza né protezione. Al giorno d'oggi non ne esistono. MS-DOS concepiti come sistemi mono-utente
-
-C: protezione discreta
-Suddivisa in C1 e C2
-C1 - i sistemi prevedono dei meccanismi di:
-- autenticazione degli utenti (i dati di autenticazione sono protetti e non accessibili ad utenti non autorizzati);
-- protezione dei dati e programmi propri di ogni utente;
-- controllo degli accessi a oggetti comuni per gruppi di utenti definiti.
-esempio: UNIX e sistemi derivati
-
-C2 - il controllo degli accessi è fatto su base individuale, non collettiva, al contrario di UNIX.
-esempio: Windows
-
-B: protezione obbligatoria
-B1 - come C2 ma con introduzione dei livelli di sicurezza (modello Bell-La Padula), almeno 2.
-B2 - si estende l'uso di etichette di riservatezza ad ogni risorsa del sistema, anche canali di comunicazione;
-B3 - ...
-
-A: protezione verificata (massima sicurezza)
-A1 e classi superiori
-
-si introduce la capacità di verifica (il RM è verificabile)
-
-categorie superiori comprendono eventuali sistemi progettati in impianti di produzione affidabili, da persone affidabili.
-
+- **D - Protezione Minima**, non sono presenti meccanismi che consentono di esercitare sicurezza né protezione. Al giorno d'oggi non ne esistono. Esempio: MS-DOS, all'epoca i sistemi erano concepiti per essere mono-utente;
+- **C - Protezione Discreta**, si suddivide in *C1* e *C2*:
+    - *C1*, i sistemi prevedono dei meccanismi di:
+        - autenticazione degli utenti (i dati di autenticazione sono protetti e non accessibili ad utenti non autorizzati);
+        - protezione dei dati e programmi propri di ogni utente;
+        - controllo degli accessi a oggetti comuni per gruppi di utenti definiti.
+    Esempio: UNIX e sistemi derivati
+    - *C2*, il controllo degli accessi è fatto su base individuale, non collettiva, al contrario di UNIX.
+    Esempio: Windows.
+- **B - Protezione Obbligatoria**, si suddivide in *B1*, *B2* e *B3*:
+    - *B1*, come C2 ma con introduzione dei livelli di sicurezza (modello Bell-La Padula), almeno 2.
+    - *B2*, si estende l'uso di etichette di riservatezza ad ogni risorsa del sistema, anche canali di comunicazione;
+    - *B3*, la TCB consente la creazione di liste di controllo degli accessi in cui sono identificati utenti o gruppi cui non è consentito l'accesso ad un oggetto specifico.
+- **A - Protezione Verificata (Massima Sicurezza)**, si suddivide in *A1* e classi superiori ad A1. È equivalente a B3, ma con il vincolo di essere progettato e realizzato utilizzando metodi formali di definizione e verifica (il RM è verificabile). Un sistema appartiene ad una categoria superiore ad A1 se è stato progettato in impianti di produzione affidabili, da persone affidabili.
