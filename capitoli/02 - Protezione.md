@@ -140,48 +140,42 @@ La rappresentazione concreta dello stato di protezione dev'essere ottimizzata si
 - **Capability List (CL)**, si basa su una *rappresentazione per righe*. Ad ogni soggetto è associta una lista che indica quali sono gli oggetti al quale il soggetto può accedere.
 
 ##### ACL: Lista degli Accessi
-La lista degli accessi per ogni oggetto ha una struttura composta da un insieme di elementi, ognuno dei quali contiene la coppia soggetto, insieme dei diritti
-Quando un qualunque soggetto S tenta un'operazione M su un oggetto O, il sistema di protezione va a verificare nella ACL associata ad O se è presente un elemento riferito al soggetto che sta tentando l'accesso e, se esiste, controlla che contenga il diritto per eseguire M.
-In certi casi, per velocizzare l'accesso, viene prevista una lista di default: se è prevista, esistono dei diritti comuni a tutti i soggetti, si va a vedere prima nella lista di default e, se la ricerca non va a buon fine, si va a vedere nello specifico, elemento per elemento. Se la ricerca non ha successo, chiaramente l'accesso viene negato.
+Ne viene assegnata una a ciascun oggetto ed ha una struttura composta da un insieme di elementi, ognuno dei quali contiene la coppia <soggetto, insieme dei diritti> limitatamente ai soggetti con un insieme non vuoto di diritti per l'oggetto.
+Quando un qualunque soggetto *S* tenta un'operazione *M* su un oggetto *O*, il sistema di protezione va a verificare nella ACL associata ad *O* se è presente un elemento riferito al soggetto che sta tentando l'accesso e, se esiste, controlla che contenga il diritto per eseguire *M* (ovvero sia presenta la coppia <*S*, *Rk*> con *M* appartenente a *Rk*).<br/>
+In certi casi, per velocizzare l'accesso, viene prevista una lista di default: se è prevista, esistono dei diritti comunia a tutti i soggetti, dunque si va a vedere prima nella lsita di default e, se la ricerca non va a buon fine, si va a vedere nello specifico, elemento per elemento. Chiaramente, se la ricerca non ha successo, l'accesso viene negato.
 
-UTENTI & GRUPPI
-Molti sistemi per identificare un soggetto prevedono non solo il nome utente ma anche il gruppo a cui appartiene. Un gruppo aggrega un insieme di utenti. È importante sapere che un utente può appartenere anche a più gruppi, ma in un certo istante può appartenere ad un solo gruppo alla volta.
-Sostanzialmente, quando un soggetto <utente, gruppo> tenta accesso a risorsa in un certo modo, l'elemento dell'ACL comprenderà sia nome ID utente che ID gruppo, più l'insieme dei diritti.
-Il tentativo di accesso comporta una ricerca nell'ACL dell'oggetto, cercando se compare il modo con il quale l'utente sta cercando di accedere alla risorsa.
+**Utenti e Gruppi**: molti sistemi, per identificare un soggetto, prevedono non solo il nome utente (UID - User IDentifier), ma anche il gruppo (GID - Group IDentifier) a cui appartiene. Un gruppo aggrega un insieme di utenti, ha un nome, e può essere incluso nelle ACL. È importante sapere che un utente può appartenere anche a più gruppi, ma in un certo istante può appartenere ad un solo gruppo alla volta. Nel caso siano presenti i gruppi, una entry della ACL ha la forma UID, GID: \<insieme di diritti\>.
+Quando un soggetto <utente, gruppo> prova ad accedere ad una risorsa in un certo modo, il tentativo di accesso comporta una ricerca nell'ACL dell'oggetto: se compare il modo con il quale l'utente sta cercando di accedere alla risorsa, allora l'operazione viene consentita.
 
-I gruppi esistono tipicamente per una questione di differenziazione dei ruoli, ciascuno dei quali ha diritti diversi.
-In generale, nei sistemi che prevedono i gruppi, è comunque possibile svincolare i soggetti dai gruppi, ovvero senza assegnargli un gruppo alcuno (UID, * <insieme diritti>)
+Tipicamente i gruppi esistono per una questione di differenziazione dei ruoli, ciascuno dei quali ha diritti diversi. In generale, nei sistemi che prevedono i gruppi, è comunque possibile svincolare i soggetti dai gruppi, ovvero senza assegnargli alcun gruppo (UID, * \<insieme diritti\>).
 
+##### CL: Capability List
+Ne viene associata una a ciascun soggetto ed ha una struttura composta da un insieme di elementi, ognuno dei quali contiene l'indicazione dell'oggetto ed i diritti di accesso che quel soggetto, al quale la CL è associata, può esercitare su quell'oggetto. Chiaramente non avrà tanti elementi quanti sono le colonne della matrice degli accessi, in quanto come detto è una matrice sparsa.
+Nella pratica, spesso l'oggetto viene identificato tramite un descrittore ed ovviamente i diritti, che spesso vengono rappresentati in modo compatto tramite una sequenza di bit.
 
-CAPABILITY LIST
-Seconda possibilità, ogni elemento di questa lista contiene l'indicazione dell'oggetto e i diritti di accesso che quel soggetto, al quale la capability list è associata, può esercitare su quell'oggetto. Chiaramente non avrà tanti elementi quanti solo le colonne della matrice degli accessi, in quanto come abbiamo detto è una matrice sparsa.
-Tipicamente contiene queste due informazioni. Nella pratica, spesso l'oggetti viene identificato tramite un indirizzo, che ne localizza in memoria, o meglio ne localizza il descrittore, ed ovviamente i diritti, che spesso vengono rappresentati in modo compatto tramite una sequenza di bit.
+*foto dimostrativa slide 40* - struttura tipica CL
 
-slide 39 - min 46:17
-Se abbiamo una CL avremo una struttura rappresentabile come a slide 40
+In generale è importante (anche per le ACL), che le informazioni relative alla protezione vengano protette a loro volta da manomissioni. Ci sono vari modi:
+- limitazione degli accessi in scrittura al solo kernel del Sistema Operativo (si sfrutta la protezione a livello hardware, oppure i modi di esecuzione del processore: kernel mode / user mode). In questo modo l'utente fa riferimento ad un puntatore (capability) che identifica la sua posizione nella lista appartenente allo spazio del kernel (soluzione simile all'uso di file descriptor in UNIX);
+- se l'hardware lo supporta si può utilizzare un'architettura etichettata: a livello hardware ogni singola parola ha bit extra (tag) che esprimono la protezione su quella cella di memoria. In questo modo si può proteggere la protezione proprio a livello basso, a livello di memoria. In architetture di questo tipo il processore sa che, durante lo svolgimento delle sue operazioni di aritmetica, i bit di etichetta devono essere ignorati (non vengono proprio considerati).
 
-*foto*
-
-È importante, anche per le ACL (in generale), le informazioni relative alla protezione devono essere protette a loro volta damanomissioni. Ci sono vari modi:
-- tipicamente si limita la possibilità di accedere inscrittura a tali scritture al solo kernel del sistema operativo (si sfrutta la protezione alivello hw, modo di esecuzione kernel vs modo di esecuzione utente;
-- se l'hw lo supporta si può utilizzare un'architettura etichettata: a livello hw ogni singola parola ha bit extra (tag) che espirmono la protezione su quella cella di memoria. In questo modo si può progettare la protezione a livello di memoria. Inarchitetture di questo tipo il processore sa che i bit di etichetta non devono essere considerate dalle operazioni logiche di aritmetica che il processore deve eseguire.
-
-
-REVOCA DEI DIRITTI DI ACCESSO
-Revocare significa negare dei diritti precedentemente concessi.
+#### Revoca dei Diritti di Accesso
+In un sistema di protezione dinamica può essere necessario *revocare* i diritti di accesso per un oggetto. Revocare significa negare dei diritti precedentemente concessi. Ne esistono diversi tipi:
 - revoca **generale** o **selettiva**, ovvero rispettivamente da un certo momento in poi nessuno potrà accedere ad un determinato oggetto, oppure solo alcuni soggetti non potranno più accedervi (ad esempio quelli appartenenti ad un gruppo);
 - revoca **totale** o **parziale**, ovvero rispettivamente riguardante tutti i diritti per l'oggetto, oppure solo un particolare sottoinsieme di diritti;
 - revoca **permanente** o **temporanea**, ovvero rispettivamente il diritto di accesso revocato non sarà più disponibile, oppure potrà essere successivamente riacquistato.
 
-Revoca per un oggetto con ACL:
-la revoca risulta semplice: si fa riferimento alla ACL associata all'oggetto e si cancellano i diritti diaccesso che si vogliono revocare.
+**Revoca per un oggetto con ACL**: la revoca in questo caso risulta semplice, in quanto si fa riferimento alla ACL associata all'oggetto in questione e si cancellano i diritti di accesso che si vogliono revocare.
 
-Per un oggetto con CL:
-l'operazione risulta un po' più complessa, in quanto è necessario verificare per ogni dominiio se contiene la capability con riferimento all'oggetto considerato.
-
-Cancellare un file significa togliere i diritti su quel file a tutti gli utenti che li possiedono. In ACL cancello semplicecmente l'ACL del sistema, mentre con CL bisogna fare ricerca in tutte le CL per vedere se esiste un elemento riferito a quel file e in caso cancellarlo.
-Sicuramente queste operazioni che riguardano un solo oggetto risultano più costose in sistemi con CL.
-
+**Revoca per un oggetto con CL**: l'operazione risulta più complessa, in quanto è necessario verificare, per ogni dominio, se contiene la capability con riferimento all'oggetto considerato.
+```
+NB: cancellare un file significa togliere i diritti su quel file a tutti gli utenti che
+li possiedono. In ACL cancello semplicecmente l'ACL del sistema, mentre con CL bisogna
+fare ricerca in tutte le CL per vedere se esiste un elemento riferito a quel file e in
+caso cancellarlo.
+Sicuramente queste operazioni che riguardano un solo oggetto risultano più costose in
+sistemi con CL.
+```
 Un sistema realizzato esclusivamente con CL può soffrire di questo appesantimento dovuto a operazioni che riguardano revoche che interessano più soggetti e quindi causano overhead (costo computazione maggiore)
 Naturalmente si può fare anche il discorso duale: se si ha la necessità di fare una modifica allo stato di protezione che interessa un particolare soggetto (caso più banale eliminare il soggetto dal sistema - questo comporta una modifica allo stato di protezione, in CL si cancella semplicemente la lsita associata al soggetto; in ACL bisogna fare ricerca in ogni ACL).
 
