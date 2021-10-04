@@ -1,4 +1,4 @@
-<h1 align="center"> Sistemi Operativi M</h1>
+<h1 align="center">Sistemi Operativi M</h1>
 
 <p align="center">
   Appunti del corso Sistemi Operativi M (<a href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2021/468009">72947</a>), anno 2021-2022. A cura di <a href="https://github.com/mikyll">Michele Righi</a> e <a href="https://github.com/TryKatChup">Karina Chichifoi</a>.
