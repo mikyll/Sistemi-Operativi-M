@@ -179,4 +179,78 @@ Se facciamo in modo che gli utenti siano classificati
 
 Nonostante l'ACL consenta l'accesso in scrittura, la politica di sicurezza lo impedisce (NB: la politica di sicurezza ha precedenza sui meccanismi di protezione).
 
+Il modello Bell-La Padula è stato concepito per mantenere i segreti, non per garantire l'integrità dei dati.
+
+
+MODELLO BIBA
+Obbiettivo: integrità dei dati. Serve per garantire che l'integrità delle informazioni di livello superiore venga in qualche modo preservata.
+
+2 regole anche qui:
+- proprietà di semplice sicurezza: è l'opposto di Bell-La Padula, in quanto stabilisce che un processo in esecuzione al livello di sicurezza k può scrivere solo oggetti al suo livello o a quelli inferiori (nessuna scrittura verso l'alto).
+- proprietà di integrità *: un processo in esecuzione a livello k può leggere solo oggetti al suo livello o a quelli superiori (nessuna lettura verso il basso).
+
+Le informazioni seguono un flusso opposto al modello precedente (in questo caso dall'alto verso il basso);
+
+B-LP e BIBA sono in conflitto tra loro, quindi non possono essere combinati.
+
+
+
+Questi modelli solitamente vengono utilizzati nelle architetture dei sistemi ad alta sicurezza
+
+Sistemi operativi sicuri o fidati
+
+fidati: per cui è possibile fornire e in certi casi dimostrare formalmente, che quel sistema garantisce il rispetto di determinati requisiti o regole.
+
+in questi sistemi è presente un componente chiamato "reference monito": elemento di controllo realizzato dall'hw e dal SO
+ha il compito di imporre il rispetto delle regole di sicurezza
+
+
+Trusted computing base: il RM fa riferimento ad una base di dati fidati (la cosiddetta TCB). Questa base di calcolo fidata contiene delle informazioni che tracciano la classificazione dei soggetti e degli oggetti all'interno del sistema;
+l'architettura di un sistema ad elevata sicurezza
+
+
+Sistemi fidati
+Il reference monitor (RM) deve imporre le regole di sicurezza (che sono ad esempio nel caso del modello Bell-La Padula no read-up e no write-down) ed ha le seguenti proprietà:
+
+- mediazione completa - le regole di sicurezza vengono applicate ad ogni singolo accesso da parte di un soggetto ad un particolare oggetto;
+NB: non è così intuitiva, nei SO comuni, es. derivati da UNIX, le regole di protezione vengono verificate solo a lato apertura del file. Se abbiamo un sistema fidato invece, ad ogni singola operazione (ad esempio di scrittura) viene fatta una verifica da parte del RM;
+
+- isolamento - il RM e la TCB devono essere a loro volta protette da parte di eventuali accessi non autorizzati. Ovvero che siano acceduti solo in modalità privilegiata
+
+- verificabilità - la correttezza del RM dev'essere dimostrata, dev'essere possibile verificare/dimostrare formalmente che il monitor fa quello per cui è stato progettato. Questa proprietà non è semplicissima da applicare.
+
+Tutto questo ci fa capire il motivo per cui quando parliamo di sistema fidato, il RM spesso è implementato anche parzialmente in hw. Ovviamente ha un costo che ad ogni singola iterazione esso debba fare delle verifiche, quindi si tende ad implementarlo in parte a livello hw.
+
+CLASSIFICAZIONE della sicurezza dei sistemi di calcolo
+Ancora oggi molto diffusa, consente di etichettare i sistemi di calcolo sulla base delle caratteristiche di sicurezza.
+Orange Book: riferimento universale per quanto riguarda la classificazione dei sistemi di calcolo in termini di sicurezza. È nato in ambito militare, in cui sono definite le classi di sicurezza e descritte le caratteristiche che un sistema deve avere per appartenere a ciascuna categoria.
+
+(- sicuro) D < C < B < A (+ sicuro)
+
+D: protezione minima
+Non sono presenti meccanismi che consentono di esercitare sicurezza né protezione. Al giorno d'oggi non ne esistono. MS-DOS concepiti come sistemi mono-utente
+
+C: protezione discreta
+Suddivisa in C1 e C2
+C1 - i sistemi prevedono dei meccanismi di:
+- autenticazione degli utenti (i dati di autenticazione sono protetti e non accessibili ad utenti non autorizzati);
+- protezione dei dati e programmi propri di ogni utente;
+- controllo degli accessi a oggetti comuni per gruppi di utenti definiti.
+esempio: UNIX e sistemi derivati
+
+C2 - il controllo degli accessi è fatto su base individuale, non collettiva, al contrario di UNIX.
+esempio: Windows
+
+B: protezione obbligatoria
+B1 - come C2 ma con introduzione dei livelli di sicurezza (modello Bell-La Padula), almeno 2.
+B2 - si estende l'uso di etichette di riservatezza ad ogni risorsa del sistema, anche canali di comunicazione;
+B3 - ...
+
+A: protezione verificata (massima sicurezza)
+A1 e classi superiori
+
+si introduce la capacità di verifica (il RM è verificabile)
+
+categorie superiori comprendono eventuali sistemi progettati in impianti di produzione affidabili, da persone affidabili.
+
 
