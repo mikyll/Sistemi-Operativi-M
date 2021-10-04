@@ -176,35 +176,28 @@ caso cancellarlo.
 Sicuramente queste operazioni che riguardano un solo oggetto risultano più costose in
 sistemi con CL.
 ```
-Un sistema realizzato esclusivamente con CL può soffrire di questo appesantimento dovuto a operazioni che riguardano revoche che interessano più soggetti e quindi causano overhead (costo computazione maggiore)
-Naturalmente si può fare anche il discorso duale: se si ha la necessità di fare una modifica allo stato di protezione che interessa un particolare soggetto (caso più banale eliminare il soggetto dal sistema - questo comporta una modifica allo stato di protezione, in CL si cancella semplicemente la lsita associata al soggetto; in ACL bisogna fare ricerca in ogni ACL).
 
-Quindi non c'è soluzione assoluta, o migliore dell'altra in toto.
-Nella realtà, ovvero nella maggior parte dei sistemi, solitamente si usa una soluzione ibrida che combina i due metodi.
+#### ACL vs CL
+Un sistema realizzato esclusivamente con CL può soffrire di un appesantimento dovuto a operazioni che riguardano revoche che interessano più soggetti e quindi causano overhead (costo computazione maggiore).
+Naturalmente si può fare anche il discorso duale: se si ha la necessità di fare una modifica allo stato di protezione che interessa un particolare soggetto. Il caso più banale è eliminare il soggetto dal sistema. Ciò questo comporta una modifica allo stato di protezione, in CL si cancella semplicemente la lista associata al soggetto; in ACL bisogna fare ricerca in ogni ACL.<br/>
+Dunque non c'è soluzione assoluta, o generalmente migliore dell'altra: nella realtà, nella maggior parte dei sistemi solitamente si usa una soluzione ibrida che combina i due metodi.
 
-In UNIX, per ogni risorsa (file, in quanto UNIX è file-centrico, tutte le risorse sono presenti nel filesystem come file) per ogni oggetto viene mantenuta una struttura contenente 12 bit "di protezione". Sono memorizzati sul disco, fanno parte dell'i-node, che è rappresentato sulla memoria di massa all'interno dell'i-list.
-Se ci pensiamo bene sono una forma semplificata di ACL: i 12 bit (9, utente, gruppo e altri) sono una forma semplificata di ACL, esprimono cosa gli utenti possono o non possono fare.
-Si distingue tra l'utente proprietario u, il gruppo, oppure gli altri. Non abbiamo il dettaglio del particolare utente, per questo è semplificata, ma solo utente proprietario.
-Questa particolare struttura viene memorizzata nella memoria secondaria.
+Ad esempio, in UNIX, per ogni risorsa (file, in quanto UNIX è file-centrico, ovvero tutte le risorse sono presenti nel filesystem come file) per ogni oggetto viene mantenuta una struttura contenente 12 bit "di protezione". Sono memorizzati sul disco e fanno parte dell'i-node, che è rappresentato sulla memoria di massa all'interno dell'i-list.
+Se ci pensiamo bene sono una forma semplificata di ACL: i 12 bit (di cui 9 per i diritti di utente, gruppo e altri) sono una forma semplificata di ACL, in quanto esprimono cosa gli utenti possono o non possono fare. È semplificata in quanto non si ha il dettaglio di un particolare utente, a differenza di Sistemi Operativi come Windows, ma solo dell'utente proprietario (oltre che del gruppo e degli altri utenti).
 
-È una soluzione ibrida, in quanto ogni volta che un processo cerca di accedere ad un oggetto (file), cosa succede? Il file viene aperto e nella tabella dei file aperti viene caricato un elemento che altro non è che la capability che quel soggetto ha nei confronti di quella risorsa.
-ES: quando cerco di aprire un file in scrittura, viene fatta una verifica sulla ACL (che controlla se posso effettuare quell'operazione). Se la verifica va a buon fine, il file viene aperto e nella tabella dei file aperti viene caricato un elemento che concettualmente rappresenta il diritto di quel processo ad accedere in scrittura sul file, quindi viene aggiunta una capability alla tabella dei file aperti. Di fatto la tabella dei file aperti è una CL.
-La differenza? La ACL si trova in memoria secondaria in modo persistente, la CL è in memoria volatile (e ha vita più breve solitamente), quando il processo finisce di operare sul file, l'elemento viene rimosso e quando il processo termina la tabella dei file aperti viene distrutta.
-Vantaggio: una volta verificato preliminarmente che sia presente il diritto d'accesso, non c'è più bisogno di consultare la ACL, ma si va a guardare la CL.
+**Soluzione ibrida**: ogni volta che un processo cerca di accedere ad un oggetto (file), questo viene aperto e nella tabella dei file aperti viene caricato un elemento che altro non è che la capability che il soggetto che l'ha aperto ha nei confronti di quell'oggetto.
 
+Esempio: quando cerco di aprire un file in scrittura, viene fatta una verifica sulla ACL (che controlla se posso effettuare quell'operazione); se la verifica va a buon fine, il file viene aperto e nella tabella dei file aperti viene caricato un elemento che concettualmente rappresenta il diritto di quel processo ad accedere in scrittura sul file; quindi viene aggiunta una capability alla tabella dei file aperti. Di fatto la tabella dei file aperti è una CL.
 
+**Differenze**: la ACL si trova in memoria secondaria in modo persistente, la CL è in memoria volatile (e solitamente ha vita più breve): quando il processo finisce di operare sul file, l'elemento viene rimosso e quando il processo termina la tabella dei file aperti viene distrutta.
 
-Protezione e sicurezza
-Protezione, come detto, riguarda il controllo degli accessi alle risorse interne al sistema.
-Sicurezza riguarda un controllo degli accessi al sistema.
-
-In certi casi la sola protezione del sistema può essere inefficace: se un utente entra nel sistema con intenzioni malevole, riesce a far eseguire ad altri dei programmi che agiscono sulle risorse del sistema (Trojan - Cavalli di Troia programmi che introdotti in qualche modo nel filesystem, una volta che sono lì si induce un utente autorizzato a eseguire quel programma e provocano dei danni, ad esempio la sottrazione di informazioni sensibili)
-
-Soluzione: affiancare al normale sistema di protezione un sistema di sicurezza, che normalmente è strutturato a livelli (struttura multilivello)
+**Vantaggio**: una volta verificato preliminarmente che sia presente il diritto d'accesso, non c'è più bisogno di consultare la ACL, ma si va a guardare la CL.
 
 
-Stabilisce delle regole più generali rispetto al sistema di protezione, in cui prima di tutto si classificano gli utenti: ad esempio in funzione del loro ruolo.
-Poi classifica, dopo i soggetti, anche gli oggetti (le risorse). In funzione della confidenzialità dell'oggetto, vengono collocate ad un livello diverso di un sistema.
+#### Protezione Multilivello
+Come detto, la protezione riguarda il controllo degli accessi alle risorse interne al sistema; la sicurezza riguarda il controllo degli accessi al sistema. Poiché la protezione di un sistema può essere inefficace, se un utente non autorizzato riesce a far eseguire programmi che agiscono sulle risorse del sistema (es: Trojan, o Cavalli di Troia <!-- indotti, con intenzioni malevole, in qualche modo nel filesystem, una volta qui inducono un utente autorrizzato ad eseguire quel programma e provocano dei danni -->), è necessario affiancarvi un sistema di sicurezza, che normalmente ha una *struttura multilivello*.
+
+Il sistema di sicurezza stabilisce delle regole più generali rispetto al sistema di protezione, in cui prima di tutto si classificano gli utenti (ad esempio in funzione del loro ruolo), dopodiché gli oggetti (le risorse). In funzione della confidenzialità dell'oggetto, vengono collocate ad un livello diverso del sistema.
 
 In un sistema di questo tipo l'approccio è quello di tipo MAC.
 
