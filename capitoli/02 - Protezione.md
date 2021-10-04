@@ -1,3 +1,58 @@
+<details open="open">
+  <summary><h2 style="display: inline-block">Indice</h2></summary>
+  <a href="#02---protezione">Protezione</a>
+  <ul>
+    <li><a href="#protezione-modelli-politiche-e-meccanismi">Protezione: Modelli, Politiche e Meccanismi</a>
+      <ul>
+        <li><a href="#modelli">Modelli</a></li>
+        <li><a href="#politiche">Politiche</a></li>
+        <li><a href="#meccanismi">Meccanismi</a></li>
+      </ul>
+    </li>
+    <li><a href="#dominio-di-protezione">Dominio di Protezione</a>
+      <ul>
+        <li><a href="#associazione-tra-processo-e-dominio">Associazione tra Processo e Dominio</a>
+          <ul>
+            <li><a href="#esempio-di-cambio-di-dominio">Esempio di cambio di dominio</a></li>
+          </ul>
+      </ul>
+    </li>
+    <li><a href="#matrice-degli-accessi">Matrice degli Accessi</a>
+      <ul>
+        <li><a href="#verifica-del-rispetto-dei-vincoli-di-accesso">Verifica del Rispetto dei Vincoli di Accesso</a></li>
+        <li><a href="#modifica-dello-stato-di-protezione">Modifica dello Stato di Protezione</a>
+          <ul>
+            <li><a href="#modello-graham-denning">Modello Graham-Denning</a></li>
+            <li><a href="#propagazione-dei-diritti-di-accesso-copy-flag">Propagazione dei Diritti di Accesso (Copy Flag)</a></li>
+            <li><a href="#diritto-owner">Diritto Owner</a></li>
+            <li><a href="#diritto-control">Diritto Control</a></li>
+            <li><a href="#diritto-switch">Diritto Switch</a></li>
+          </ul>
+        <li><a href="#realizzazione-della-matrice-degli-accessi">Realizzazione della Matrice degli Accessi</a>
+          <ul>
+            <li><a href="#acl-lista-degli-accessi">ACL: Lista degli Accessi</a></li>
+            <li><a href="#cl-capability-list">CL: Capability List</a></li>
+          </ul>
+        </li>
+        <li><a href="#revoca-dei-diritti-di-accesso">Revoca dei Diritti di Accesso</a></li>
+        <li><a href="#acl-vs-cl">ACL vs CL</a></li>
+      </ul>
+    </li>
+    <li><a href="#protezione-multilivello">Protezione Multilivello</a>
+      <ul>
+        <li><a href="#modelli-di-sicurezza-multilivello">Modelli di Sicurezza Multilivello</a>
+          <ul>
+            <li><a href="#modello-bell-la-padula">Modello Bell-La Padula</a></li>
+            <li><a href="#modello-biba">Modello Biba</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#architetture-dei-sistemi-ad-elevata-sicurezza">Architetture dei Sistemi ad Elevata Sicurezza</a></li>
+    <li><a href="#classificazione-della-sicurezza-dei-sistemi-di-calcolo">Classificazione della Sicurezza dei Sistemi di Calcolo</a></li>
+  </ul>
+</details>
+
 ## 02 - Protezione
 **Sicurezza**: riguarda l'insieme delle *tecniche per regolamentare l'accesso* degli utenti al sistema di elaborazione. La sicurezza impedisce accessi non autorizzati al sistema e i conseguenti tentativi dolosi di alterazione e distruzione dei dati. La sicurezza riguarda l'interfaccia del sistema verso il mondo esterno. Le tecnologie di sicurezza di un sistema informatico realizzano meccanismi per l'identificazione, l'autenticazione e l'autorizzazione di utenti "fidati".<br/>
 **Protezione**: *insieme di attività volte a garantire il controllo dell'accesso* alle risorse logiche e fisiche da parte degli utenti autorizzati all'uso di un sistema di calcolo. Rispetto alla sicurezza ha un campo d'azione più interno al sistema. Per rendere un sistema "sicuro" è necessario stabilire per ogni utente autorizzato quali siano le risorse a cui può accedere e con quali operazioni può farlo. Ciò viene stabilito dal sistema di protezione tramite le tecniche di controllo degli accessi.
