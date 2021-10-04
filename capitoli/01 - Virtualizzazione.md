@@ -10,11 +10,11 @@
       </ul>
     </li>
     <li><a href="#tipi-livelli-di-virtualizzazione">Tipi (Livelli) di Virtualizzazione</a></li>
-    <!--<li><a href="#cenni-storici">Cenni Storici</a></li>-->
+    <li><a href="#cenni-storici">Cenni Storici</a></li>
     <li><a href="#vantaggi-della-virtualizzazione">Vantaggi della Virtualizzazione</a></li>
     <li><a href="#realizzazione-del-vmm">Realizzazione del VMM</a>
       <ul>
-        <!--<li><a href="#vmm-di-sistema">VMM di Sistema</a></li>
+        <li><a href="#vmm-di-sistema">VMM di Sistema</a></li>
         <li><a href="#vmm-ospitato">VMM Ospitato</a></li>
         <li><a href="#ring-di-protezione">Ring di Protezione</a>
           <ul>
@@ -24,17 +24,17 @@
           </ul>
         </li>
         <li><a href="#supporto-hardware-alla-virtualizzazione">Supporto Hardware alla Virtualizzazione</a></li>
-        <li><a href="#realizzazione-del-vmm-in-architetture-non-virtualizzabili">Realizzazione del VMM in Architetture Non Virtualizzabili</a></li>-->
+        <li><a href="#realizzazione-del-vmm-in-architetture-non-virtualizzabili">Realizzazione del VMM in Architetture Non Virtualizzabili</a></li>
         <li><a href="#fast-binary-translation-ftb">Fast Binary Translation (FTB)</a></li>
         <li><a href="#paravirtualizzazione">Paravirtualizzazione</a></li>
       </ul>
     </li>
-    <!--<li><a href="#architetture-virtualizzabili">Architetture Virtualizzabili</a>
+    <li><a href="#architetture-virtualizzabili">Architetture Virtualizzabili</a>
       <ul>
         <li><a href="#protezione-nellarchitettura-x86">Protezione nell'architettura x86</a></li>
         <li><a href="#funzionamento-dei-vmm-nellarchitettura-x86-classica">Funzionamento dei VMM nell'architettura x86 classica</a></li>
       </ul>
-    </li>-->
+    </li>
     <li><a href="#gestione-di-vm">Gestione di VM</a>
       <ul>
         <li><a href="#stati-di-una-vm">Stati di una VM</a></li>
