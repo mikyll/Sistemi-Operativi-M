@@ -102,9 +102,9 @@
 							<ul>
 								<!--<li><a href="#modello-graham-denning">Modello Graham-Denning</a></li>-->
 								<li><a href="#propagazione-dei-diritti-di-accesso-copy-flag">Propagazione dei Diritti di Accesso (Copy Flag)</a></li>
-								<li><a href="#diritto-owner">Diritto Owner</a></li>
+								<!--<li><a href="#diritto-owner">Diritto Owner</a></li>
 								<li><a href="#diritto-control">Diritto Control</a></li>
-								<li><a href="#diritto-switch">Diritto Switch</a></li>
+								<li><a href="#diritto-switch">Diritto Switch</a></li>-->
 							</ul>
 						<li><a href="#realizzazione-della-matrice-degli-accessi">Realizzazione della Matrice degli Accessi</a>
 							<ul>
@@ -112,8 +112,8 @@
 								<li><a href="#cl-capability-list">CL: Capability List</a></li>
 							</ul>
 						</li>
-						<li><a href="#revoca-dei-diritti-di-accesso">Revoca dei Diritti di Accesso</a></li>
-						<li><a href="#acl-vs-cl">ACL vs CL</a></li>
+						<!--<li><a href="#revoca-dei-diritti-di-accesso">Revoca dei Diritti di Accesso</a></li>
+						<li><a href="#acl-vs-cl">ACL vs CL</a></li>-->
 					</ul>
 				</li>
 				<li><a href="#protezione-multilivello">Protezione Multilivello</a>
@@ -126,8 +126,8 @@
 						</li>
 					</ul>
 				</li>
-				<li><a href="#architetture-dei-sistemi-ad-elevata-sicurezza">Architetture dei Sistemi ad Elevata Sicurezza</a></li>
-				<li><a href="#classificazione-della-sicurezza-dei-sistemi-di-calcolo">Classificazione della Sicurezza dei Sistemi di Calcolo</a></li>
+				<!--<li><a href="#architetture-dei-sistemi-ad-elevata-sicurezza">Architetture dei Sistemi ad Elevata Sicurezza</a></li>
+				<li><a href="#classificazione-della-sicurezza-dei-sistemi-di-calcolo">Classificazione della Sicurezza dei Sistemi di Calcolo</a></li>-->
 			</ul>
 		</li>
   </ol>
