@@ -193,105 +193,78 @@ Esempio: quando cerco di aprire un file in scrittura, viene fatta una verifica s
 
 **Vantaggio**: una volta verificato preliminarmente che sia presente il diritto d'accesso, non c'è più bisogno di consultare la ACL, ma si va a guardare la CL.
 
-
-#### Protezione Multilivello
+### Protezione Multilivello
 Come detto, la protezione riguarda il controllo degli accessi alle risorse interne al sistema; la sicurezza riguarda il controllo degli accessi al sistema. Poiché la protezione di un sistema può essere inefficace, se un utente non autorizzato riesce a far eseguire programmi che agiscono sulle risorse del sistema (es: Trojan, o Cavalli di Troia <!-- indotti, con intenzioni malevole, in qualche modo nel filesystem, una volta qui inducono un utente autorrizzato ad eseguire quel programma e provocano dei danni -->), è necessario affiancarvi un sistema di sicurezza, che normalmente ha una *struttura multilivello*.
 
-Il sistema di sicurezza stabilisce delle regole più generali rispetto al sistema di protezione, in cui prima di tutto si classificano gli utenti (ad esempio in funzione del loro ruolo), dopodiché gli oggetti (le risorse). In funzione della confidenzialità dell'oggetto, vengono collocate ad un livello diverso del sistema.
+Il sistema di sicurezza stabilisce delle regole più generali rispetto al sistema di protezione, in cui prima di tutto si classificano gli utenti (ad esempio in funzione del loro ruolo), dopodiché gli oggetti (le risorse). In funzione della confidenzialità dell'oggetto, vengono collocate ad un livello diverso del sistema. In un sistema di questo tipo l'approccio è quello di tipo MAC.
 
-In un sistema di questo tipo l'approccio è quello di tipo MAC.
+#### Modelli di Sicurezza Multilivello
+I modelli di sicurezza multilivello più usati sono due:
+- **Bell-La Padula** - obbiettivo di garantire la confidenzialità delle informazioni;
+- **Biba** - è antitetico al precedente, e ha l'obbiettivo di garantire l'integrità delle informazioni.
+Entrambi aderiscono allo stesso modello multilivello.
 
-I modelli di sicurezza multilivello più famosi sono due:
-- Bell-La Padula - obbiettivo di garantire la confidenzialità delle informazioni;
-- Biba - è antitetico al precedente, e ha l'obbiettivo di garantire l'integrità delle informazioni.
-Entrambi aderiscono allo stesso modello multilivello
-
-MODELLI DI SICUREZZA MULTILIVELLO
 In un modello di sicurezza multilivello:
 i soggetti (utenti) e gli oggetti (risorse) sono classificati in livelli (classi di accesso):
 - livelli per i soggetti (**clearance levels**);
 - livelli per gli oggetti (**sensitivity levels**).
+```
+NB: le regole di sicurezza fissano le regole di interazione tra livelli diversi.
+```
 
-Il modello inoltre, fissa delle regole di sicurezza che possono variare a seconda del particolare modello che sto considerando.
-
-Le regole di sicurezza fissano le regole di interazione tra livelli diversi.
-
-Modello Bell-La Padula
-Nato in ambito militare ha come obbiettivo primario garantire la confidenzialità delle informazioni.
+##### Modello Bell-La Padula
+Nato in ambito militare, ha come obbiettivo primario garantire la **confidenzialità** delle informazioni.
 Abbiamo un sistema di protezione (matrice accessi) a cui viene affiancato un modello multilivello che viene gestito con approccio di tipo MAC.
-2 regole di sicurezza che caratterizzano il modello, che stabiliscono il verso di propagazione delle informazioni nel sistema.
-
-4 diversi livelli di sensibilità degli oggetti:
+Vi sono 4 diversi livelli di sensibilità degli oggetti:
 1. non classificato (+ basso);
 2. confidenziale
 3. segreto
 4. top secret (+ alto)
 
 Questi sono i livelli in cui verranno classificati i documenti.
+Se voglio che un documento sia disponibile solo a chi si trova ai vertifici della gerarchia (es. Generale) lo metterò top secret.
 
-Se voglio che un documento sia disponibile solo a chi si trova ai vertifici della gerarchia (es. capitano(?)) lo metterò top secret.
+Vi sono 2 regole di sicurezza, che caratterizzano il modello, che stabiliscono il verso di propagazione delle informazioni nel sistema:
+1. **proprietà di semplice sicurezza**: un processo in esecuzione ad un livello di sicurezza k può **leggere** oggetti a suo livello o a livelli inferiori;
+2. **proprità \* (star)**: un processo in esecuzione a livello di sicurezza k può **scrivere** solo oggetti al suo livello o superiori.
+Il flusso delle informazioni è dunque dal basso verso l'alto.
 
-4 livelli di autorizzazione (clearance) per i soggetti, come per gli oggetti, hanno gli stessi nomi
+*foto dimostrativa slide 53*
 
-Regole di sicurezza (che determinano il flusso di informazione del sistema):
-1. proprietà di semplice sicurezza: un processo in esecuzione ad un livello di sicurezza k può **leggere** oggetti a suo livello o a livelli inferiori;
-2. proprità * (star): un processo in esecuzione a livello di sicurezza k può **scrivere** solo oggetti al suo livello o superiori.
+**Esempio di difesa contro Trojan per modello Bell-La Padula**: Bell-La Padula serve a impedire attacchi come questo. Supponiamo che i livelli di sicurezza siano 2: riservato e pubblico.
+Se facciamo in modo che gli utenti siano classificati, nonostante l'ACL consenta l'accesso in scrittura, la politica di sicurezza lo impedisce (NB: la politica di sicurezza ha precedenza sui meccanismi di protezione).
+Tuttavia, il modello Bell-La Padula è stato concepito per mantenere i segreti, non per garantire l'integrità dei dati.
 
-Il flusso delle informazioni è dal basso verso l'alto.
+##### Modello Biba
+Ha come obbiettivo l'**integrità** dei dati. Serve per garantire che l'integrità delle informazioni di livello superiore venga in qualche modo preservata.
+Anche in questo caso prevede 2 regole:
+- **proprietà di semplice sicurezza**: è l'opposto di Bell-La Padula, in quanto stabilisce che un processo in esecuzione al livello di sicurezza k può scrivere solo oggetti al suo livello o a quelli inferiori (nessuna scrittura verso l'alto).
+- **proprietà di integrità \* **: un processo in esecuzione a livello k può leggere solo oggetti al suo livello o a quelli superiori (nessuna lettura verso il basso).
+Il flusso delle informazioni è dunque l'opposto del precedente: dall'alto verso il basso.
+```
+NB: chiaramente i modelli B-LP e BIBA sono in conflitto tra loro, quindi non pos-
+sono essere combinati.
+```
 
-*foto dimostrativa*
+### Architetture dei Sistemi ad Elevata Sicurezza
+**Sistemi Operativi Fidati**: sistemi per cui è possibile definire (e in certi casi dimostrare formalmente) determinati requisiti o regole di sicurezza.
 
-esempio di difesa contro Trojan per modello bell-la padula
+**Reference Monitor (RM)**: elemento di controllo realizzato nell'hardware del sistema operativo, che regola l'accesso dei soggetti agli oggetti sulla base di parametri di sicurezza del soggetto e dell'oggetto (in pratica ha il compito di imporre il rispetto delle regole di sicurezza). Poiché ad ogni singola iterazione deve fare delle verifiche e ciò ha un costo, spesso si tende ad implementarlo, almeno in parte, a livello hardware.
 
+**Trusted Computing Base (TCB)**: il RM ha accesso ad una base di calcolo fidata, chiamata *TCB*. Questa contiene delle informazioni che tracciano la classificazione dei soggetti e degli oggetti all'interno del sistema.
 
-bell-la padula serve a impedire attacchi come questo. Supponiamo che i livelli di sicurezza siano 2: riservato e pubblico.
-Se facciamo in modo che gli utenti siano classificati
+Il reference monitor deve imporre le regole di sicurezza (che sono ad esempio, nel caso del modello Bell-La Padula, "no read-up" e "no write-down") ed ha le seguenti proprietà:
+- **mediazione completa**, ovvero le regole di sicurezza vengono applicate ad ogni singolo accesso da parte di un soggetto ad un particolare oggetto;
+```
+NB: non è così intuitiva, nei SO comuni, es. derivati da UNIX, le regole di prote-
+zione vengono verificate solo a lato apertura del file. Se abbiamo un sistema fi-
+dato invece, ad ogni singola operazione (ad esempio di scrittura) viene fatta una
+verifica da parte del RM.
+```
+- **isolamento**, ovvero il RM e la TCB devono essere a loro volta protette da parte di eventuali accessi non autorizzati. Deve essere possibile accederli solo se ci si trova in modalità privilegiata;
+- **verificabilità**, ovvero la correttezza del RM dev'essere dimostrata. Dev'essere possibile verificare/dimostrare formalmente che il monitor fa quello per cui è stato progettato. Questa proprietà non è semplicissima da applicare.
 
-Nonostante l'ACL consenta l'accesso in scrittura, la politica di sicurezza lo impedisce (NB: la politica di sicurezza ha precedenza sui meccanismi di protezione).
-
-Il modello Bell-La Padula è stato concepito per mantenere i segreti, non per garantire l'integrità dei dati.
-
-
-MODELLO BIBA
-Obbiettivo: integrità dei dati. Serve per garantire che l'integrità delle informazioni di livello superiore venga in qualche modo preservata.
-
-2 regole anche qui:
-- proprietà di semplice sicurezza: è l'opposto di Bell-La Padula, in quanto stabilisce che un processo in esecuzione al livello di sicurezza k può scrivere solo oggetti al suo livello o a quelli inferiori (nessuna scrittura verso l'alto).
-- proprietà di integrità *: un processo in esecuzione a livello k può leggere solo oggetti al suo livello o a quelli superiori (nessuna lettura verso il basso).
-
-Le informazioni seguono un flusso opposto al modello precedente (in questo caso dall'alto verso il basso);
-
-B-LP e BIBA sono in conflitto tra loro, quindi non possono essere combinati.
-
-
-
-Questi modelli solitamente vengono utilizzati nelle architetture dei sistemi ad alta sicurezza
-
-Sistemi operativi sicuri o fidati
-
-fidati: per cui è possibile fornire e in certi casi dimostrare formalmente, che quel sistema garantisce il rispetto di determinati requisiti o regole.
-
-in questi sistemi è presente un componente chiamato "reference monito": elemento di controllo realizzato dall'hw e dal SO
-ha il compito di imporre il rispetto delle regole di sicurezza
-
-
-Trusted computing base: il RM fa riferimento ad una base di dati fidati (la cosiddetta TCB). Questa base di calcolo fidata contiene delle informazioni che tracciano la classificazione dei soggetti e degli oggetti all'interno del sistema;
-l'architettura di un sistema ad elevata sicurezza
-
-
-Sistemi fidati
-Il reference monitor (RM) deve imporre le regole di sicurezza (che sono ad esempio nel caso del modello Bell-La Padula no read-up e no write-down) ed ha le seguenti proprietà:
-
-- mediazione completa - le regole di sicurezza vengono applicate ad ogni singolo accesso da parte di un soggetto ad un particolare oggetto;
-NB: non è così intuitiva, nei SO comuni, es. derivati da UNIX, le regole di protezione vengono verificate solo a lato apertura del file. Se abbiamo un sistema fidato invece, ad ogni singola operazione (ad esempio di scrittura) viene fatta una verifica da parte del RM;
-
-- isolamento - il RM e la TCB devono essere a loro volta protette da parte di eventuali accessi non autorizzati. Ovvero che siano acceduti solo in modalità privilegiata
-
-- verificabilità - la correttezza del RM dev'essere dimostrata, dev'essere possibile verificare/dimostrare formalmente che il monitor fa quello per cui è stato progettato. Questa proprietà non è semplicissima da applicare.
-
-Tutto questo ci fa capire il motivo per cui quando parliamo di sistema fidato, il RM spesso è implementato anche parzialmente in hw. Ovviamente ha un costo che ad ogni singola iterazione esso debba fare delle verifiche, quindi si tende ad implementarlo in parte a livello hw.
-
-CLASSIFICAZIONE della sicurezza dei sistemi di calcolo
+### Classificazione della Sicurezza dei Sistemi di Calcolo
 Ancora oggi molto diffusa, consente di etichettare i sistemi di calcolo sulla base delle caratteristiche di sicurezza.
 Orange Book: riferimento universale per quanto riguarda la classificazione dei sistemi di calcolo in termini di sicurezza. È nato in ambito militare, in cui sono definite le classi di sicurezza e descritte le caratteristiche che un sistema deve avere per appartenere a ciascuna categoria.
 
