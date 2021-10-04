@@ -1,3 +1,66 @@
+<details open="open">
+  <summary><h2 style="display: inline-block">Indice del capitolo</h2></summary>
+  <a href="#01---virtualizzazione">Virtualizzazione</a>
+  <ul>
+    <li><a href="#virtualizzazione-di-un-sistema-di-elaborazione">Virtualizzazione di un sistema di elaborazione</a></li>
+    <li><a href="#emulazione">Emulazione</a>
+      <ul>
+        <li><a href="#interpretazione">Interpretazione</a>
+        <li><a href="#compilazione-dinamica">Compilazione Dinamica</a>
+      </ul>
+    </li>
+    <li><a href="#tipi-livelli-di-virtualizzazione">Tipi (Livelli) di Virtualizzazione</a></li>
+    <!--<li><a href="#cenni-storici">Cenni Storici</a></li>-->
+    <li><a href="#vantaggi-della-virtualizzazione">Vantaggi della Virtualizzazione</a></li>
+    <li><a href="#realizzazione-del-vmm">Realizzazione del VMM</a>
+      <ul>
+        <!--<li><a href="#vmm-di-sistema">VMM di Sistema</a></li>
+        <li><a href="#vmm-ospitato">VMM Ospitato</a></li>
+        <li><a href="#ring-di-protezione">Ring di Protezione</a>
+          <ul>
+            <li><a href="#ring-deprivileging">Ring Deprivileging</a></li>
+            <li><a href="#ring-compression">Ring Compression</a></li>
+            <li><a href="#ring-aliasing">Ring Aliasing</a></li>
+          </ul>
+        </li>
+        <li><a href="#supporto-hardware-alla-virtualizzazione">Supporto Hardware alla Virtualizzazione</a></li>
+        <li><a href="#realizzazione-del-vmm-in-architetture-non-virtualizzabili">Realizzazione del VMM in Architetture Non Virtualizzabili</a></li>-->
+        <li><a href="#fast-binary-translation-ftb">Fast Binary Translation (FTB)</a></li>
+        <li><a href="#paravirtualizzazione">Paravirtualizzazione</a></li>
+      </ul>
+    </li>
+    <!--<li><a href="#architetture-virtualizzabili">Architetture Virtualizzabili</a>
+      <ul>
+        <li><a href="#protezione-nellarchitettura-x86">Protezione nell'architettura x86</a></li>
+        <li><a href="#funzionamento-dei-vmm-nellarchitettura-x86-classica">Funzionamento dei VMM nell'architettura x86 classica</a></li>
+      </ul>
+    </li>-->
+    <li><a href="#gestione-di-vm">Gestione di VM</a>
+      <ul>
+        <li><a href="#stati-di-una-vm">Stati di una VM</a></li>
+        <li><a href="#migrazione-di-una-vm">Migrazione di una VM</a></li>
+        <li><a href="#soluzione-precopy">Soluzione: precopy</a></li>
+      </ul>
+    </li>
+    <li><a href="#xen">XEN</a>
+      <ul>
+        <li><a href="#architettura">Architettura</a></li>
+        <li><a href="#realizzazione">Realizzazione</a></li>
+        <li><a href="#gestione-della-memoria-e-paginazione">Gestione della Memoria e Paginazione</a></li>
+        <li><a href="#cenni-su-virtualizzazione-della-cpu">Cenni su Virtualizzazione della CPU</a></li>
+        <li><a href="#virtualizzazione-dei-dispositivi-io">Virtualizzazione dei Dispositivi (I/O)</a></li>
+          <ul>
+            <li><a href="#protezione-memory-split">Protezione: Memory Split</a></li>
+            <li><a href="#protezione-balloon-process">Protezione: Balloon Process</a></li>
+          </ul>
+        </li>
+        <li><a href="#gestione-delle-interruzioni">Gestione delle Interruzioni</a></li>
+        <li><a href="#migrazione-live">Migrazione Live</a></li>
+      </ul>
+    </li>
+  </ul>
+</details>
+
 <!-- lezione 2021-09-21 -->
 ## 01 - Virtualizzazione
 La virtualizzazione è una tecnologia oggi usatissima. Virtualizzare un sistema di elaborazione (costituito da un insieme di risorse hardware e software) significa presentare all'utilizzatore una visione delle risorse diversa da quella attuale (ad esempio duplicazione della memoria). Questo obbiettivo viene raggiunto mediante un livello intermedio, un layer che svolge appunto il ruolo di intermediario tra utilizzatore (vista logica) e sistema (vista fisica). Solitamente l'intermediario è software, ma talvolta può avere un supporto hardware specifico. Esso permette di eseguire più macchine virtuali su una stessa architettura e ognuna di queste vede le proprie risorse, indipendentemente dalle altre, e da quelle effettive ("reali").
