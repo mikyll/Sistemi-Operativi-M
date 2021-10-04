@@ -54,7 +54,7 @@ deve tenere conto di 3 cose:
 
 Soluzione più naturale ed intuitiva sarebbe riservare nella memoria un'area per la matrice. La rappresentazione concreta però dev'essere ottimizzata sia per quanto riguarda l'occupazione della memoria, sia rispetto all'efficienza nel'accesso e nella gestione delle informazioni di protezione. Quindi esistono 2 approcci:
 - Access Control List (ACL), rappresentazione per colonne. Per ogni oggetto (risorsa) si mantiene una struttura dati che concettualmente rappresenta una colonna della matrice, ma tenendo conto che la colonna, come la matrice, è sparsa, in questa lista si ottengono solo gli elementi significativi, ovvero quelli non vuoti. La struttura associata ad ogni oggetto è una lista in cui ogni elemento è un soggetto che ha un qualche diritto su quell'oggetto.
-- Capability List, rappresentazione per righe. Ad ogni soggetto è associata una lsita che indica quali sono gli oggetti al quale il soggetto può accedere.
+- Capability List (CL), rappresentazione per righe. Ad ogni soggetto è associata una lsita che indica quali sono gli oggetti al quale il soggetto può accedere.
 
 ACL: Lista degli Accessi
 La lista degli accessi per ogni oggetto ha una struttura composta da un insieme di elementi, ognuno dei quali contiene la coppia soggetto, insieme dei diritti
@@ -71,23 +71,112 @@ In generale, nei sistemi che prevedono i gruppi, è comunque possibile svincolar
 
 
 CAPABILITY LIST
-Seconda possibilità, ogni elemento di questa lista contiene l'indicazione dell'oggetto e i diritti di accesso che quel soggetto al quale la capability list è associata. Chiaramente non avrà tanti elementi quanti solo le colonne della matrice degli accessi, in quanto come abbiamo detto è una matrice sparsa.
-Tipicamente contiene queste due informazioni. Nella pratica, spesso l'oggetti viene identificato tramite un indirizzo, che ne localizza in memoria, o meglio ne localizza il descrittore, ed ovviamente i diritti che spesso vengono rappresentati in modo compatto tramite una sequenza di bit.
+Seconda possibilità, ogni elemento di questa lista contiene l'indicazione dell'oggetto e i diritti di accesso che quel soggetto, al quale la capability list è associata, può esercitare su quell'oggetto. Chiaramente non avrà tanti elementi quanti solo le colonne della matrice degli accessi, in quanto come abbiamo detto è una matrice sparsa.
+Tipicamente contiene queste due informazioni. Nella pratica, spesso l'oggetti viene identificato tramite un indirizzo, che ne localizza in memoria, o meglio ne localizza il descrittore, ed ovviamente i diritti, che spesso vengono rappresentati in modo compatto tramite una sequenza di bit.
+
+slide 39 - min 46:17
+Se abbiamo una CL avremo una struttura rappresentabile come a slide 40
+
+*foto*
+
+È importante, anche per le ACL (in generale), le informazioni relative alla protezione devono essere protette a loro volta damanomissioni. Ci sono vari modi:
+- tipicamente si limita la possibilità di accedere inscrittura a tali scritture al solo kernel del sistema operativo (si sfrutta la protezione alivello hw, modo di esecuzione kernel vs modo di esecuzione utente;
+- se l'hw lo supporta si può utilizzare un'architettura etichettata: a livello hw ogni singola parola ha bit extra (tag) che espirmono la protezione su quella cella di memoria. In questo modo si può progettare la protezione a livello di memoria. Inarchitetture di questo tipo il processore sa che i bit di etichetta non devono essere considerate dalle operazioni logiche di aritmetica che il processore deve eseguire.
 
 
-slide 39
+REVOCA DEI DIRITTI DI ACCESSO
+Revocare significa negare dei diritti precedentemente concessi.
+- revoca **generale** o **selettiva**, ovvero rispettivamente da un certo momento in poi nessuno potrà accedere ad un determinato oggetto, oppure solo alcuni soggetti non potranno più accedervi (ad esempio quelli appartenenti ad un gruppo);
+- revoca **totale** o **parziale**, ovvero rispettivamente riguardante tutti i diritti per l'oggetto, oppure solo un particolare sottoinsieme di diritti;
+- revoca **permanente** o **temporanea**, ovvero rispettivamente il diritto di accesso revocato non sarà più disponibile, oppure potrà essere successivamente riacquistato.
+
+Revoca per un oggetto con ACL:
+la revoca risulta semplice: si fa riferimento alla ACL associata all'oggetto e si cancellano i diritti diaccesso che si vogliono revocare.
+
+Per un oggetto con CL:
+l'operazione risulta un po' più complessa, in quanto è necessario verificare per ogni dominiio se contiene la capability con riferimento all'oggetto considerato.
+
+Cancellare un file significa togliere i diritti su quel file a tutti gli utenti che li possiedono. In ACL cancello semplicecmente l'ACL del sistema, mentre con CL bisogna fare ricerca in tutte le CL per vedere se esiste un elemento riferito a quel file e in caso cancellarlo.
+Sicuramente queste operazioni che riguardano un solo oggetto risultano più costose in sistemi con CL.
+
+Un sistema realizzato esclusivamente con CL può soffrire di questo appesantimento dovuto a operazioni che riguardano revoche che interessano più soggetti e quindi causano overhead (costo computazione maggiore)
+Naturalmente si può fare anche il discorso duale: se si ha la necessità di fare una modifica allo stato di protezione che interessa un particolare soggetto (caso più banale eliminare il soggetto dal sistema - questo comporta una modifica allo stato di protezione, in CL si cancella semplicemente la lsita associata al soggetto; in ACL bisogna fare ricerca in ogni ACL).
+
+Quindi non c'è soluzione assoluta, o migliore dell'altra in toto.
+Nella realtà, ovvero nella maggior parte dei sistemi, solitamente si usa una soluzione ibrida che combina i due metodi.
+
+In UNIX, per ogni risorsa (file, in quanto UNIX è file-centrico, tutte le risorse sono presenti nel filesystem come file) per ogni oggetto viene mantenuta una struttura contenente 12 bit "di protezione". Sono memorizzati sul disco, fanno parte dell'i-node, che è rappresentato sulla memoria di massa all'interno dell'i-list.
+Se ci pensiamo bene sono una forma semplificata di ACL: i 12 bit (9, utente, gruppo e altri) sono una forma semplificata di ACL, esprimono cosa gli utenti possono o non possono fare.
+Si distingue tra l'utente proprietario u, il gruppo, oppure gli altri. Non abbiamo il dettaglio del particolare utente, per questo è semplificata, ma solo utente proprietario.
+Questa particolare struttura viene memorizzata nella memoria secondaria.
+
+È una soluzione ibrida, in quanto ogni volta che un processo cerca di accedere ad un oggetto (file), cosa succede? Il file viene aperto e nella tabella dei file aperti viene caricato un elemento che altro non è che la capability che quel soggetto ha nei confronti di quella risorsa.
+ES: quando cerco di aprire un file in scrittura, viene fatta una verifica sulla ACL (che controlla se posso effettuare quell'operazione). Se la verifica va a buon fine, il file viene aperto e nella tabella dei file aperti viene caricato un elemento che concettualmente rappresenta il diritto di quel processo ad accedere in scrittura sul file, quindi viene aggiunta una capability alla tabella dei file aperti. Di fatto la tabella dei file aperti è una CL.
+La differenza? La ACL si trova in memoria secondaria in modo persistente, la CL è in memoria volatile (e ha vita più breve solitamente), quando il processo finisce di operare sul file, l'elemento viene rimosso e quando il processo termina la tabella dei file aperti viene distrutta.
+Vantaggio: una volta verificato preliminarmente che sia presente il diritto d'accesso, non c'è più bisogno di consultare la ACL, ma si va a guardare la CL.
 
 
 
-[...]
+Protezione e sicurezza
+Protezione, come detto, riguarda il controllo degli accessi alle risorse interne al sistema.
+Sicurezza riguarda un controllo degli accessi al sistema.
+
+In certi casi la sola protezione del sistema può essere inefficace: se un utente entra nel sistema con intenzioni malevole, riesce a far eseguire ad altri dei programmi che agiscono sulle risorse del sistema (Trojan - Cavalli di Troia programmi che introdotti in qualche modo nel filesystem, una volta che sono lì si induce un utente autorizzato a eseguire quel programma e provocano dei danni, ad esempio la sottrazione di informazioni sensibili)
+
+Soluzione: affiancare al normale sistema di protezione un sistema di sicurezza, che normalmente è strutturato a livelli (struttura multilivello)
 
 
+Stabilisce delle regole più generali rispetto al sistema di protezione, in cui prima di tutto si classificano gli utenti: ad esempio in funzione del loro ruolo.
+Poi classifica, dopo i soggetti, anche gli oggetti (le risorse). In funzione della confidenzialità dell'oggetto, vengono collocate ad un livello diverso di un sistema.
+
+In un sistema di questo tipo l'approccio è quello di tipo MAC.
+
+I modelli di sicurezza multilivello più famosi sono due:
+- Bell-La Padula - obbiettivo di garantire la confidenzialità delle informazioni;
+- Biba - è antitetico al precedente, e ha l'obbiettivo di garantire l'integrità delle informazioni.
+Entrambi aderiscono allo stesso modello multilivello
+
+MODELLI DI SICUREZZA MULTILIVELLO
+In un modello di sicurezza multilivello:
+i soggetti (utenti) e gli oggetti (risorse) sono classificati in livelli (classi di accesso):
+- livelli per i soggetti (**clearance levels**);
+- livelli per gli oggetti (**sensitivity levels**).
+
+Il modello inoltre, fissa delle regole di sicurezza che possono variare a seconda del particolare modello che sto considerando.
+
+Le regole di sicurezza fissano le regole di interazione tra livelli diversi.
+
+Modello Bell-La Padula
+Nato in ambito militare ha come obbiettivo primario garantire la confidenzialità delle informazioni.
+Abbiamo un sistema di protezione (matrice accessi) a cui viene affiancato un modello multilivello che viene gestito con approccio di tipo MAC.
+2 regole di sicurezza che caratterizzano il modello, che stabiliscono il verso di propagazione delle informazioni nel sistema.
+
+4 diversi livelli di sensibilità degli oggetti:
+1. non classificato (+ basso);
+2. confidenziale
+3. segreto
+4. top secret (+ alto)
+
+Questi sono i livelli in cui verranno classificati i documenti.
+
+Se voglio che un documento sia disponibile solo a chi si trova ai vertifici della gerarchia (es. capitano(?)) lo metterò top secret.
+
+4 livelli di autorizzazione (clearance) per i soggetti, come per gli oggetti, hanno gli stessi nomi
+
+Regole di sicurezza (che determinano il flusso di informazione del sistema):
+1. proprietà di semplice sicurezza: un processo in esecuzione ad un livello di sicurezza k può **leggere** oggetti a suo livello o a livelli inferiori;
+2. proprità * (star): un processo in esecuzione a livello di sicurezza k può **scrivere** solo oggetti al suo livello o superiori.
+
+Il flusso delle informazioni è dal basso verso l'alto.
+
+*foto dimostrativa*
+
+esempio di difesa contro Trojan per modello bell-la padula
 
 
+bell-la padula serve a impedire attacchi come questo. Supponiamo che i livelli di sicurezza siano 2: riservato e pubblico.
+Se facciamo in modo che gli utenti siano classificati
 
-Protezione e Sicurezza
+Nonostante l'ACL consenta l'accesso in scrittura, la politica di sicurezza lo impedisce (NB: la politica di sicurezza ha precedenza sui meccanismi di protezione).
 
 
-
-
-Sicu
