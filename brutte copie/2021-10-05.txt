@@ -76,7 +76,7 @@ Modello Multicomputer e modello network systems
 Multicomputer:
 Modello in cui i nodi e la rete sono fisicamente vicini (tipicamente nello stesso cabinet/struttura fisica), ad esempio sistema cluster:
 è un insieme di nodi, tipicamente detti server, fisicamente vicini. Ogni nodo è una scheda inserita in una struttura fisica (Rack), dove solitamente la rete di interconnessione è una linea ad alta velocità con una larghezza di banda sufficientemente ampia.
-Oltre ai cluster vi fanno parte anche i sistemi ad alto parallelismo (sistemi HTC(?))
+Oltre ai cluster vi fanno parte anche i sistemi ad alto parallelismo (sistemi HPC)
 Multicomputer sono fatti per essere aggregati in una stessa struttura fisica.
 
 
@@ -96,18 +96,86 @@ in cui vengono inquadrate architetture e sistemi di elab secondo 2 parametri:
 	
 *foto Flynn Tassonomy slide 11*
 
+SISD - Singel Instruction, Multiple Data (streams
+sistemi monoprocessore che fanno riferimento all'architettura classica della macchina di von newman.
+
+SIMD - Single Instruction, Multiple Data (streams)
+
+10:49
+- parla delle GPU
+
+
+nelle GPU, modello SIMD molto efficace, in quanto si hanno matrici di dati molto grandi (immagini)
+
+in questa categoria rientrano i vector processors (tante unità di elaborazione, non troppo potenti, ma che messe insieme e se controllate opportunamente possono risolvere particolari classi di problemi in modo molto veloce
+
+MIND - Multiple Instruction, Multiple Data (streams)
+
+Insieme di nodi di  elab ognuno dei quali può eseguire flussi di istruzioni diverse su dati diversi.
+
+ogni nodo del sistema può essere utilizzato da un processo che fa cose diverse su dati diversi.
+
+all'interno di questa categoria rientrano i multiprocessori ma anche i multi computers.
 
 
 
+MISD - Multiple Instruction, Single Data (streams)
+
+singolo flusso di dati che allo stesso tempo può essere manipolato con diverse istruzioni.
+
+A livello di sistemi di elaborazione non abbiamo sistemi significativi da portare.
+Potrebbe essere il caso di "computer pipelined".
+Ci sono diverse unità di elaborazione messe in cascata (in pipeline), che lavora su quel flusso ognuno facendo qualcosa di diverso.
+
+
+slide 13
+SIMD
+le architetture di questa categoria hanno l'obbiettivo di risolvere in modo più veloce possibile problemi matriciali, nei quali i dati sono rappresentati in forma vettoriale o matriciale, e a livello architetturale, un esempio di come potrebbe essere strutturato un esempio di questa categoria sono i ray processors, in cui rientrano anche le GPU.
+
+Ci sono tante unità di elaborazione, con la capacità ognuna di lavorare su dati diversi ad ogni istante, ma controllati da una singola control unit, che lavora in modo sequenziale, dunque impartirà ad ogni ciclo una certa istruzione a tutti i ...
 
 
 
+slide 15
+Applicazioni
+
+Torniamo al discorso di partenza: come il progetto di app concorrenti dev'essere portato avavnti? dipende innanzitutto dal tipo di architettura, ma anche daivincoli del sistema operativo.
+
+Tipi:
+a) app che forniscono modello multithreaded
+-strutturata come un insieme di processi (thread) che:
+	- permette di dominare la complessità del problema da risolvere;
+	- ovviamente aumentare l'efficienza, in quanto non si lavora più in modo sequenziale ma in parallelo;
+	- semplificare la programmazione (secondo un modello di scomposizione dell'algoritmo in più parti che possono procedere contemporaneamete).
+- i processi possono condividere variabili;
+- sono caratterizzati dal fatto che generalmente esistono più processi che processori;
+- i processi sono schedulati ed eseguiti indipendentemente.
 
 
+b) sistemi multitasking/modelli di sistemi distribuiti
+non possono condividere variabili, ...
+- 
+l'interconnessione tra i processi viene garantita tramite un opportuno supporto fornito dal sistema operativo, che mette a disposizione dei processi che devono interagire fra loro, 
 
+non potendo condividere memoria, si scambiano messaggi.
 
+questa organizzazione tipicamente fa riferimento al modello client-server
 
+in alcuni casi (sistema distribuito) ogni parte dell'applicazione che esegue su un nodo distinto della rete, può essere modellata come applicazione multithreaded.
 
+Sistemi ibridi, in cui alcune parti interagiscono in modo multithreaded (memoria comune(?)), altri a scambio di messaggi
+
+c) applicazioni parallele
+Possiamo avere sia un modello in cui i processi condividono memoria, o no.
+Ciò che caratterizza queste app è l'obbiettivo per le quali vengono procettate: risolvere il problema dato nel modo più veloce dato; oppure risolvere un problema di dimensioni più grandi di quello dato, nello stesso tempo.
+
+Tipicamente quando parliamo di app parallele parliamo di app progettate specificatamente per eseguire su sistemi paralleli (anche a livello hw).
+
+a seconda del modello architetturale, l'esecuzione è portata avanti da istruzioni/thread/processi
+
+abbiamo parti dell'applicazione che eseguono in parallelo
+e ci dev'essere la possibilità di mettere in comunicazione queste diverse parti.
+Tipicamente vengono utlizzate delle librerie a questo scopo.
 
 
 
