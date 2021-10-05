@@ -17,7 +17,7 @@
   <summary><h2 style="display: inline-block">Indice</h2></summary>
   <ol>
 <!-- CAPITOLO 1 -->
-    <li><a href="#01---virtualizzazione">Virtualizzazione</a>
+    <li><a href="#01---virtualizzazione-">Virtualizzazione</a>
       <ul>
         <li><a href="#virtualizzazione-di-un-sistema-di-elaborazione">Virtualizzazione di un sistema di elaborazione</a></li>
         <li><a href="#emulazione">Emulazione</a>
@@ -78,7 +78,7 @@
       </ul>
     </li>
 <!-- CAPITOLO 2 -->
-    <li><a href="#02---protezione">Protezione</a>
+    <li><a href="#02---protezione-">Protezione</a>
       <ul>
         <li><a href="#protezione-modelli-politiche-e-meccanismi">Protezione: Modelli, Politiche e Meccanismi</a>
 					<ul>
@@ -131,7 +131,7 @@
 			</ul>
 		</li>
 <!-- CAPITOLO 3 -->
-		<li><a href="#03---programmazione-concorrente">Programmazione Concorrente</a>
+		<li><a href="#03---programmazione-concorrente-">Programmazione Concorrente</a>
 			<ul>
 				<li><a href="#cenni-storici">Cenni Storici</a></li>
 				<li><a href="#tipi-di-architettura">Tipi di architettura</a></li>
