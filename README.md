@@ -133,10 +133,10 @@
 <!-- CAPITOLO 3 -->
 		<li><a href="#03---programmazione-concorrente-">Programmazione Concorrente</a>
 			<ul>
-				<li><a href="#cenni-storici">Cenni Storici</a></li>
+				<!--<li><a href="#cenni-storici">Cenni Storici</a></li>-->
 				<li><a href="#tipi-di-architettura">Tipi di architettura</a></li>
 				<li><a href="#classificazione-delle-architetture">Classificazione delle Architetture</a>
-					<ul>
+					<!--<ul>
 						<li><a href="#single-processor">Single Processor</a></li>
 						<li><a href="#shared-memory-multiprocessors">Shared-Memory Multiprocessors</a></li>
 						<li><a href="#distributed-memory">Distributed-Memory</a>
@@ -145,17 +145,17 @@
 								<li><a href="#network-systems">Network Systems</a></li>
 							</ul>
 						</li>
-					</ul>
+					</ul>-->
 				</li>
 				<li><a href="#tipi-di-applicazioni">Tipi di Applicazioni</a></li>
 				<li><a href="#processi-non-sequenziali-e-tipi-di-iterazione">Processi Non Sequenziali e Tipi di Iterazione</a>
 					<ul>
 						<li><a href="#processo-sequenziale">Processo Sequenziale</a></li>
 						<li><a href="#processo-non-sequenziale">Processo Non Sequenziale</a>
-							<ul>
+							<!--<ul>
 								<li><a href="#elaboratore-non-sequenziale">Elaboratore Non Sequenziale</a></li>
 								<li><a href="#linguaggi-concorrenti">Linguaggi Concorrenti</a></li>
-							</ul>
+							</ul>-->
 						</li>
 						<li><a href="#scomposizione-di-un-processo-non-sequenziale">Scomposizione di un Processo Non Sequenziale</a></li>
 					</ul>
@@ -168,10 +168,10 @@
 <details>
   <summary><h2 style="display: inline-block">Indice per lezioni</h2></summary>
   <ul>
-    <li><a href="#01---virtualizzazione">2021/09/21</a></li>
+    <li><a href="#01---virtualizzazione-">2021/09/21</a></li>
     <li><a href="#soluzione-precopy">2021/09/28</a></li>
     <li><a href="#diritto-owner">2021/09/29</a></li>
-		<li><a href="#03---programmazione-concorrente">2021/10/05</a></li>
+		<li><a href="#03---programmazione-concorrente-">2021/10/05</a></li>
 		<li><a href="#">2021/10/06</a></li>
   </ul>
 </details>
