@@ -1,1 +1,280 @@
- 
+<!-- lezione 2021/10/05 -->
+
+03 - Programmazione Concorrente
+
+Quando parliamo di prog concorrente:insieme delle tecniche, metodologie e strumenti per il supporto all'esecuzione di sistemi soft composti da **insiemi di attività svolte simultaneamnete**
+
+vari temi: non solo sviluppo di app concorrenti, ma anche tema di come queste possono essere supportate dal sistema di elaborazione.
+
+Cenni di storia
+
+origine in anni '60, nasce proprio nell'ambito dei Sistemi Operativi
+
+Introduzione dei canali o controllori di dispositivi:
+
+Naturalmentel'interazione tra dispositivi ed unità centrale di elaborazione è basta su meccanismo delle interruzioni (interrupt)
+
+quando parliamo di esecuz di operazione a livello di IO consente di realizzare una forma di interazione tra la periferica e la CPU, che al ricevimento ditale segnale può tempestivamente gestire l'evento (es: trasferimento di dati).
+
+Questo meccanismo di interruzioni è stato utilizzato ampiamente in sistemi multiprogrammati time-sharing, in cui è implementato il concetto di quanto tempo, che può essere condiviso.
+
+Quanto di tempo assegnato ad una certa applicazione
+
+"scatto di esecuzione"
+
+molti programmi possono eseguire in un sistema time-sharing in ordine non predicibile (app concorrenti sono non deterministiche: lo stesso programma eseguito in tempi diversi può comportare risultati diversi)
+Ciò si rileva anche quando parti di programmi condividono delle stesse variabili comuni: in cui si possono creare delle interferenze.
+
+
+Successivamente sistemi multiprocessore. Nei primi sistemi concorrenti, in cui era previsto l'avanzamento simultaneo di più applicazioni contemporaneamanete, quello che prima era un parallelismo virtuale, poi è diventato anche un parallelismo "reale" in quanto si è arrivati ad avere dei processori con diversi core (microprocessori)
+
+Vantaggio in termini di prestazione: quello che prima doveva essere portato avanti con un modello di parall virtuale, in cui la CPU si divideva in tutte le app concorrenti presenti sul sistema, qui diventa reale ed i tempi di esecuzione si abbattono.
+
+quando ci proviamo in un sistema concorrente 
+
+-con quale criterio modellare l'applicazione concorrente?
+
+-Come suddividerla in attività concorrenti? (quanti processi utilizzare)
+
+-Tema della possibilità delle interazioni tra queste diverse attività concorrenti
+In generale le attività nelle quali si scompone l'applicazione, possono aver bisogno di interagire fra di loro. Ad esempio imporre dei vincoli di precedenza (sincronizzazione).
+
+queste decisioni dipendono da diversi fattori: tipo di architettura hw, e tipo di applicazione.
+
+di seguito qualche immagine che esprime i diversi tipi di architettura:
+PROCESSORE SINGOLO
+processore singolo (tipicamente 2 livelli di cache)
+
+MULTIPROCESSORE
+multiprocessore (ciascun core ha le proprie cache). Più comune al giorno d'oggi.
+Nei pc di ultima generazione le cache sono di 3 livelli, ciascuna delle quali ha velocità e dimensioni diverse.
+
+Ogni nodo (microprocessore) ha la possibilità di accedere a qualunque parte della memoria, grazie alla rete di interconnessione.
+
+Categorizzazione: 2 modelli
+- UMA (Uniform Memory Access), sistemi con numero ridotto di processori (da 2 a 30 circa). Sono caratterizzati da:
+	- interconnessione realizzata tipicamente da memory bus o crossbar switch;
+	- tempo di accesso alla memoria uniforme (qualunque il processore e qualunque sia la cella di memoria da accedere, il tempo di accesso è costante)
+	- sono chiamati anche SMP (Symmetric MultiProcessors)
+
+- NUMA (Non Uniform Memory Access), sistemi con un numero elevato di processori (decine o centinaia):
+	- la memoria è organizzata gerarchicamente per evitare la congestione del bus;
+	- la rete di interconnessione è strutturata anch'essa in modo gerarchico (insieme di switch e memorie ad albero, in cui ci sono parti di memoria più vicine a certi processori ed altre più lontane);
+	- come dice il nome, il tempo di accesso dipende dalla distanza tra processore e memoria.
+
+DISTRIBUTED-MEMORY
+Rientrano in questa categoria i Multicomputers e Network Systems
+non c'è memoria condivisa tra i nodi di elaborazione
+
+La memoria è specifica del processore a cui è stata associata.
+Non è possibile che un nodo di elaborazione possa fare riferimento alla memoria di un altro nodo.
+
+C'è comunque bisogno di garantire la comunicazione tra i nodi, e quindi anche in queto caso c'è una rete di comunicazione.
+
+Modello Multicomputer e modello network systems
+
+Multicomputer:
+Modello in cui i nodi e la rete sono fisicamente vicini (tipicamente nello stesso cabinet/struttura fisica), ad esempio sistema cluster:
+è un insieme di nodi, tipicamente detti server, fisicamente vicini. Ogni nodo è una scheda inserita in una struttura fisica (Rack), dove solitamente la rete di interconnessione è una linea ad alta velocità con una larghezza di banda sufficientemente ampia.
+Oltre ai cluster vi fanno parte anche i sistemi ad alto parallelismo (sistemi HPC)
+Multicomputer sono fatti per essere aggregati in una stessa struttura fisica.
+
+
+differenza tra questo modello e l'altro 
+Network systems: sistemi in cui l'accoppiamento è più vasto rispetto al caso precedente, proprio a livello geografico.
+
+
+slide 10
+classificazione delle architetture, con riferimento alla tassonomia di Flynn (1972)
+in cui vengono inquadrate architetture e sistemi di elab secondo 2 parametri:
+1. distingue parallelismo a livello di istruzioni. In un sistema di questo tipo, abbiamo 2 possibilità:
+	- **single instruction stream**, può essere eseguito un solo singolo flusso di istruzioni;
+	- **multiple instruction streams**, possono essere eseguiti flussi di istruzioni multipli.
+2. parallelismo a livello di dati:
+	- **single data stream**, l'architettura durante l'esecuzione è in grado di elaborare un singolo flusso sequenziale di dati;
+	- **multiple data streams**: l'architettura è in grado di processare più flussi di dati in parallelo.
+	
+*foto Flynn Tassonomy slide 11*
+
+SISD - Singel Instruction, Multiple Data (streams
+sistemi monoprocessore che fanno riferimento all'architettura classica della macchina di von newman.
+
+SIMD - Single Instruction, Multiple Data (streams)
+
+10:49
+- parla delle GPU
+
+
+nelle GPU, modello SIMD molto efficace, in quanto si hanno matrici di dati molto grandi (immagini)
+
+in questa categoria rientrano i vector processors (tante unità di elaborazione, non troppo potenti, ma che messe insieme e se controllate opportunamente possono risolvere particolari classi di problemi in modo molto veloce
+
+MIND - Multiple Instruction, Multiple Data (streams)
+
+Insieme di nodi di  elab ognuno dei quali può eseguire flussi di istruzioni diverse su dati diversi.
+
+ogni nodo del sistema può essere utilizzato da un processo che fa cose diverse su dati diversi.
+
+all'interno di questa categoria rientrano i multiprocessori ma anche i multi computers.
+
+
+
+MISD - Multiple Instruction, Single Data (streams)
+
+singolo flusso di dati che allo stesso tempo può essere manipolato con diverse istruzioni.
+
+A livello di sistemi di elaborazione non abbiamo sistemi significativi da portare.
+Potrebbe essere il caso di "computer pipelined".
+Ci sono diverse unità di elaborazione messe in cascata (in pipeline), che lavora su quel flusso ognuno facendo qualcosa di diverso.
+
+
+slide 13
+SIMD
+le architetture di questa categoria hanno l'obbiettivo di risolvere in modo più veloce possibile problemi matriciali, nei quali i dati sono rappresentati in forma vettoriale o matriciale, e a livello architetturale, un esempio di come potrebbe essere strutturato un esempio di questa categoria sono i ray processors, in cui rientrano anche le GPU.
+
+Ci sono tante unità di elaborazione, con la capacità ognuna di lavorare su dati diversi ad ogni istante, ma controllati da una singola control unit, che lavora in modo sequenziale, dunque impartirà ad ogni ciclo una certa istruzione a tutti i ...
+
+
+
+slide 15
+Applicazioni
+
+Torniamo al discorso di partenza: come il progetto di app concorrenti dev'essere portato avavnti? dipende innanzitutto dal tipo di architettura, ma anche daivincoli del sistema operativo.
+
+Tipi:
+a) app che forniscono modello multithreaded
+-strutturata come un insieme di processi (thread) che:
+	- permette di dominare la complessità del problema da risolvere;
+	- ovviamente aumentare l'efficienza, in quanto non si lavora più in modo sequenziale ma in parallelo;
+	- semplificare la programmazione (secondo un modello di scomposizione dell'algoritmo in più parti che possono procedere contemporaneamete).
+- i processi possono condividere variabili;
+- sono caratterizzati dal fatto che generalmente esistono più processi che processori;
+- i processi sono schedulati ed eseguiti indipendentemente.
+
+
+b) sistemi multitasking/modelli di sistemi distribuiti
+non possono condividere variabili, ...
+- 
+l'interconnessione tra i processi viene garantita tramite un opportuno supporto fornito dal sistema operativo, che mette a disposizione dei processi che devono interagire fra loro, 
+
+non potendo condividere memoria, si scambiano messaggi.
+
+questa organizzazione tipicamente fa riferimento al modello client-server
+
+in alcuni casi (sistema distribuito) ogni parte dell'applicazione che esegue su un nodo distinto della rete, può essere modellata come applicazione multithreaded.
+
+Sistemi ibridi, in cui alcune parti interagiscono in modo multithreaded (memoria comune(?)), altri a scambio di messaggi
+
+c) applicazioni parallele
+Possiamo avere sia un modello in cui i processi condividono memoria, o no.
+Ciò che caratterizza queste app è l'obbiettivo per le quali vengono procettate: risolvere il problema dato nel modo più veloce dato; oppure risolvere un problema di dimensioni più grandi di quello dato, nello stesso tempo.
+
+Tipicamente quando parliamo di app parallele parliamo di app progettate specificatamente per eseguire su sistemi paralleli (anche a livello hw).
+
+a seconda del modello architetturale, l'esecuzione è portata avanti da istruzioni/thread/processi
+
+abbiamo parti dell'applicazione che eseguono in parallelo
+e ci dev'essere la possibilità di mettere in comunicazione queste diverse parti.
+Tipicamente vengono utlizzate delle librerie a questo scopo.
+
+esempi di applicazioni: ...
+
+Processi non sequenziali e tipi di interazione
+
+
+
+Algoritmo, Processo e Programma
+Il processo - è ciò che succede quando mettiamo in esecuzione un programma (insiem eordinato di eventi cui dà luogo un elaboratore quando opera soltto il controllo di un programma)
+
+Col termine elaboratore, intendiamo l'entità astratta (realizzata in hw o sw) che è in grado di eseguire i programmi, in un linguaggio di programmazione dato.
+
+evento
+
+effetto derivante dall'esecuzione dell'evento assegnamento ad una variabile
+
+
+
+un programma generalmente non descrive un singolo processo ma un insieme di p. ognuno dei quali è relativo all'esecuzione del programma da parte dell'elaboratore per un determinato insieme di dati in ingresso.
+
+Cosa si intende per processo sequenziale? Caso in cui l'insieme degli eventi che avvengono all'interno dell'elaboratore quando esegue un determinato programma sia una vera e propria sequenza. Quindi sostanzialmente siano ordinati in modo sequenziale: per ogni evento, tramite per il primo e l'ultimo, c'è un solo evento che lo precede ed uno solo che lo segue
+
+esempio solito: valutare il massimo comune divisore tra due numeri naturali x e y:
+
+col metodo di euclide, in modo sequenziale è possibile rappresentare l'algoritmo tramite una tabella.
+
+
+come detto il processo è la sequenza di stati attraverso cui passa l'elaboratore durante la sequenza del programma.
+
+Questo nel caso dell'algoritmo MCD, il processo non è altro che la sequenza di stati mostrati in tabella. Ed è una sequenza rigida.
+
+
+Anche nel caso di questo esempio molto semplice, è possibile
+
+Grafo di precedenza
+un processo sequenziale può essere rappresentato tramite un formalismo dato dai grafi di precedenza: ogni nodo rappresenta un singolo evento durante l'esec del programma, ogni arco rappresenta la precedenza temporale tra un nodo ed il successivo.
+
+essendo l'algoritmo strettamente sequenziale, il grafo di precedenza ottenuto è detto "ad Ordinamento Totale" (ogni nodo ha esattamente uno ed un solo nodo che lo precede ed uno ed un solo nodo che lo segue)
+
+Qualunque coppia di nodi prenda nel grafo, questa coppia è sempre ordinata.
+
+Processi non sequenziali
+Il grafo di precedenza che descrive un processo non è ordinato in modo totale, ma è caratterizzato da un ordinamento parziale.
+L'insieme degli eventi che lo compongono è ordinato non più da una relazione d'ordine totale, ma una d'ordine parziale.
+
+Caso della valutazione di un'espressione aritmetica composta:
+(3 * 4) + (2 + 3) * (6 - 2)
+
+si può seguire un'esecuzione ordinata in modo totale, ma anche parziale (vedere foto dimostrative), basta che l'ordine delle operazioni venga rispettato in base alle 
+
+Il grafo di precedenza di ordinamento parziale
+
+Esempio: elaborazione di dati su un file sequenziale
+[...]
+
+
+
+ne deriva un grafo ad ordinamento parziale
+
+
+
+l'esecuzione di un processo non sequenziale richiede:
+- innanzitutto che o a livello software o hw l'elaboratore ci dia la possibilità di eseguire operazioni simultanee, ovvero che non sia un elaboratore sequenziale;
+- un linguaggio di programmazione non sequenziale.
+
+Per quanto riguarda l'elaboratore non sequenziale abbiamo due possibilità:
+- sistemi multielaboratori (a)
+- sistemi monoelaboratori (b)
+
+
+linguaggi non sequenziali (o concorrenti): caratteristica comune: consente di esprimere a livello di programma la concorrenza o l'eventuale parallelismo (ovvero una serie di attività concorrenti).
+Deve disporre di costrutti che permettono di eseguire dei moduli in parallelo.
+
+Linguaggi concorrenti:
+naturalmente, un linguaggio di questa categoria permette di esprimere un potenziale parallelismo nell'esecuzione di moduli differenti
+
+
+da cosa è costituito tipicamente un modulo concorrente di un linguaggio?
+2 casi:
+- linguaggi in cui il parallelismo può essere espresso a livello di singola istruzione (es CSP, Occam);
+- caso più frequente: parallelismo a livello di sequenza di istruzioni (es: Java, Ada, Go, ...)
+
+In java se definisco un oggetto derivante dalla classe Thread, stabilisco una serie di istruzioni da eseguire in sequenza all'interno di un Thread
+
+Una volta noto l'algoritmo non sequenziale si tratta di ricavare dal grafo di precedenza di quell'algoritmo non sequenziale una collezione di processi non sequenziali.
+
+
+Processi indipendenti: l'evoluzione di un processo non influenza quella degli altri.
+
+Se abbiamo processi indipendenti, di fatto nel grafo, abbiamo un unico punto di partenza ed un unico punto di arrivo, ma il grafo magari si esprime come una serie di 3 sequenze di nodi, che non sono legate fra loro.
+
+
+Quando andiamo a tradurre un algoritmo non sequenziale in un algoritmo sequenziale, 
+
+
+slide 35 abbiamo ricavato 3 processi (uno si occupa della lettura, uno dell'elaborazione, uno della scrittura), ma non sono indipendenti (sono processi interagenti)
+
+quando partiamo da un algoritmo non sequenziale è individuare all'interno del grafo di ordinamento parziale una collezione di processi parziali che non saranno indipendenti fra loro(?)
+
+prossima volta vediamo come esprimere i vincoli
+
+
