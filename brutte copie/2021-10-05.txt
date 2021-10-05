@@ -177,8 +177,104 @@ abbiamo parti dell'applicazione che eseguono in parallelo
 e ci dev'essere la possibilità di mettere in comunicazione queste diverse parti.
 Tipicamente vengono utlizzate delle librerie a questo scopo.
 
+esempi di applicazioni: ...
+
+Processi non sequenziali e tipi di interazione
 
 
 
+Algoritmo, Processo e Programma
+Il processo - è ciò che succede quando mettiamo in esecuzione un programma (insiem eordinato di eventi cui dà luogo un elaboratore quando opera soltto il controllo di un programma)
+
+Col termine elaboratore, intendiamo l'entità astratta (realizzata in hw o sw) che è in grado di eseguire i programmi, in un linguaggio di programmazione dato.
+
+evento
+
+effetto derivante dall'esecuzione dell'evento assegnamento ad una variabile
+
+
+
+un programma generalmente non descrive un singolo processo ma un insieme di p. ognuno dei quali è relativo all'esecuzione del programma da parte dell'elaboratore per un determinato insieme di dati in ingresso.
+
+Cosa si intende per processo sequenziale? Caso in cui l'insieme degli eventi che avvengono all'interno dell'elaboratore quando esegue un determinato programma sia una vera e propria sequenza. Quindi sostanzialmente siano ordinati in modo sequenziale: per ogni evento, tramite per il primo e l'ultimo, c'è un solo evento che lo precede ed uno solo che lo segue
+
+esempio solito: valutare il massimo comune divisore tra due numeri naturali x e y:
+
+col metodo di euclide, in modo sequenziale è possibile rappresentare l'algoritmo tramite una tabella.
+
+
+come detto il processo è la sequenza di stati attraverso cui passa l'elaboratore durante la sequenza del programma.
+
+Questo nel caso dell'algoritmo MCD, il processo non è altro che la sequenza di stati mostrati in tabella. Ed è una sequenza rigida.
+
+
+Anche nel caso di questo esempio molto semplice, è possibile
+
+Grafo di precedenza
+un processo sequenziale può essere rappresentato tramite un formalismo dato dai grafi di precedenza: ogni nodo rappresenta un singolo evento durante l'esec del programma, ogni arco rappresenta la precedenza temporale tra un nodo ed il successivo.
+
+essendo l'algoritmo strettamente sequenziale, il grafo di precedenza ottenuto è detto "ad Ordinamento Totale" (ogni nodo ha esattamente uno ed un solo nodo che lo precede ed uno ed un solo nodo che lo segue)
+
+Qualunque coppia di nodi prenda nel grafo, questa coppia è sempre ordinata.
+
+Processi non sequenziali
+Il grafo di precedenza che descrive un processo non è ordinato in modo totale, ma è caratterizzato da un ordinamento parziale.
+L'insieme degli eventi che lo compongono è ordinato non più da una relazione d'ordine totale, ma una d'ordine parziale.
+
+Caso della valutazione di un'espressione aritmetica composta:
+(3 * 4) + (2 + 3) * (6 - 2)
+
+si può seguire un'esecuzione ordinata in modo totale, ma anche parziale (vedere foto dimostrative), basta che l'ordine delle operazioni venga rispettato in base alle 
+
+Il grafo di precedenza di ordinamento parziale
+
+Esempio: elaborazione di dati su un file sequenziale
+[...]
+
+
+
+ne deriva un grafo ad ordinamento parziale
+
+
+
+l'esecuzione di un processo non sequenziale richiede:
+- innanzitutto che o a livello software o hw l'elaboratore ci dia la possibilità di eseguire operazioni simultanee, ovvero che non sia un elaboratore sequenziale;
+- un linguaggio di programmazione non sequenziale.
+
+Per quanto riguarda l'elaboratore non sequenziale abbiamo due possibilità:
+- sistemi multielaboratori (a)
+- sistemi monoelaboratori (b)
+
+
+linguaggi non sequenziali (o concorrenti): caratteristica comune: consente di esprimere a livello di programma la concorrenza o l'eventuale parallelismo (ovvero una serie di attività concorrenti).
+Deve disporre di costrutti che permettono di eseguire dei moduli in parallelo.
+
+Linguaggi concorrenti:
+naturalmente, un linguaggio di questa categoria permette di esprimere un potenziale parallelismo nell'esecuzione di moduli differenti
+
+
+da cosa è costituito tipicamente un modulo concorrente di un linguaggio?
+2 casi:
+- linguaggi in cui il parallelismo può essere espresso a livello di singola istruzione (es CSP, Occam);
+- caso più frequente: parallelismo a livello di sequenza di istruzioni (es: Java, Ada, Go, ...)
+
+In java se definisco un oggetto derivante dalla classe Thread, stabilisco una serie di istruzioni da eseguire in sequenza all'interno di un Thread
+
+Una volta noto l'algoritmo non sequenziale si tratta di ricavare dal grafo di precedenza di quell'algoritmo non sequenziale una collezione di processi non sequenziali.
+
+
+Processi indipendenti: l'evoluzione di un processo non influenza quella degli altri.
+
+Se abbiamo processi indipendenti, di fatto nel grafo, abbiamo un unico punto di partenza ed un unico punto di arrivo, ma il grafo magari si esprime come una serie di 3 sequenze di nodi, che non sono legate fra loro.
+
+
+Quando andiamo a tradurre un algoritmo non sequenziale in un algoritmo sequenziale, 
+
+
+slide 35 abbiamo ricavato 3 processi (uno si occupa della lettura, uno dell'elaborazione, uno della scrittura), ma non sono indipendenti (sono processi interagenti)
+
+quando partiamo da un algoritmo non sequenziale è individuare all'interno del grafo di ordinamento parziale una collezione di processi parziali che non saranno indipendenti fra loro(?)
+
+prossima volta vediamo come esprimere i vincoli
 
 
