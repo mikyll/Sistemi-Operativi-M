@@ -1,1 +1,116 @@
- 
+<!-- lezione 2021/10/05 -->
+
+03 - Programmazione Concorrente
+
+Quando parliamo di prog concorrente:insieme delle tecniche, metodologie e strumenti per il supporto all'esecuzione di sistemi soft composti da **insiemi di attività svolte simultaneamnete**
+
+vari temi: non solo sviluppo di app concorrenti, ma anche tema di come queste possono essere supportate dal sistema di elaborazione.
+
+Cenni di storia
+
+origine in anni '60, nasce proprio nell'ambito dei Sistemi Operativi
+
+Introduzione dei canali o controllori di dispositivi:
+
+Naturalmentel'interazione tra dispositivi ed unità centrale di elaborazione è basta su meccanismo delle interruzioni (interrupt)
+
+quando parliamo di esecuz di operazione a livello di IO consente di realizzare una forma di interazione tra la periferica e la CPU, che al ricevimento ditale segnale può tempestivamente gestire l'evento (es: trasferimento di dati).
+
+Questo meccanismo di interruzioni è stato utilizzato ampiamente in sistemi multiprogrammati time-sharing, in cui è implementato il concetto di quanto tempo, che può essere condiviso.
+
+Quanto di tempo assegnato ad una certa applicazione
+
+"scatto di esecuzione"
+
+molti programmi possono eseguire in un sistema time-sharing in ordine non predicibile (app concorrenti sono non deterministiche: lo stesso programma eseguito in tempi diversi può comportare risultati diversi)
+Ciò si rileva anche quando parti di programmi condividono delle stesse variabili comuni: in cui si possono creare delle interferenze.
+
+
+Successivamente sistemi multiprocessore. Nei primi sistemi concorrenti, in cui era previsto l'avanzamento simultaneo di più applicazioni contemporaneamanete, quello che prima era un parallelismo virtuale, poi è diventato anche un parallelismo "reale" in quanto si è arrivati ad avere dei processori con diversi core (microprocessori)
+
+Vantaggio in termini di prestazione: quello che prima doveva essere portato avanti con un modello di parall virtuale, in cui la CPU si divideva in tutte le app concorrenti presenti sul sistema, qui diventa reale ed i tempi di esecuzione si abbattono.
+
+quando ci proviamo in un sistema concorrente 
+
+-con quale criterio modellare l'applicazione concorrente?
+
+-Come suddividerla in attività concorrenti? (quanti processi utilizzare)
+
+-Tema della possibilità delle interazioni tra queste diverse attività concorrenti
+In generale le attività nelle quali si scompone l'applicazione, possono aver bisogno di interagire fra di loro. Ad esempio imporre dei vincoli di precedenza (sincronizzazione).
+
+queste decisioni dipendono da diversi fattori: tipo di architettura hw, e tipo di applicazione.
+
+di seguito qualche immagine che esprime i diversi tipi di architettura:
+PROCESSORE SINGOLO
+processore singolo (tipicamente 2 livelli di cache)
+
+MULTIPROCESSORE
+multiprocessore (ciascun core ha le proprie cache). Più comune al giorno d'oggi.
+Nei pc di ultima generazione le cache sono di 3 livelli, ciascuna delle quali ha velocità e dimensioni diverse.
+
+Ogni nodo (microprocessore) ha la possibilità di accedere a qualunque parte della memoria, grazie alla rete di interconnessione.
+
+Categorizzazione: 2 modelli
+- UMA (Uniform Memory Access), sistemi con numero ridotto di processori (da 2 a 30 circa). Sono caratterizzati da:
+	- interconnessione realizzata tipicamente da memory bus o crossbar switch;
+	- tempo di accesso alla memoria uniforme (qualunque il processore e qualunque sia la cella di memoria da accedere, il tempo di accesso è costante)
+	- sono chiamati anche SMP (Symmetric MultiProcessors)
+
+- NUMA (Non Uniform Memory Access), sistemi con un numero elevato di processori (decine o centinaia):
+	- la memoria è organizzata gerarchicamente per evitare la congestione del bus;
+	- la rete di interconnessione è strutturata anch'essa in modo gerarchico (insieme di switch e memorie ad albero, in cui ci sono parti di memoria più vicine a certi processori ed altre più lontane);
+	- come dice il nome, il tempo di accesso dipende dalla distanza tra processore e memoria.
+
+DISTRIBUTED-MEMORY
+Rientrano in questa categoria i Multicomputers e Network Systems
+non c'è memoria condivisa tra i nodi di elaborazione
+
+La memoria è specifica del processore a cui è stata associata.
+Non è possibile che un nodo di elaborazione possa fare riferimento alla memoria di un altro nodo.
+
+C'è comunque bisogno di garantire la comunicazione tra i nodi, e quindi anche in queto caso c'è una rete di comunicazione.
+
+Modello Multicomputer e modello network systems
+
+Multicomputer:
+Modello in cui i nodi e la rete sono fisicamente vicini (tipicamente nello stesso cabinet/struttura fisica), ad esempio sistema cluster:
+è un insieme di nodi, tipicamente detti server, fisicamente vicini. Ogni nodo è una scheda inserita in una struttura fisica (Rack), dove solitamente la rete di interconnessione è una linea ad alta velocità con una larghezza di banda sufficientemente ampia.
+Oltre ai cluster vi fanno parte anche i sistemi ad alto parallelismo (sistemi HTC(?))
+Multicomputer sono fatti per essere aggregati in una stessa struttura fisica.
+
+
+differenza tra questo modello e l'altro 
+Network systems: sistemi in cui l'accoppiamento è più vasto rispetto al caso precedente, proprio a livello geografico.
+
+
+slide 10
+classificazione delle architetture, con riferimento alla tassonomia di Flynn (1972)
+in cui vengono inquadrate architetture e sistemi di elab secondo 2 parametri:
+1. distingue parallelismo a livello di istruzioni. In un sistema di questo tipo, abbiamo 2 possibilità:
+	- **single instruction stream**, può essere eseguito un solo singolo flusso di istruzioni;
+	- **multiple instruction streams**, possono essere eseguiti flussi di istruzioni multipli.
+2. parallelismo a livello di dati:
+	- **single data stream**, l'architettura durante l'esecuzione è in grado di elaborare un singolo flusso sequenziale di dati;
+	- **multiple data streams**: l'architettura è in grado di processare più flussi di dati in parallelo.
+	
+*foto Flynn Tassonomy slide 11*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
