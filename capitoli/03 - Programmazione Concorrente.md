@@ -1,5 +1,40 @@
-<!-- lezione 2021/10/05 -->
+<h1 align="center">Capitolo 3: Programmazione Concorrente</h1>
 
+<details open="open">
+  <summary><h2 style="display: inline-block">Indice</h2></summary>
+  <a href="#03---programmazione-concorrente">Programmazione Concorrente</a>
+  <ul>
+    <li><a href="#cenni-storici">Cenni Storici</a></li>
+	<li><a href="#tipi-di-architettura">Tipi di architettura</a></li>
+	<li><a href="#classificazione-delle-architetture">Classificazione delle Architetture</a>
+		<ul>
+			<li><a href="#single-processor">Single Processor</a></li>
+			<li><a href="#shared-memory-multiprocessors">Shared-Memory Multiprocessors</a></li>
+			<li><a href="#distributed-memory">Distributed-Memory</a>
+				<ul>
+					<li><a href="#multicomputers">Multicomputers</a></li>
+					<li><a href="#network-systems">Network Systems</a></li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li><a href="#tipi-di-applicazioni">Tipi di Applicazioni</a></li>
+	<li><a href="#processi-non-sequenziali-e-tipi-di-iterazione">Processi Non Sequenziali e Tipi di Iterazione</a>
+		<ul>
+			<li><a href="#processo-sequenziale">Processo Sequenziale</a></li>
+			<li><a href="#processo-non-sequenziale">Processo Non Sequenziale</a>
+				<ul>
+					<li><a href="#elaboratore-non-sequenziale">Elaboratore Non Sequenziale</a></li>
+					<li><a href="#linguaggi-concorrenti">Linguaggi Concorrenti</a></li>
+				</ul>
+			</li>
+			<li><a href="#scomposizione-di-un-processo-non-sequenziale">Scomposizione di un Processo Non Sequenziale</a></li>
+		</ul>
+	</li>
+  </ul>
+</details>
+
+<!-- lezione 2021/10/05 -->
 ## 03 - Programmazione Concorrente
 La *programmazione concorrente* è l'insieme delle tecniche, metodologie e strumenti per il support all'esecuzione di sistemi software composti da *insiemi di attività svolte simultaneamente*.
 
@@ -7,8 +42,8 @@ La *programmazione concorrente* è l'insieme delle tecniche, metodologie e strum
 La programmazione concorrente nasce negli anni '60, proprio nell'ambito dei Sistemi Operativi, quando ci fu l'introduzione dei canali o controllori di dispositivi (hardware): questi consentono l'esecuzione concorrente di operazioni nei dispositivi ed istruzioni nei programmi eseguiti dall'unità di elaborazione centrale.
 
 L'interazione tra dispositivi ed unità centrale di elaborazione (processore) è basata fortemente sul meccanismo delle interruzioni (segnali di interrupt).
-Quando la CPU riceve un segnale di interrupt dalla periferica, può tempestivamente gestiree quel particolare evento, che potrebbe essere ad esempio il trasferimento di dati.
-Questo meccanismo di interruzioni è stato poi importato ed utilizzato ampiamente in sistemi multiprogrammati time-sharing, in cui è impiegato il concetto di **quanto  di tempo** che consente di dividere equamente il tempo di CPU tra tutte le applicazioni in esecuzione su quel sistema/ambiente di esecuzione. Il modo per sancire il termine di un quanto di tempo assegnato ad un certo processo, che esegue un'applicazione, è ancora rappresentato dall'interruzione. Si ha lo scatto all'interruzione quando il quanto di tempo è esaurito, e dunque tempestivamente il Sistema Operativo si occupa di gestire il *cambio di contesto* tra un'applicazione e la successiva, secondo le politiche di scheduling che possiede.
+Quando la CPU riceve un segnale di interrupt dalla periferica, può tempestivamente gestiree quel particolare evento, che potrebbe essere ad esempio il trasferimento di dati.\
+Questo meccanismo di interruzioni è stato poi importato ed utilizzato ampiamente in sistemi multiprogrammati time-sharing, in cui è impiegato il concetto di **quanto  di tempo** che consente di dividere equamente il tempo di CPU tra tutte le applicazioni in esecuzione su quel sistema/ambiente di esecuzione. Il modo per sancire il termine di un quanto di tempo assegnato ad un certo processo, che esegue un'applicazione, è ancora rappresentato dall'interruzione. Si ha lo scatto all'interruzione quando il quanto di tempo è esaurito, e dunque tempestivamente il Sistema Operativo si occupa di gestire il *cambio di contesto* tra un'applicazione e la successiva, secondo le politiche di scheduling che possiede.\
 Le interruzioni possono accadere ad istanti impredicibili, dunque in un sistema time-sharing parti di programmi possono essere eseguite in modo non predicibile. Infatti, una delle principali caratteristiche delle applicazioni concorrenti è il *non determinismo*: lo stesso programma eseguito in tempi diversi può comportare risultati diversi anche se il codice non cambia. Questo, ad esempio, si può rilevare quando cci sono parti di programmi che condividono le stesse variabili comuni: in questi casi, se non viene sincronizzato l'accesso a tali variabili, si possono creare delle interferenze.
 
 Successivamente sono stati introdotti i sistemi multiprocessore, ovvero con più unità di elaborazione (parallelismo supportato a livello hardware). Se prima il parallelismo era puramente virtuale, con tali architetture il parallelismo era diventato effettivamente "reale", in quanto si potevano avere fisicamente diversi microprocessori che lavoravano in modo concorrente.
@@ -22,7 +57,7 @@ Queste decisioni dipendono da:
 - tipo di architettura hardware;
 - tipo di applicazione.
 
-### Tipi di architettura
+### Tipi di Architettura
 
 #### Single Processor
 Si ha un solo processore che possiede delle memorie ad accesso rapido (tipicamente 2 cache) ed una memoria primaria. Non sono necessari ulteriori layer di comunicazione con altre unità di calcolo, in quanto ne è presente solo una.
@@ -57,7 +92,7 @@ con larghezza di banda sufficientemente ampia.
 Sistemi in cui i nodi sono collegati da una rete locale (es: Ethernet) o geografica (es: Internet).
 
 ### Classificazione delle Architetture
-La classificazione dei sistemi di calcolo più utilizzata è la *tassonomia di Flynn (1972)*, in cui vengono inquadrate architetture e sistemi di elaborazione secondo due parametri:
+La classificazione dei sistemi di calcolo più utilizzata è la *Tassonomia di Flynn (1972)*, in cui vengono inquadrate architetture e sistemi di elaborazione secondo due parametri:
 1. **parallelismo a livello di istruzioni**
 	- **Single Instruction Stream**, può essere eseguito un solo singolo flusso di istruzioni;
 	- **Multiple Instruction Stream**, possono essere eseguiti più flussi di istruzioni in parallelo.
@@ -110,7 +145,58 @@ gio.
 	- a seconda del modello architetturale, l'esecuzione è portata avanti da istruzioni/thread/processi paralleli che interagiscono utilizzando librerie specifiche.
 
 ### Processi Non Sequenziali e Tipi di Iterazione
+**Algoritmo**: procedimento logico che deve essere eseguito per risolvere un determinato problema. È ciò che succede quando mettiamo in esecuzione un programma
+
+**Programma**: descrizione di un algoritmo mediante un opportuno formalismo (linguaggio di programmazione), che rende possibile l'esecuzione dell'algoritmo da parte di un particolare elaboratore.
+
+**Processo**: insieme ordinato degli eventi cui dà luogo un elaboratore quando opera sotto il controllo di un programma.
+
+**Elaboratore**: entità astratta realizzata in hardware e parzialmente in software, in grado di eseguire programmi (descritti in un dato linguaggio).
+
+**Evento**: esecuzione di un'operazione tra quelle appartenenti all'insieme che l'elaboratore sa riconoscere ed eseguire. Ogni evento determina una transizione di stato dell'elaboratore.
+```
+NB: un programma descrive non un processo, ma un insieme di processi, ognuno dei quali
+è relativo all'esecuzione del programma da parte dell'elaboratore per un determinato 
+insieme di dati in ingresso.
+```
+
+#### Processo Sequenziale
+Con *processo sequenziale* si intende il caso in cui l'insieme degli eventi che avvengono all'interno dell'elaboratore quando esegue un dato programma (l'insieme degli eventi che fanno parte dell'esecuzione prende il nome di "traccia del programma"), sia una vera e propria sequenza. Ovvero che gli eventi siano ordinati in modo sequenziale: per ogni evento, tranne il primo e l'ultimo, c'è sempre un solo evento che lo precede ed un solo evento che lo segue.
+
+**Grafo di Precedenza**: è uno schema che permette di rappresentare, tramite un formalismo, la traccia del programma. Ogni nodo rappresenta un singolo evento durante l'esecuzione del programma, ogni arco rappresenta la *precedenza temporale* tra un nodo ed il successivo. Nel caso di un algoritmo strettamente sequenziale, il grafo di precedenza che lo rappresenta si dice ad **ordinamento totale** (qualunque coppia di nodi venga presa nel grafo, questa coppia è sempre ordinata).
+
+*foto esempio MCD* + *foto grafo*
+
+#### Processo Non Sequenziale
+Con *processo non sequenziale* si intende il caso in cui l'insieme degli eventi che lo descrive è ordinato secondo una relazione d'ordine parziale. In altre parole, un processo si dice non sequenziale se il grafo di precedenza che lo descrive non è ordinato in modo totale, ma è caratterizzato da un **ordinamento parziale**.
+
+*foto esempio lettura, elaborazione, scrittura*
+
+L'esecuzione di un processo non sequenziale richiede:
+- innanzitutto che o a livello software o hardware l'*elaboratore* sia *non sequenziale*, ovvero ci dia la possibilità di eseguire operazioni simultanee;
+- un *linguaggio di programmazione non sequenziale*.
+
+###### Elaboratore Non Sequenziale
+È in grado di eseguire più operazioni contemporaneamente e si hanno due possibilità:
+- sistemei multielaboratori (a)
+- sistemi monoelaboratori (b)
+
+*immagine*
+
+###### Linguaggi Concorrenti
+I linguaggi concorrenti (o non sequenziali) hanno la caratteristica comune di consentire, a livello di programma, la descrizione di un insieme di attività concorrenti, tramite moduli che possono essere eseguiti in parallelo (es: processi sequenziali).\
+In generale, un linguaggio concorrente permette di esprimere il (potenziale) parallelismo nell'esecuzione di moduli differenti.
+
+Tipicamente ci sono due modi in cui viene realizzato il modulo concorrente di un linguaggio:
+- parallelismo espresso a livello di **singola istruzione**, oggi poco usato (es: CSP, Occam);
+- parallelismo a livello di **sequenza di istruzioni**, molto più frequente (es: Java, Ada, Go, ...).
+
+#### Scomposizione di un Processo Non Sequenziale
+Se il linguaggio concorrente permette di esprimere il parallelismo a livello di sequenza di istruzioni, allora si può scomporre un processo non sequenziale in un insieme di processi sequenziali eseguiti contemporaneamente, e far fronte alla complessità di un algoritmo non sequenziale.\
+Una volta noto l'algoritmo non sequenziale si tratta di ricavare dal suo grafo di precedenza una collezione di grafi di processi sequenziali, che chiaramente saranno legati fra di loro da vincoli di precedenza.\
+Le attività rappresentate dai processi possono essere:
+- **completamente indipententi**, se l'evoluzione del processo non influenza quella degli altri. Di fatto nel grafo abbiamo un unico punto di partenza ed un unico punto di arrivo, ma i nodi potrebbero esprimersi, ad esempio, come una serie di 3 sequenze di nodi, che non sono però legate fra loro da vincoli di precedenza (gli eventi che appartengono ad un processo non sono legati ad altri eventi appartenenti ad altri processi);
+- **interagenti**, se sono assoggettati a vincoli di precedenza tra stati che appartengono a processi diversi (vincoli di precedenza fra le operazioni e vincoli di sincronizzazione).
 
 
-
-ricontrollare i NB
+<!-- lezione 2021/10/06 -->

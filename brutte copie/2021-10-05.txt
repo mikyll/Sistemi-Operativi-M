@@ -139,7 +139,7 @@ Ci sono tante unità di elaborazione, con la capacità ognuna di lavorare su dat
 slide 15
 Applicazioni
 
-Torniamo al discorso di partenza: come il progetto di app concorrenti dev'essere portato avavnti? dipende innanzitutto dal tipo di architettura, ma anche daivincoli del sistema operativo.
+Torniamo al discorso di partenza: come il progetto di app concorrenti dev'essere portato avanti? dipende innanzitutto dal tipo di architettura, ma anche daivincoli del sistema operativo.
 
 Tipi:
 a) app che forniscono modello multithreaded
@@ -196,7 +196,7 @@ effetto derivante dall'esecuzione dell'evento assegnamento ad una variabile
 
 un programma generalmente non descrive un singolo processo ma un insieme di p. ognuno dei quali è relativo all'esecuzione del programma da parte dell'elaboratore per un determinato insieme di dati in ingresso.
 
-Cosa si intende per processo sequenziale? Caso in cui l'insieme degli eventi che avvengono all'interno dell'elaboratore quando esegue un determinato programma sia una vera e propria sequenza. Quindi sostanzialmente siano ordinati in modo sequenziale: per ogni evento, tramite per il primo e l'ultimo, c'è un solo evento che lo precede ed uno solo che lo segue
+Cosa si intende per processo sequenziale? È il caso in cui l'insieme degli eventi che avvengono all'interno dell'elaboratore quando esegue un determinato programma sia una vera e propria sequenza. Quindi sostanzialmente siano ordinati in modo sequenziale: per ogni evento, tranne per il primo e l'ultimo, c'è un solo evento che lo precede ed uno solo che lo segue
 
 esempio solito: valutare il massimo comune divisore tra due numeri naturali x e y:
 
@@ -273,7 +273,7 @@ Quando andiamo a tradurre un algoritmo non sequenziale in un algoritmo sequenzia
 
 slide 35 abbiamo ricavato 3 processi (uno si occupa della lettura, uno dell'elaborazione, uno della scrittura), ma non sono indipendenti (sono processi interagenti)
 
-quando partiamo da un algoritmo non sequenziale è individuare all'interno del grafo di ordinamento parziale una collezione di processi parziali che non saranno indipendenti fra loro(?)
+quando partiamo da un algoritmo non sequenziale è individuare all'interno del grafo di ordinamento parziale una collezione di processi sequenziali che non saranno indipendenti fra loro(?)
 
 prossima volta vediamo come esprimere i vincoli
 
