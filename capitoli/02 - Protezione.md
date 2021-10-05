@@ -56,7 +56,7 @@
 </details>
 
 ## 02 - Protezione
-**Sicurezza**: riguarda l'insieme delle *tecniche per regolamentare l'accesso* degli utenti al sistema di elaborazione. La sicurezza impedisce accessi non autorizzati al sistema e i conseguenti tentativi dolosi di alterazione e distruzione dei dati. La sicurezza riguarda l'interfaccia del sistema verso il mondo esterno. Le tecnologie di sicurezza di un sistema informatico realizzano meccanismi per l'identificazione, l'autenticazione e l'autorizzazione di utenti "fidati".<br/>
+**Sicurezza**: riguarda l'insieme delle *tecniche per regolamentare l'accesso* degli utenti al sistema di elaborazione. La sicurezza impedisce accessi non autorizzati al sistema e i conseguenti tentativi dolosi di alterazione e distruzione dei dati. La sicurezza riguarda l'interfaccia del sistema verso il mondo esterno. Le tecnologie di sicurezza di un sistema informatico realizzano meccanismi per l'identificazione, l'autenticazione e l'autorizzazione di utenti "fidati".\
 **Protezione**: *insieme di attività volte a garantire il controllo dell'accesso* alle risorse logiche e fisiche da parte degli utenti autorizzati all'uso di un sistema di calcolo. Rispetto alla sicurezza ha un campo d'azione più interno al sistema. Per rendere un sistema "sicuro" è necessario stabilire per ogni utente autorizzato quali siano le risorse a cui può accedere e con quali operazioni può farlo. Ciò viene stabilito dal sistema di protezione tramite le tecniche di controllo degli accessi.
 
 ### Protezione: Modelli, Politiche e Meccanismi
@@ -77,7 +77,7 @@ Un dominio di protezione è unico per ogni soggetto, mentre un soggetto (ad esem
 
 #### Politiche
 Le politiche di protezione definiscono le regole con le quali i soggetti possono accedere agli oggetti. Mentre il modello è qualcosa di insito nel sistema, le politiche generalmente vengono scelte da chi opera su quel sistema. Si classificano in 3 diverse tipologie:
-- **DAC** (Discretional Access Control) - il creatore di un oggetto controolla i diritti di accesso per quell'oggetto (tipologia adottata da UNIX, che fornisce un meccanismo per definire e interpretare per ciascun file i 3 bit di read, write ed execute, per il proprietario, il gruppo e gli altri). La definizione delle politiche è decentralizzata.
+- **DAC** (Discretional Access Control) - il creatore di un oggetto controlla i diritti di accesso per quell'oggetto (tipologia adottata da UNIX, che fornisce un meccanismo per definire e interpretare per ciascun file i 3 bit di read, write ed execute, per il proprietario, il gruppo e gli altri). La definizione delle politiche è decentralizzata.
 - **MAC** (Mandatory Access Control) - i diritti d'accesso vengono definiti in modo centralizzato. Questa soluzione viene utilizzata in sistemi di alta sicurezza per garantire assoluta confidenzialità e i diritti vengono gestiti da un'entità centrale.
 - **RBAC** (Role Based Access Control) - ad un ruolo vengono assegnati specifici diritti di accesso sulle risorse. Gli utenti possono appartenere a diversi ruoli. I diritti attribuiti ad ogni ruolo vengono assegnati in modo centralizzato.
 **Principio del Privilegio Minimo** (o POLA - Principle Of Least Authority): ad ogni soggetto sono garantiti i diritti di accesso solo agli oggetti strettamente necessari per la sua esecuzione. Questa è una caratteristica desiderabile per tutte le politiche di protezione.
@@ -101,8 +101,8 @@ NB: in ogni istante della sua esecuzione, il processo esegue in uno ed un solo d
 ```
 
 #### Associazione tra Processo e Dominio
-L'associazione tra processo e dominio può essere statica o dinamica.<br/>
-**Statica**: l'insieme delle risorse disponibili ad un processo rimane fisso durante il suo tempo di vita. Osservazioni: questo tipo di associazione non è adatta al Principio del Privilegio Minimo, in quanto l'insieme globale delle risorse che un processo potrà usare può non essere un'informazione disponibile prima della sua esecuzione; inoltre, l'insieme minimo di risorse necessarie ad un processo per garantire tale Principio, può cambiare in modo dinamico durante l'esecuzione.<br/>
+L'associazione tra processo e dominio può essere statica o dinamica.\
+**Statica**: l'insieme delle risorse disponibili ad un processo rimane fisso durante il suo tempo di vita. Osservazioni: questo tipo di associazione non è adatta al Principio del Privilegio Minimo, in quanto l'insieme globale delle risorse che un processo potrà usare può non essere un'informazione disponibile prima della sua esecuzione; inoltre, l'insieme minimo di risorse necessarie ad un processo per garantire tale Principio, può cambiare in modo dinamico durante l'esecuzione.\
 **Dinamica**: l'associazione tra processo e dominio varia durante l'esecuzione del processo. In questo modo si può mettere in pratica il *Principio del Privilegio Minimo*, in quanto in ogni sua fase di esecuzione il processo può acquisire diritti diversi (ovvero solo quelli strettamente necessari). Tuttavia in questo caso *occorre un meccanismo per consentire il passaggio da un dominio all'altro* del processo.
 
 ##### Esempio di cambio di dominio
@@ -152,7 +152,7 @@ L'operazione di propagazione può essere realizzata in due modi:
 
 <!-- lezione 2021-09-29 -->
 ##### Diritto Owner
-Il diritto *owner* realizza il concetto di "proprietario di una risorsa" (oggetto). Il soggetto che possiede tale diritto di accesso, nei sistemi che lo prevedono, ha la possibilità di concedere/revocare un qualunque diritto di accesso sull'oggetto che gli appartiene (ovvero possiede il diritto owner su tale oggetto) ad un qualunque altro soggetto.<br/>
+Il diritto *owner* realizza il concetto di "proprietario di una risorsa" (oggetto). Il soggetto che possiede tale diritto di accesso, nei sistemi che lo prevedono, ha la possibilità di concedere/revocare un qualunque diritto di accesso sull'oggetto che gli appartiene (ovvero possiede il diritto owner su tale oggetto) ad un qualunque altro soggetto.\
 In una matrice degli accessi, ciò si traduce nella presenza, in ciascuna colonna, di una ed una sola cella nella quale è presente un diritto owner. Per ogni risorsa (dunque per ogni colonna) ci dev'essere un solo soggetto che ne è il proprietario. Ciò significa che tale soggetto ha un ruolo privilegiato nei confronti di quella risorsa ed è l'unico soggetto capace di revocare o concedere diritti di accesso su quella risorsa ad altri soggetti.
 Ad esempio, se *S2* ha il diritto 'owner' su *O2* allora può revocare il diritto 'execute' su *O* al soggetto *S1*.
 
@@ -160,7 +160,7 @@ Ad esempio, se *S2* ha il diritto 'owner' su *O2* allora può revocare il diritt
 
 ##### Diritto Control
 Il diritto *control* permette di revocare un qualunque diritto di accesso, riferendosi non ad un oggetto ma ad un altro soggetto.
-Se la cella della colonna di un soggetto ha il diritto control, autorizza l'owner a modificare la riga associata a tale soggetto.<br/>
+Se la cella della colonna di un soggetto ha il diritto control, autorizza l'owner a modificare la riga associata a tale soggetto.\
 Ad esempio, se *S1* ha il diritto di 'control' su *S2* e *S2* ha il diritto di 'write' su *O3*, allora *S1* può revocare il diritto di write di *S2* su *O3*.
 
 <img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Control.png" alt="Matrice degli Accessi e Diritto Control"/>
@@ -175,7 +175,7 @@ nel senso che può modificare il contenuto della riga associata ad ogni altro so
 Copy flag, owner e control sono strumenti con cui possiamo *modificare* il contenuto della matrice degli accessi (possiamo aggiungere o togliere diritti nelle varie caselle). Se ci pensiamo bene, una riga della matrice altro non è che il dominio di protezione associato ad un soggetto.
 
 ##### Diritto Switch
-Uno dei modi possibili per garantire il rispetto del Principio del Privilegio Minimo è prevedere la possibilità di un cambio di dominio a runtime. Un processo che esegue nel dominio di un soggetto, se ha bisogno di diritti differenti, può spostarsi nel dominio specifico che gli garantisce questi diritti nuovi di cui ha bisogno.<br/>
+Uno dei modi possibili per garantire il rispetto del Principio del Privilegio Minimo è prevedere la possibilità di un cambio di dominio a runtime. Un processo che esegue nel dominio di un soggetto, se ha bisogno di diritti differenti, può spostarsi nel dominio specifico che gli garantisce questi diritti nuovi di cui ha bisogno.\
 A tal proposito, esiste un diritto speciale chiamato *switch*: esercitando questo diritto, il processo che esegue nel dominio di un certo soggetto, può passare ad un nuovo dominio.
 Ad esempio, se il soggetto *S2* ha bisogno del diritto 'write' sull'oggetto O3, ma possiede solo 'read', se possiede il diritto di 'switch' *S1* può passare nel dominio di *S1* per acquistare il diritto di 'write' e accedere a tale risorsa in scrittura.
 
@@ -198,7 +198,7 @@ La rappresentazione concreta dello stato di protezione dev'essere ottimizzata si
 
 ##### ACL: Lista degli Accessi
 Ne viene assegnata una a ciascun oggetto ed ha una struttura composta da un insieme di elementi, ognuno dei quali contiene la coppia <soggetto, insieme dei diritti> limitatamente ai soggetti con un insieme non vuoto di diritti per l'oggetto.
-Quando un qualunque soggetto *S* tenta un'operazione *M* su un oggetto *O*, il sistema di protezione va a verificare nella ACL associata ad *O* se è presente un elemento riferito al soggetto che sta tentando l'accesso e, se esiste, controlla che contenga il diritto per eseguire *M* (ovvero sia presenta la coppia <*S*, *Rk*> con *M* appartenente a *Rk*).<br/>
+Quando un qualunque soggetto *S* tenta un'operazione *M* su un oggetto *O*, il sistema di protezione va a verificare nella ACL associata ad *O* se è presente un elemento riferito al soggetto che sta tentando l'accesso e, se esiste, controlla che contenga il diritto per eseguire *M* (ovvero sia presenta la coppia <*S*, *Rk*> con *M* appartenente a *Rk*).\
 In certi casi, per velocizzare l'accesso, viene prevista una lista di default: se è prevista, esistono dei diritti comunia a tutti i soggetti, dunque si va a vedere prima nella lsita di default e, se la ricerca non va a buon fine, si va a vedere nello specifico, elemento per elemento. Chiaramente, se la ricerca non ha successo, l'accesso viene negato.
 
 **Utenti e Gruppi**: molti sistemi, per identificare un soggetto, prevedono non solo il nome utente (UID - User IDentifier), ma anche il gruppo (GID - Group IDentifier) a cui appartiene. Un gruppo aggrega un insieme di utenti, ha un nome, e può essere incluso nelle ACL. È importante sapere che un utente può appartenere anche a più gruppi, ma in un certo istante può appartenere ad un solo gruppo alla volta. Nel caso siano presenti i gruppi, una entry della ACL ha la forma UID, GID: \<insieme di diritti\>.
@@ -236,7 +236,7 @@ sistemi con CL.
 
 #### ACL vs CL
 Un sistema realizzato esclusivamente con CL può soffrire di un appesantimento dovuto a operazioni che riguardano revoche che interessano più soggetti e quindi causano overhead (costo computazione maggiore).
-Naturalmente si può fare anche il discorso duale: se si ha la necessità di fare una modifica allo stato di protezione che interessa un particolare soggetto. Il caso più banale è eliminare il soggetto dal sistema. Ciò questo comporta una modifica allo stato di protezione, in CL si cancella semplicemente la lista associata al soggetto; in ACL bisogna fare ricerca in ogni ACL.<br/>
+Naturalmente si può fare anche il discorso duale: se si ha la necessità di fare una modifica allo stato di protezione che interessa un particolare soggetto. Il caso più banale è eliminare il soggetto dal sistema. Ciò questo comporta una modifica allo stato di protezione, in CL si cancella semplicemente la lista associata al soggetto; in ACL bisogna fare ricerca in ogni ACL.\
 Dunque non c'è soluzione assoluta, o generalmente migliore dell'altra: nella realtà, nella maggior parte dei sistemi solitamente si usa una soluzione ibrida che combina i due metodi.
 
 Ad esempio, in UNIX, per ogni risorsa (file, in quanto UNIX è file-centrico, ovvero tutte le risorse sono presenti nel filesystem come file) per ogni oggetto viene mantenuta una struttura contenente 12 bit "di protezione". Sono memorizzati sul disco e fanno parte dell'i-node, che è rappresentato sulla memoria di massa all'interno dell'i-list.
