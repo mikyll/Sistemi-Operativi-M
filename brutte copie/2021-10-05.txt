@@ -130,7 +130,7 @@ Ci sono diverse unità di elaborazione messe in cascata (in pipeline), che lavor
 
 slide 13
 SIMD
-le architetture di questa categoria hanno l'obbiettivo di risolvere in modo più veloce possibile problemi matriciali, nei quali i dati sono rappresentati in forma vettoriale o matriciale, e a livello architetturale, un esempio di come potrebbe essere strutturato un esempio di questa categoria sono i ray processors, in cui rientrano anche le GPU.
+le architetture di questa categoria hanno l'obbiettivo di risolvere in modo più veloce possibile problemi matriciali, nei quali i dati sono rappresentati in forma vettoriale o matriciale, e a livello architetturale, un esempio di come potrebbe essere strutturato un esempio di questa categoria sono i array processors, in cui rientrano anche le GPU.
 
 Ci sono tante unità di elaborazione, con la capacità ognuna di lavorare su dati diversi ad ogni istante, ma controllati da una singola control unit, che lavora in modo sequenziale, dunque impartirà ad ogni ciclo una certa istruzione a tutti i ...
 
