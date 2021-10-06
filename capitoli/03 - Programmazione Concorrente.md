@@ -199,3 +199,126 @@ Le attività rappresentate dai processi possono essere:
 - **interagenti**, se sono assoggettati a vincoli di precedenza tra stati che appartengono a processi diversi (vincoli di precedenza fra le operazioni e vincoli di sincronizzazione).
 
 <!-- lezione 2021/10/06 -->
+##### Interazione Tra Processi
+Esistono tre possibili tipi di interazione tra processi: *cooperazione*, *competizione*, *interferenza*.
+
+###### Cooperazione
+Comprende tutte le intearazioni *prevedibili* e *desiderate*, che sono in qualche modo dettate dall'algoritmo (date cioè dagli archi del grafo di precedenza ad ordinamento parziale). È insita nella logica che vogliamo rappresentare. Si può esprimere in 2 modi: **segnali temporali**, ovvero sincronizzazione pura, che esprime solo ed unicamente un vincolo di precedenza; **scambio di dati**, ovvero comunicazione vera e propria. In entrambi i casi esiste comunque un vincolo di precedenza tra gli eventi di processi diversi.\
+C'è una relazione di causa ed effetto tra l'esecuzione dell'operazione di invio da parte del processo mittente e l'operazione di ricezione da parte del processo ricevente, con un vincolo di precedenza tra questi eventi (*sincronizzazione* di due processi). Il linguaggio di programmazione deve fornire i costrutti linguistici necessari a specificare la sincronizzazione e la eventuale comunicazione tra i processi.\
+Esempio di cooperazione: interazione data da vincoli temporali (es: un processo esegue delle operazioni ogni 2 secondi, un altro ogni 3 ed un terzo li coordina attivando periodicamente tali processi).
+
+###### Competizione
+Consiste in un'interazione *prevedibile* e *non desiderata* (in quanto non fa parte dell'algoritmo che si vuole implementare, ma è solitamente dato da un limite della risorsa fisica o logica), ma *necessaria*. Infatti, la macchina concorrente, su cui i processi sono eseguiti, mette a disposizione un numero limitato di risorse condivise, disponibili nell'ambiente di esecuzione. Poiché alcune di queste non possono essere accedute o utilizzate contemporaneamente da più processi (o lo sono solo per un numero limitato), è necessario prevedere meccanismi che regolino la competizione, coordinando l'accesso alla risorsa da parte dei vari processi, in modo **mutuamente esclusivo**. Questo può determinare l'imposizione di vincoli di sincronizzazione (se una risorsa può essere usata da un solo processo alla volta, nella fase in cui sta venendo usata da un certo processo, nessun altro deve poterla utilizzare): un processo che tenta di accedere una risorsa già occupata (se non rispetta certi vincoli) dev'essere bloccato.\
+**Sezione critica**: indica una sequenza di istruzioni con cui un processo accede ad una risorsa condivisa mutuamente esclusiva. Ad una risorsa possono essere associate, in casi particolari, anche più di una sezione critica. Se su una risorsa vale la mutua esclusione, sezioni critiche appartenenti alla stessa classe non possono eseguire contemporaneamente.\
+Esempio di competizione: processi che devono accedere ad una stampante (risorsa mutuamente esclusiva).
+
+###### Interferenza
+È un tipo di interazione *non prevista* e *non desiderata*. Solitamente è provocata da errori del programmatore (infatti solitamente si cerca di eliminarle o escluderle), il quale non ha modellato correttamente l'interazione dei propri processi non sequenziali interagenti.\
+Può non manifestarsi, in quanto a volte dipende dalla velocità relativa dei processi; gli errori possono manifestarsi nel corso dell'esecuzione del programma, a seconda delle diverse condizioni di velocità di esecuzione dei processi. In questi casi si parla di errori dipendenti dal tempo.\
+Esempio tipico: deadlock.
+
+### Architetture e Linguaggi per la Programmazione Concorrente
+
+
+[...]
+
+
+
+offre in generale un certo numero di unità di elaborazione virtuali, che in generale possono essere maggiori, ma non sempre sono in numero sufficiente per supportare l'esecuzione di processi
+
+
+all'interno dell'hardware andiamo a realizzare un processo di virtualizzazione dell'hardware: offriamo a chi utilizzerà il software una visione dell'elaboratore diversa da quella attuale.
+In che modo viene realizzato questo processo di astrazione? Meccanismo di multiprogrammazione. La macchina fisica in generale può avere un numero limitato di unità di elaborazione. La macchina astratta deve offrire un meccanismo di multiprogrammazione. Il kernel del SO dà la possibilità ad ogni processo che viene creato all'interno di quell'ambiente di avere una visione diversa, come se avesse una CPU completamente dedicata.
+
+devono essere previsti, oltre a meccanismi di sincronizzazioe anche quelli di protezione (controllo degli accessi alle risorse).
+La parte gialla è una componente software che nella realtà è realizzata dal kernel del SO. Il SO indipendentemente dalle caratteristiche fisiche della macchina, offre l'illusione di avere una macchina con più di un'unità di elab: una per ogni processo che verrà messo in esecuzione contemporaneamente.
+
+La multiprogrammazione è un insieme di meccanismi
+
+La virtualizzazione che viene offerta dalla macchina astratta si basa sulle politiche di scheduling.
+
+Di fatto, la macchina astratta M offre l'illusione del sistema composta da tante unità di elab quanti sono i processi che stanno eseguendo in quel sistema. Il meccanismo di interazione offre una visione di quella visione astratta, tale per cui possano all'occorrenza interagire tramite forme di sincronizzazione o comunicazione.
+
+2 possibilità:
+1. queste macchine astratte M sono collegate ad un'unica memoria principale.
+La visione proposta è aderente al modello di multiprocessore, e sostanzialmente se queste sono le caratteristiche della macchina astratta, ovviamente il modello di interazione previsto sarà a memoria comune, perché è previsto che le unità di elab astratte/virtuali, prevedano la condivisione della memoria.
+
+2. Altra possibilità: elaboratori astratti realizzati dalla macchina M non condividono memoria. Sono posti in collegamento da rete di comunicazione ma non hanno possibilità di accedere alle stesse aree di memoria.
+Ciascuna di queste aree virtuali è fornito ad un certo processo, quindi l'interazione dovrà necessariamente basarsi sul modello a scambio di messaggi perché appunto non si dispone di memoria comune. Sarà compito della macchina M fornire dei meccanismi opportuni che consentano la comunicazione tra i processi che eseguono.
+
+
+slide 55
+Qualunque siano le caratteristiche della macchina astratta, il linguaggio di programmazione deve fornire costrutti che consentono di gestire i processi.
+
+esistono 2 modelli diversi:
+
+1. Fork/Join
+È un modello nel quale sono disponibili almeno 2 primitive: 1 indicata col termine fork, una co ltermine join.
+
+Fork serve per attivare un processo che inizia la propria esecuzione in parallelo con quella del processo chiamante
+la differenza con la tradizione fork UNIX (non confondiamoci, qua la fork è un modello più generale),
+è che qui si passa il codice di una funzione alla fork.
+
+*grafico*
+
+ogni volta che viene chiamata una fork si ha una biforcazione del grafo
+
+Join: consente di sincronizzare un processo con la terminazione di un altro processo.
+porsi in attesa del processo che è stato precedentemente creato.
+
+Un nodo che rappresenta l'evento join, ha due predecessori.
+
+nella join bisogna specificare il processo da attendere.
+
+La wait invece si mette in attesa di uno qualunque dei figli.
+
+
+
+
+esistono anche altri schemi, ad esempio:
+cobegin/coend
+alternativa del modello fork/join
+
+trae ispirazione dai principi della programmazione strutturata.
+
+esprime la concorrenza attraverso opportuni blocchi da inserire nel codice di opportuniprogrammi concorrenti.
+
+cobegin - inizia blocco
+
+coend - termina blocco
+
+all'interno del blocco si può specificare una serie di operazioni, o una serie di processi (più generale)
+la caratteristica degli statement in questo blocco è che ognuno di essi verrà eseguito concorrentemente rispetto agli altri di tale blocco.
+
+NB: tali blocchi si possono innestare uno dentro l'altro.
+
+
+tutti i grafi di precedenza possono essere espressi tramite fork/join, ma non tutti possono essere espressi con cobegin-coend
+
+
+
+l'esecuzione di un programma è descritta da una traccia: è la sequenza degli stati attraversati dal programma
+stato: insieme dei valori delle variabili definite nel programma + quelle implicite (es program counter, instruction register(?))
+
+esecuzione di un programma è descritto dalla sua traccia
+
+
+programmi descritti da un unico grafo nei quali i nodi sono legati da una realazione di ordinamento totale, si può dimostrare che ogni esecuzione di un programma P genera sempre e comunque la stessa traccia.
+La verifica di ciò può essere fatta sperimentalmente (utilizzando un debugger)
+
+ciò non vale per programmi concorrenti, in quanto lo scheduler non è deterministico.
+
+
+oltre a proprietà di correttezza ci possono essere anche altre proprietà, di cui possono godere i programmi. Si classificano in 2 tipi:
+safety properties - garantisce che durante l'esec di un programma non si entrerà mai in uno stato in cui questa proprietà non è verificata (ovvero le variabili assumono valori non desiderati);
+liveness properties - garantisce che durante l'esec di un programma prima o poi si raggiungerà uno stato corretto rispetto a questa proprietà, ovvero le variabili assumono valori desiderati.
+
+Nei programmi sequenziali la proprietà di correttezza a cui facevamo riferimento è che il programma sia corretto => safety;
+ma anche proprietà di liveness, dobbiamo garantire la terminazione del programma, che prima o poi l'esecuzione termini.
+
+Prossima volta vediamo le proprietà tipiche che vogliamo garantire per programmi sequenziali
+
+in lab cominciamo lunedì 18
+
+(l'orario del lunedì è errato)
+
