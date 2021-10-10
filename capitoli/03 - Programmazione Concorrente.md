@@ -310,12 +310,7 @@ Le proprietà fondamentali che ogni programma sequenziale deve avere sono:
 - *la correttezza del risultato finale*, ovvero che per ogni esecuzione, al termine del programma, il risultato ottenuto sia giusto -> **Safety**;
 - *la terminazione*, ovvero prima o poi l'esecuzione del programma deve terminare -> **Liveness**.
 
-
-
-
-
-
-
+<!-- lezione 2021/10/12 -->
 prossima volta(?)
 
 ##### Proprietà dei Programmi Concorrenti
@@ -325,12 +320,3 @@ Le proprietà fondamentali che ogni programma concorrente deve avere sono:
 - *mutua esclusione nell'accesso a risorse condivise*, ovvero per ogni esecuzione non accadrà mai che più di un processo acceda contemporaneamente alla stessa risorsa -> **Safety**;
 - *assenza di deadlock*, ovvero per ogni esecuzione non si verificheranno mai situazioni di blocco critico -> **Safety**;
 - *asseenza di starvation*, ovvero prima o poi ogni processo potrà accedere alle risorse richieste -> **Liveness**.
-
-
-
-Prossima volta vediamo le proprietà tipiche che vogliamo garantire per programmi sequenziali
-
-in lab cominciamo lunedì 18
-
-(l'orario del lunedì è errato)
-
