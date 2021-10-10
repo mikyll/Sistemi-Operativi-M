@@ -287,30 +287,46 @@ za possono essere espressi tramite fork/join ma non tutti possono essere espress
 cobegin/coend.
 ```
 
+### Proprietà dei Programmi
+I seguenti concetti permettono di specificare cosa succede quando il programma viene eseguito, di conseguenza sono utili per verificare la correttezza dei programmi realizzati.
+
+**Traccia dell'esecuzione**: sequenza degli stati attraversati dal sistema di elaborazione durante l'esecuzione del programma. L'esecuzione di un programma è descritta dalla sua traccia.
+
+**Stato**: insieme dei valori delle variabili definite nel programma più le variabili "implicite" (ad esempio il valore del program counter, o di altri registri).
+
+#### Verifica della Correttezza di un Programma
+**Programma sequenziale**: nei programmi sequenziali ogni esecuzione di un certo programma P su un particolare insieme di dati D genera sempre la stessa traccia (la verifica può essere svolta facilmente tramite debugging).\
+**Programma concorrente**: nei programmi concorrenti l'esito dell'esecuzione dipende da quale sia l'effettiva sequenza cronologica di esecuzione delle istruzioni contenute, dunque ogni esecuzione di un certo programma P su un particolare insieme di dati D può dare origine a una traccia diversa, in quanto lo scheduling dei processi non è deterministico (la verifica è molto più difficile).
+
+#### Proprietà di Safety e Liveness
+**Proprietà di un programma**: attributo che è sempre vero, in ogni possibile traccia generata dalla sua esecuzione. Oltre alle proprietà di correttezza di un programma definite in precedenza, esistono anche altre proprietà, che solitamente si classificano in due categorie: *safety properties* e *liveness properties*.
+
+**Safety**: garantisce che durante l'esecuzione di un programma *non si entrerà mai in uno stato "errato"*, ovvero in cui le variabili assumono valori non desiderati.
+
+**Liveness**: garantisce che durante l'esecuzione del programma, *prima o poi si entrerà in uno stato "corretto"*, ovvero in cui le variabili assumono valori desiderati.
+
+##### Proprietà dei Programmi Sequenziali
+Le proprietà fondamentali che ogni programma sequenziale deve avere sono:
+- *la correttezza del risultato finale*, ovvero che per ogni esecuzione, al termine del programma, il risultato ottenuto sia giusto -> **Safety**;
+- *la terminazione*, ovvero prima o poi l'esecuzione del programma deve terminare -> **Liveness**.
 
 
 
 
 
 
-l'esecuzione di un programma è descritta da una traccia: è la sequenza degli stati attraversati dal programma
-stato: insieme dei valori delle variabili definite nel programma + quelle implicite (es program counter, instruction register(?))
 
-esecuzione di un programma è descritto dalla sua traccia
+prossima volta(?)
+
+##### Proprietà dei Programmi Concorrenti
+Le proprietà fondamentali che ogni programma concorrente deve avere sono:
+- *correttezza del risultato finale* -> **Safety**;
+- *terminazione*, -> **Liveness**;
+- *mutua esclusione nell'accesso a risorse condivise*, ovvero per ogni esecuzione non accadrà mai che più di un processo acceda contemporaneamente alla stessa risorsa -> **Safety**;
+- *assenza di deadlock*, ovvero per ogni esecuzione non si verificheranno mai situazioni di blocco critico -> **Safety**;
+- *asseenza di starvation*, ovvero prima o poi ogni processo potrà accedere alle risorse richieste -> **Liveness**.
 
 
-programmi descritti da un unico grafo nei quali i nodi sono legati da una realazione di ordinamento totale, si può dimostrare che ogni esecuzione di un programma P genera sempre e comunque la stessa traccia.
-La verifica di ciò può essere fatta sperimentalmente (utilizzando un debugger)
-
-ciò non vale per programmi concorrenti, in quanto lo scheduler non è deterministico.
-
-
-oltre a proprietà di correttezza ci possono essere anche altre proprietà, di cui possono godere i programmi. Si classificano in 2 tipi:
-safety properties - garantisce che durante l'esec di un programma non si entrerà mai in uno stato in cui questa proprietà non è verificata (ovvero le variabili assumono valori non desiderati);
-liveness properties - garantisce che durante l'esec di un programma prima o poi si raggiungerà uno stato corretto rispetto a questa proprietà, ovvero le variabili assumono valori desiderati.
-
-Nei programmi sequenziali la proprietà di correttezza a cui facevamo riferimento è che il programma sia corretto => safety;
-ma anche proprietà di liveness, dobbiamo garantire la terminazione del programma, che prima o poi l'esecuzione termini.
 
 Prossima volta vediamo le proprietà tipiche che vogliamo garantire per programmi sequenziali
 
