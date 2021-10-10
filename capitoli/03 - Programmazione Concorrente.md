@@ -237,7 +237,7 @@ Il nucleo corrisponde al supporto a tempo di esecuzione del compilatore di un li
 - meccanismo di **sincronizzazione** e **comunicazione**, estende le potenzialità delle unità reali di elaborazione, rendendo disponibile alle unità virtuali strumenti mediante i quali sincronizzarsi e comunicare.
 Oltre ai meccanismi di multiprogrammazione e interazione, è presente anche il meccanismo di **protezione** (controllo degli accessi alle risorse): importante per rilevare eventuali interferenze tra i processi; può essere realizzato in hardware o software nel supporto a tempo di esecuzione; comprende capabilities e ACL.
 
-
+#### Architettura della Macchina M
 
 
 2 possibilità:
