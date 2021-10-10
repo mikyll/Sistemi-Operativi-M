@@ -247,62 +247,46 @@ Qualunque siano le caratteristiche della macchina astratta, il linguaggio di pro
 Esistono due modelli diversi:
 
 #### Fork/Join
-Questo modello comprende appunto due primitive fondamentali: fork e join.
+Questo modello comprende appunto due primitive fondamentali: *fork* e *join*.
+
 **Fork**: permette di creare e attivare un processo che inizia la propria esecuzione in *parallelo* con quella del processo chiamante.
 ```
-NB: non va confusa con la system call di UNIX: in questo caso riguarda un modello più generale e, a differenza della primitiva UNIX, si passa una funzione, col codice da eseguire, alla fork.
+NB: non va confusa con la system call di UNIX: in questo caso riguarda un modello più
+generale e, a differenza della primitiva UNIX, si passa una funzione, col codice da e-
+seguire, alla fork.
 ```
 
-*pic dimostrativa*
+*pic dimostrativa slide 56*
 
-1. Fork/Join
-È un modello nel quale sono disponibili almeno 2 primitive: 1 indicata col termine fork, una co ltermine join.
+La fork ha un comportamento simile ad una exec: mentre quest'ultima implica l'attivazione di un processo che esegue il programma chiamato e la sospensione del programma chiamante, la fork prevede che il programma chiamante prosegua contemporaneamente con l'esecuzione della funzione chiamata. Coincide infatti con una biforcazione del grafo.
 
-Fork serve per attivare un processo che inizia la propria esecuzione in parallelo con quella del processo chiamante
-la differenza con la tradizione fork UNIX (non confondiamoci, qua la fork è un modello più generale),
-è che qui si passa il codice di una funzione alla fork.
+**Join**: consente di sincronizzare un processo con la terminazione di un altro processo, precedentemente creato tramite una fork.
 
-*grafico*
+*immagine(?) slide 57*
 
-ogni volta che viene chiamata una fork si ha una biforcazione del grafo
+In un grafo di precedenza, il nodo che rappresenta l'evento join ha due predecessori.
 
-Join: consente di sincronizzare un processo con la terminazione di un altro processo.
-porsi in attesa del processo che è stato precedentemente creato.
-
-Un nodo che rappresenta l'evento join, ha due predecessori.
-
-nella join bisogna specificare il processo da attendere.
-
-La wait invece si mette in attesa di uno qualunque dei figli.
-
-
-
-
-esistono anche altri schemi, ad esempio:
-
+```
+NB: a differenza della wait UNIX, nella join è necessario specificare il processo da
+attendere, mentre nella wait no, di conseguenza quest'ultima si mette in attesa della 
+terminazione di uno qualunque dei processi figli.
+```
 
 #### Cobeign/Coend
+Questo modello trae ispirazione dalla programmazione strutturata, permettendo di esprimere la concorrenza tramite opportuni blocchi da inserire nel codice di opportuni programmi concorrenti. Si basa su due primitive fondamentali: *cobegin* e *coend*.
+
+**Cobegin**: specifica l'inizio di un blocco di codice che deve essere eseguito in parallelo. All'interno di questo blocco si possono specificare una serie di operazioni o processi: la caratteristica degli statement in questo blocco è che ognuno di essi verrà eseguito concorrentemente rispetto agli altri di tale blocco. Inoltre, è possibile innestare un blocco dentro l'altro. 
+
+**Coend**: indica la fine di un blocco di istruzioni parallele.
+
+*immagine dimostrativa con grafo di precedenza*
+
+```
+NB: tutti i grafi di precedenza possono essere espressi tramite fork/join ma non tutti 
+possono essere espressi con cobegin/coend.
+```
 
 
-
-cobegin/coend
-alternativa del modello fork/join
-
-trae ispirazione dai principi della programmazione strutturata.
-
-esprime la concorrenza attraverso opportuni blocchi da inserire nel codice di opportuniprogrammi concorrenti.
-
-cobegin - inizia blocco
-
-coend - termina blocco
-
-all'interno del blocco si può specificare una serie di operazioni, o una serie di processi (più generale)
-la caratteristica degli statement in questo blocco è che ognuno di essi verrà eseguito concorrentemente rispetto agli altri di tale blocco.
-
-NB: tali blocchi si possono innestare uno dentro l'altro.
-
-
-tutti i grafi di precedenza possono essere espressi tramite fork/join, ma non tutti possono essere espressi con cobegin-coend
 
 
 
