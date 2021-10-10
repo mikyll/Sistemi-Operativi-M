@@ -238,20 +238,22 @@ Il nucleo corrisponde al supporto a tempo di esecuzione del compilatore di un li
 Oltre ai meccanismi di multiprogrammazione e interazione, è presente anche il meccanismo di **protezione** (controllo degli accessi alle risorse): importante per rilevare eventuali interferenze tra i processi; può essere realizzato in hardware o software nel supporto a tempo di esecuzione; comprende capabilities e ACL.
 
 #### Architettura della Macchina M
+In base all'organizzazione logica di M vengono definiti due modelli di interazione tra i processi:
+1. Modello a **memoria comune**, ovvero le macchine astratte M sono collegate ad un'unica memoria principale. La visione proposta è aderente al modello del *multiprocessore*. Se queste sono le caratteristiche della macchina astratta, le unità di elaborazione astratte/virtuali prevedono l'interazione dei processi tramite oggetti contenuti in memoria comune (modello ad ambiente globale).
+2. Modello a **scambio di messaggi**, ovvero gli elaboratori astratti realizzati dalla macchina M non condividono memoria. Sono posti in collegamento da una rete di comunicazione, ma non hanno possibilità di accedere alle stesse aree di memoria (tipico dei sistemi *multicomputer*). Ciascuna di queste aree virtuali viene fornita ad un certo processo, e sarà compito della macchina M fornire dei meccanismi opportuni che consentano la comunicazione fra i processi che eseguono (modello ad ambiente locale).
 
+### Costrutti Linguistici per la Specifica della Concorrenza
+Qualunque siano le caratteristiche della macchina astratta, il linguaggio di programmazione (concorrente) deve fornire costrutti che consentano di gestire i processi.\
+Esistono due modelli diversi:
 
-2 possibilità:
-1. queste macchine astratte M sono collegate ad un'unica memoria principale.
-La visione proposta è aderente al modello di multiprocessore, e sostanzialmente se queste sono le caratteristiche della macchina astratta, ovviamente il modello di interazione previsto sarà a memoria comune, perché è previsto che le unità di elab astratte/virtuali, prevedano la condivisione della memoria.
+#### Fork/Join
+Questo modello comprende appunto due primitive fondamentali: fork e join.
+**Fork**: permette di creare e attivare un processo che inizia la propria esecuzione in *parallelo* con quella del processo chiamante.
+```
+NB: non va confusa con la system call di UNIX: in questo caso riguarda un modello più generale e, a differenza della primitiva UNIX, si passa una funzione, col codice da eseguire, alla fork.
+```
 
-2. Altra possibilità: elaboratori astratti realizzati dalla macchina M non condividono memoria. Sono posti in collegamento da rete di comunicazione ma non hanno possibilità di accedere alle stesse aree di memoria.
-Ciascuna di queste aree virtuali è fornito ad un certo processo, quindi l'interazione dovrà necessariamente basarsi sul modello a scambio di messaggi perché appunto non si dispone di memoria comune. Sarà compito della macchina M fornire dei meccanismi opportuni che consentano la comunicazione tra i processi che eseguono.
-
-
-slide 55
-Qualunque siano le caratteristiche della macchina astratta, il linguaggio di programmazione deve fornire costrutti che consentono di gestire i processi.
-
-esistono 2 modelli diversi:
+*pic dimostrativa*
 
 1. Fork/Join
 È un modello nel quale sono disponibili almeno 2 primitive: 1 indicata col termine fork, una co ltermine join.
@@ -277,6 +279,12 @@ La wait invece si mette in attesa di uno qualunque dei figli.
 
 
 esistono anche altri schemi, ad esempio:
+
+
+#### Cobeign/Coend
+
+
+
 cobegin/coend
 alternativa del modello fork/join
 
