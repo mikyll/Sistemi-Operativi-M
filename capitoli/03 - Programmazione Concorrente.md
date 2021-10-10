@@ -218,26 +218,27 @@ Può non manifestarsi, in quanto a volte dipende dalla velocità relativa dei pr
 Esempio tipico: deadlock.
 
 ### Architetture e Linguaggi per la Programmazione Concorrente
+Avendo a disposizione una *macchina concorrente* **M** (in grado di eseguire più processi sequenziali contemporaneamente) e di un *linguaggio di programmazione* con il quale descrivere algoritmi non sequenziali, è possibile scrivere e far eseguire programmi concorrenti. L'elaborazione complessiva può essere descritta come un insieme di *processi sequenziali interagenti*.\
+Le **proprietà di un linguaggio di programmazione concorrente** sono:
+- fornire appositi costrutti con i quali sia possibile dichiarare moduli di programma destinati ad essere eseguiti come processi sequenziali distinti;
+- non tutti i processi vengono eseguiti contemporaneamente. Alcuni processi vengono svolti se, dinamicamente, si verificano particolari condizioni. È quindi necessario poter specificare quando un processo deve essere attivato e termianto;
+- devono essere presenti strumenti linguistici per specificare le interazioni che dinamicamente possono verificarsi tra i vari processi.
+
+### Architettura di una Macchina Concorrente
+*pic slide 51*
+M offre un certo numero di unità di elaborazione virtuali, che però non sempre sono in numero sufficiente per supportare l'esecuzione contemporanea dei processi di un programma concorrente.\
+M è una macchina astratta ottenuta tramite tecniche software (o hardware) basandosi su una macchina fisica M' generalmente più semplice (con un numero di unità di elaborazione solitamente minore del numero dei processi).\
+
+*pic slide 52?*
+
+Al proprio interno M contiene ciò che dev'essere messo in atto quando viene richiesta l'esecuzione di processi concorrenti e tutto ciò che riguarda l'interazione (sincronizzazione con scambio di informazioni).\
+Il nucleo corrisponde al supporto a tempo di esecuzione del compilatore di un linguaggio concorrente e comprende sempre due funzionalità base:
+- meccanismo di **multiprogrammazione**, preposto alla gestione delle unità di elaborazione della macchina M', ovvero le unità reali. Questo meccanismo è realizzato dal kernel del SO, il quale dà la possibilità ad ogni processo creato all'intero dell'ambiente, di avere una visione diversa, come se avesse una CPU completamente dedicata. Ciò permette ai vari processi eseguiti sulla macchina astratta M di condividere l'uso delle unità reali di elaborazione (tale virtualizzazione si basa sulle politiche di *scheduling*) tramite l'allocazione in modo esclusivo ad ogni processo di un'unità virtuale di elaborazione. Di fatto la macchina astratta M offre l'illusione che il sistema sia composto da tante unità di elaborazione, quanti siano i processi in esecuzione;
+- meccanismo di **sincronizzazione** e **comunicazione**, estende le potenzialità delle unità reali di elaborazione, rendendo disponibile alle unità virtuali strumenti mediante i quali sincronizzarsi e comunicare.
+Oltre ai meccanismi di multiprogrammazione e interazione, è presente anche il meccanismo di **protezione** (controllo degli accessi alle risorse): importante per rilevare eventuali interferenze tra i processi; può essere realizzato in hardware o software nel supporto a tempo di esecuzione; comprende capabilities e ACL.
 
 
-[...]
 
-
-
-offre in generale un certo numero di unità di elaborazione virtuali, che in generale possono essere maggiori, ma non sempre sono in numero sufficiente per supportare l'esecuzione di processi
-
-
-all'interno dell'hardware andiamo a realizzare un processo di virtualizzazione dell'hardware: offriamo a chi utilizzerà il software una visione dell'elaboratore diversa da quella attuale.
-In che modo viene realizzato questo processo di astrazione? Meccanismo di multiprogrammazione. La macchina fisica in generale può avere un numero limitato di unità di elaborazione. La macchina astratta deve offrire un meccanismo di multiprogrammazione. Il kernel del SO dà la possibilità ad ogni processo che viene creato all'interno di quell'ambiente di avere una visione diversa, come se avesse una CPU completamente dedicata.
-
-devono essere previsti, oltre a meccanismi di sincronizzazioe anche quelli di protezione (controllo degli accessi alle risorse).
-La parte gialla è una componente software che nella realtà è realizzata dal kernel del SO. Il SO indipendentemente dalle caratteristiche fisiche della macchina, offre l'illusione di avere una macchina con più di un'unità di elab: una per ogni processo che verrà messo in esecuzione contemporaneamente.
-
-La multiprogrammazione è un insieme di meccanismi
-
-La virtualizzazione che viene offerta dalla macchina astratta si basa sulle politiche di scheduling.
-
-Di fatto, la macchina astratta M offre l'illusione del sistema composta da tante unità di elab quanti sono i processi che stanno eseguendo in quel sistema. Il meccanismo di interazione offre una visione di quella visione astratta, tale per cui possano all'occorrenza interagire tramite forme di sincronizzazione o comunicazione.
 
 2 possibilità:
 1. queste macchine astratte M sono collegate ad un'unica memoria principale.
