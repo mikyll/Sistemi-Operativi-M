@@ -282,9 +282,12 @@ Questo modello trae ispirazione dalla programmazione strutturata, permettendo di
 *immagine dimostrativa con grafo di precedenza*
 
 ```
-NB: tutti i grafi di precedenza possono essere espressi tramite fork/join ma non tutti 
-possono essere espressi con cobegin/coend.
+NB: fork/join è un formalismo più generale di cobegin/coend: tutti i grafi di preceden-
+za possono essere espressi tramite fork/join ma non tutti possono essere espressi con 
+cobegin/coend.
 ```
+
+
 
 
 
