@@ -49,8 +49,8 @@
 		</li>
 		<li><a href="#costrutti-linguistici-per-la-specifica-della-concorrenza">Costrutti Linguistici per la Specifica della Concorrenza</a>
 			<ul>
-				<li><a href="#fork-join">Fork/Join</a></li>
-				<li><a href="#cobegin-coend">Cobeign/Coend</a></li>
+				<li><a href="#forkjoin">Fork/Join</a></li>
+				<li><a href="#cobegincoend">Cobeign/Coend</a></li>
 			</ul>
 		</li>
 		<li><a href="#proprietà-dei-programmi">Proprietà dei Programmi</a>
@@ -258,11 +258,11 @@ Le **proprietà di un linguaggio di programmazione concorrente** sono:
 - devono essere presenti strumenti linguistici per specificare le interazioni che dinamicamente possono verificarsi tra i vari processi.
 
 ### Architettura di una Macchina Concorrente
-*pic slide 51*
+<img width="70%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Architettura%20Macchina%20Concorrente%20(1).png" alt="Architettura Macchina Concorrente (1)"/>
 M offre un certo numero di unità di elaborazione virtuali, che però non sempre sono in numero sufficiente per supportare l'esecuzione contemporanea dei processi di un programma concorrente.\
 M è una macchina astratta ottenuta tramite tecniche software (o hardware) basandosi su una macchina fisica M' generalmente più semplice (con un numero di unità di elaborazione solitamente minore del numero dei processi).\
 
-*pic slide 52?*
+<img width="60%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Architettura%20Macchina%20Concorrente%20(2).png" alt="Architettura Macchina Concorrente (2)"/>
 
 Al proprio interno M contiene ciò che dev'essere messo in atto quando viene richiesta l'esecuzione di processi concorrenti e tutto ciò che riguarda l'interazione (sincronizzazione con scambio di informazioni).\
 Il nucleo corrisponde al supporto a tempo di esecuzione del compilatore di un linguaggio concorrente e comprende sempre due funzionalità base:
