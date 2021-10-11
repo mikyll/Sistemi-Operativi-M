@@ -28,7 +28,40 @@
 						<li><a href="#linguaggi-concorrenti">Linguaggi Concorrenti</a></li>
 					</ul>
 				</li>
-				<li><a href="#scomposizione-di-un-processo-non-sequenziale">Scomposizione di un Processo Non Sequenziale</a></li>
+				<li><a href="#scomposizione-di-un-processo-non-sequenziale">Scomposizione di un Processo Non Sequenziale</a>
+					<ul>
+						<li><a href="#interazione-tra-processi">Interazione tra Processi</a>
+							<ul>
+								<li><a href="#cooperazione">Cooperazione</a></li>
+								<li><a href="#competizione">Competizione</a></li>
+								<li><a href="#interferenza">Interferenza</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li><a href="#architetture-e-linguaggi-per-la-programmazione-concorrente">Architetture e Linguaggi per la Programmazione Concorrente</a></li>
+		<li><a href="#architettura-di-una-macchina-concorrente">Architettura di una Macchina Concorrente</a>
+			<ul>
+				<li><a href="#architettura-della-macchina-m">Architettura della Macchina M</a></li>
+			</ul>
+		</li>
+		<li><a href="#costrutti-linguistici-per-la-specifica-della-concorrenza">Costrutti Linguistici per la Specifica della Concorrenza</a>
+			<ul>
+				<li><a href="#fork-join">Fork/Join</a></li>
+				<li><a href="#cobegin-coend">Cobeign/Coend</a></li>
+			</ul>
+		</li>
+		<li><a href="#proprietà-dei-programmi">Proprietà dei Programmi</a>
+			<ul>
+				<li><a href="#verifica-della-correttezza-di-un-programma">Verifica della Correttezza di un Programma</a></li>
+				<li><a href="#proprietà-di-safety-e-liveness">Proprietà di Safety e Liveness</a>
+					<ul>
+						<li><a href="#proprietà-dei-programmi-sequenziali">Proprietà dei Programmi Sequenziali</a></li>
+						<li><a href="#proprietà-dei-programmi-concorrenti">Proprietà dei Programmi Concorrenti</a></li>
+					</ul>
+				</li>
 			</ul>
 		</li>
   </ul>
@@ -199,7 +232,7 @@ Le attività rappresentate dai processi possono essere:
 - **interagenti**, se sono assoggettati a vincoli di precedenza tra stati che appartengono a processi diversi (vincoli di precedenza fra le operazioni e vincoli di sincronizzazione).
 
 <!-- lezione 2021/10/06 -->
-##### Interazione Tra Processi
+##### Interazione tra Processi
 Esistono tre possibili tipi di interazione tra processi: *cooperazione*, *competizione*, *interferenza*.
 
 ###### Cooperazione
