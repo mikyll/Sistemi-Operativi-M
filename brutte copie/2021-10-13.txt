@@ -1,0 +1,74 @@
+Mail: Sarei interessata ad andare in Erasmus, e vorrei chiederti com'è stata la tua esperienza, se potresti raccontarmi come ti sei trovata e se magari hai qualche consiglio da darmi: su come informarmi, come scegliere, se è difficile entrare, se occorre prepararsi in qualche modo e un tuo parere personale :)
+
+
+
+
+
+slide 51
+
+
+Meccanismo a tornello: in cui si fa passare una persona alla volta
+
+si risveglia il primo, che fa una v, risvegliando il secondo, ecc.
+
+
+lunedì ci servirà discorso riguardante le barriere.
+
+
+
+
+Semafori binari composti:
+servono ogni volta che 2 processi si devono scambiare messaggi. memoria condivisa, ad esempio un buffer.
+
+
+
+
+
+il valore di pn indica in modo binario lo stato del buffer (pieno o vuoto)
+
+
+coppia di semafori usata in modo
+
+
+un processo
+per ricezione
+
+ogni processo che riceve fa la p
+
+
+
+slide 57
+in altre parole: un semaforo condizione consente di esprimere uno schema di sincronizzazione descritto da quella regione non condizionale.
+
+region R << when(C) S1; >>
+S1 può essere eseguita solo quando la condizione C risulta vera.
+
+Quando risulta falsa il processo si sospende su un semaforo.
+
+tipicamente il processo da running passa in stato di waiting (sospensione), quindi non consuma nemmeno CPU.
+
+
+introduco semaforo sem di condizione, che inizializzo a 0.
+
+introduco semaforo mutex che garantisce che risorsa R venga acceduta in modo mutuamente esclusivo.
+
+introduco csem = 0 che tiene traccia del numero dei processi in attesa che la condizione C diventi vera
+
+
+all'interno del corpo
+
+
+
+
+schema con passaggio di testimone
+
+
+
+possiamo usare anche il nostro pc
+
+
+
+nuovo PDF pthreads
+
+thread è flusso di esecuzione in processo pesante
+
