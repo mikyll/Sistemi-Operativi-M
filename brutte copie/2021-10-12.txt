@@ -1,0 +1,178 @@
+ 
+##### Proprietà dei Programmi Concorrenti
+Le proprietà fondamentali che ogni programma concorrente deve avere sono:
+- *correttezza del risultato finale* -> **Safety**;
+- *terminazione*, -> **Liveness**;
+- *mutua esclusione nell'accesso a risorse condivise*, ovvero per ogni esecuzione non accadrà mai che più di un processo acceda contemporaneamente alla stessa risorsa -> **Safety**;
+- *assenza di deadlock*, ovvero per ogni esecuzione non si verificheranno mai situazioni di blocco critico -> **Safety**;
+- *asseenza di starvation*, ovvero prima o poi ogni processo potrà accedere alle risorse richieste -> **Liveness**.
+
+
+Verifica di proprietà nei programmi concorrenti
+tramite una specifica formale, attraverso un processo di dimostrazione matematica si possono dimostrare le proprietà di un programma concorrente
+
+in particolare quando vedremo la mutua esclusione coi semafori
+
+nuovo pdf
+
+
+
+modello di programmazione concorrente basato su waifu
+
+siamo nel modello a memoria comune quando i processi possono condividere memoria (possono vedere e accedere alle stesse variabili di memoria)
+
+modello a scambio di messaggi: i processori non condividono memoria! Ognuno ha la sua memoria privata (ricordare le immagini dei tipi diversi di sistemi)
+*mettere link(?)
+
+
+ci sono risorse comuni: che possono essere accedute da più processi
+
+
+
+
+
+
+
+
+altra possibile dist:
+alloc statica, alloc dinamica
+
+
+slide 9:
+casella delle risorse private: caso in cui ci sono
+
+
+
+casella: risorse dedicate allocate dinamicamente:
+
+ad ogni istante non ci sarà mai più di un processo che possa esercitare il diritto di accesso su quella risorsa.
+
+caso B: abbiamo un srdt con cardinatlità > 1 che è sempre quello per tutta la durata dell'esecuzione del processo.
+
+
+
+caso D:
+dinamicamente perché nel tempo quell'accesso può variare
+
+D è forse ilcaso più generale di tutti
+
+
+la colonna di destra è quella che riguarda la memoria comune
+
+il gestore della risorsa, se abbiamo risorse allocate staticamente, diventa il programmatore, che sfruttando ciò che gli permette di fare il linguaggio di programmazione, opera sulle varie risorse (es sfruttando regole di visibilità del linguaggio).
+
+se dinamicamente, ovviamente
+
+
+il gestore in generale deve mantenere aggiornato l'insieme SR(t) e fornire i meccanismi che il processo può usare per esercitare il diritto di operare su quella risorsa.
+
+
+A seconda del modello di interazione, il gestore può essere implementato in modo diverso:
+modello a memoria comune - il gestore è risorsa a sua volta.
+
+
+ricordiamo il monitor: oggetto che regola gli accessi, è un esempio classico di gestore (implicitamente gestisce l'insieme dei processi che possono accedere a quella risorsa e fornisce i meccanismi, ovvero i metodi che espone, e implementa la strategia di accesso alla risorsa)
+
+
+in un sistema basato sul modello a scambio di messaggi, il gestore di una risorsa è un processo.
+
+
+Noi faremo riferimento al modello a memoria comune (colonna 2 della tabella).
+
+non c'è bisogno a runtime di verificare se il processo appartiene all'insieme srdt, ma si sa a priori, quindi basta che esegua l'operazione
+
+
+se l'allocazione è dinamica, è necessario prevedere un gestore GR associato a quella risorsa
+
+
+richiesta: operazione con cui un processo richiede alloc risorsa (gestore la implementa andando a verificare diritto di accesso)
+
+
+
+
+se non scrivo nulla mi sento inutile
+
+
+
+[...]
+
+
+sincronizzazione
+
+
+a livello sintattico come si esprime una regione critica condizionale
+
+
+slide 15
+Specifica della sincronizzazione
+
+Sa è una qualunque istruzione;
+
+con riferimento alla risorsa R:
+eseguo Sa (statement A)
+when (C) esprime condizione C che, se soddisfatta, consente di eseguire lo statement successivo Sb.
+Se (C) è falsa, il processo viene sospeso: rimane in attesa che la condizione C diventi vera.
+
+
+slide 18
+esempio di specifica della sincronizzazione
+
+caso classico: modello a memoria comune: due processi condividono una variabile comune "buffer" (di dim unitaria) per lo scambio di un messaggio alla volta
+
+il mittente, quando ha bisogno di inviare un messaggio, chiamerà sulla risorsa m l'inerimento
+
+dall'altra parte ricevente che dovrà eseguire a sua volta il metodo di estrazione.
+
+queste due operazioni non possono ovviamente essere eseguite senza vincoli di sincronizzazione (mittente non può inserire in buffer pieno - ovvero con messaggio non ancora letto dal ricevente; e ricevente non può leggere dal buffer se questo è vuoto)
+
+vediamo come possiamo descrivere queste due sezioni critiche (slide 19)
+
+
+
+
+
+
+si può prevedere un protocollo, detta S la sezione critica, per specificare quella sequenza di istruzioni come una vera e propria sezione critica,
+
+
+
+
+
+
+per garantire mutua esclusione diverse possibilità
+
+
+
+
+
+
+esercitazione: vedremo pthread (LinuxThreads - implementazione dei pthreads in linux e li useremo per implementazione sincronizzazione su Linux
+
+
+proprietà del semaforo
+
+
+
+
+
+
+
+
+vogliamo dimostrare che le condizioni necessarie per la mutua esclusione siano soddisfatte:
+sezioni critiche della stessa classe siano eseguite in modo mutuamente esclusivo (nello stesso programma si possono aavere più processi contenenti 1 o+ sezioni critiche => bisogna fare in modo che all'interno della sezione critica della stessa classe ci sia al più un solo processo)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
