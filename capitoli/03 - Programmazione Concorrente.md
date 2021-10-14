@@ -301,6 +301,8 @@ attendere, mentre nella wait no, di conseguenza quest'ultima si mette in attesa 
 terminazione di uno qualunque dei processi figli.
 ```
 
+<img width="70%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Fork%20Join.png" alt="Fork/Join"/>
+
 #### Cobeign/Coend
 Questo modello trae ispirazione dalla programmazione strutturata, permettendo di esprimere la concorrenza tramite opportuni blocchi da inserire nel codice di opportuni programmi concorrenti. Si basa su due primitive fondamentali: *cobegin* e *coend*.
 
@@ -308,13 +310,13 @@ Questo modello trae ispirazione dalla programmazione strutturata, permettendo di
 
 **Coend**: indica la fine di un blocco di istruzioni parallele.
 
-*immagine dimostrativa con grafo di precedenza*
-
 ```
 NB: fork/join è un formalismo più generale di cobegin/coend: tutti i grafi di preceden-
 za possono essere espressi tramite fork/join ma non tutti possono essere espressi con 
 cobegin/coend.
 ```
+
+<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Cobegin%20Coend.png" alt="Cobegin/Coend"/>
 
 ### Proprietà dei Programmi
 I seguenti concetti permettono di specificare cosa succede quando il programma viene eseguito, di conseguenza sono utili per verificare la correttezza dei programmi realizzati.
