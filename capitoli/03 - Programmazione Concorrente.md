@@ -59,7 +59,11 @@
 				<li><a href="#proprietà-di-safety-e-liveness">Proprietà di Safety e Liveness</a>
 					<ul>
 						<li><a href="#proprietà-dei-programmi-sequenziali">Proprietà dei Programmi Sequenziali</a></li>
-						<li><a href="#proprietà-dei-programmi-concorrenti">Proprietà dei Programmi Concorrenti</a></li>
+						<li><a href="#proprietà-dei-programmi-concorrenti">Proprietà dei Programmi Concorrenti</a>
+							<ul>
+								<li><a href="#verifica-di-proprietà-nei-programmi-concorrenti">Verifica di Proprietà nei Programmi Concorrenti</a></li>
+							</ul>
+						</li>
 					</ul>
 				</li>
 			</ul>
@@ -342,8 +346,6 @@ Le proprietà fondamentali che ogni programma sequenziale deve avere sono:
 - *la terminazione*, ovvero prima o poi l'esecuzione del programma deve terminare -> **Liveness**.
 
 <!-- lezione 2021/10/12 -->
-prossima volta(?)
-
 ##### Proprietà dei Programmi Concorrenti
 Le proprietà fondamentali che ogni programma concorrente deve avere sono:
 - *correttezza del risultato finale* -> **Safety**;
@@ -351,3 +353,6 @@ Le proprietà fondamentali che ogni programma concorrente deve avere sono:
 - *mutua esclusione nell'accesso a risorse condivise*, ovvero per ogni esecuzione non accadrà mai che più di un processo acceda contemporaneamente alla stessa risorsa -> **Safety**;
 - *assenza di deadlock*, ovvero per ogni esecuzione non si verificheranno mai situazioni di blocco critico -> **Safety**;
 - *asseenza di starvation*, ovvero prima o poi ogni processo potrà accedere alle risorse richieste -> **Liveness**.
+
+###### Verifica di Proprietà nei Programmi Concorrenti
+Poiché lo scheduling dei processi non è deterministico, il semplice testing su vari set di dati, per diverse ripetizioni dell'esecuzione, non dimostra rigorosamente il soddisfacimento di proprietà. Per questo motivo, un possibile approccio è l'utilizzo di una specifica "formale": tramite un processo di dimostrazione matematica si possono verificare le proprietà di un programma concorrente.
