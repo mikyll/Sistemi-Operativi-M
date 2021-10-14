@@ -1,0 +1,1 @@
+<h1 align="center">Capitolo 4: Modello a Memoria Comune</h1>

@@ -1046,3 +1046,6 @@ Le proprietà fondamentali che ogni programma concorrente deve avere sono:
 
 ###### Verifica di Proprietà nei Programmi Concorrenti
 Poiché lo scheduling dei processi non è deterministico, il semplice testing su vari set di dati, per diverse ripetizioni dell'esecuzione, non dimostra rigorosamente il soddisfacimento di proprietà. Per questo motivo, un possibile approccio è l'utilizzo di una specifica "formale": tramite un processo di dimostrazione matematica si possono verificare le proprietà di un programma concorrente.
+
+
+## 04 - Modello a Memoria Comune [![Vai al Capitolo Singolo](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/icon-document.png)](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/capitoli/04%20-%20Modello%20a%20Memoria%20Comune.md "Vai al Capitolo Singolo")
