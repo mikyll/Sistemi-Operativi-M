@@ -157,7 +157,42 @@
 								<li><a href="#linguaggi-concorrenti">Linguaggi Concorrenti</a></li>
 							</ul>-->
 						</li>
-						<li><a href="#scomposizione-di-un-processo-non-sequenziale">Scomposizione di un Processo Non Sequenziale</a></li>
+						<li><a href="#scomposizione-di-un-processo-non-sequenziale">Scomposizione di un Processo Non Sequenziale</a>
+					<ul>
+						<li><a href="#interazione-tra-processi">Interazione tra Processi</a>
+							<ul>
+								<li><a href="#cooperazione">Cooperazione</a></li>
+								<li><a href="#competizione">Competizione</a></li>
+								<li><a href="#interferenza">Interferenza</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li><a href="#architetture-e-linguaggi-per-la-programmazione-concorrente">Architetture e Linguaggi per la Programmazione Concorrente</a></li>
+		<li><a href="#architettura-di-una-macchina-concorrente">Architettura di una Macchina Concorrente</a>
+			<ul>
+				<li><a href="#architettura-della-macchina-m">Architettura della Macchina M</a></li>
+			</ul>
+		</li>
+		<li><a href="#costrutti-linguistici-per-la-specifica-della-concorrenza">Costrutti Linguistici per la Specifica della Concorrenza</a>
+			<ul>
+				<li><a href="#forkjoin">Fork/Join</a></li>
+				<li><a href="#cobegincoend">Cobegin/Coend</a></li>
+			</ul>
+		</li>
+		<li><a href="#proprietà-dei-programmi">Proprietà dei Programmi</a>
+			<ul>
+				<li><a href="#verifica-della-correttezza-di-un-programma">Verifica della Correttezza di un Programma</a></li>
+				<li><a href="#proprietà-di-safety-e-liveness">Proprietà di Safety e Liveness</a>
+					<ul>
+						<li><a href="#proprietà-dei-programmi-sequenziali">Proprietà dei Programmi Sequenziali</a></li>
+						<li><a href="#proprietà-dei-programmi-concorrenti">Proprietà dei Programmi Concorrenti</a>
+							<ul>
+								<li><a href="#verifica-di-proprietà-nei-programmi-concorrenti">Verifica di Proprietà nei Programmi Concorrenti</a></li>
+							</ul>
+						</li>
 					</ul>
 				</li>
 			</ul>
@@ -172,7 +207,9 @@
     <li><a href="#soluzione-precopy">2021/09/28</a></li>
     <li><a href="#diritto-owner">2021/09/29</a></li>
 		<li><a href="#03---programmazione-concorrente-">2021/10/05</a></li>
-		<li><a href="#">2021/10/06</a></li>
+		<li><a href="#interazione-tra-processi">2021/10/06</a></li>
+		<li><a href="#proprietà-dei-programmi-concorrenti">2021/10/12</a></li>
+		<li><a href="#">2021/10/13</a></li>
   </ul>
 </details>
 
@@ -888,5 +925,124 @@ Le attività rappresentate dai processi possono essere:
 - **completamente indipententi**, se l'evoluzione del processo non influenza quella degli altri. Di fatto nel grafo abbiamo un unico punto di partenza ed un unico punto di arrivo, ma i nodi potrebbero esprimersi, ad esempio, come una serie di 3 sequenze di nodi, che non sono però legate fra loro da vincoli di precedenza (gli eventi che appartengono ad un processo non sono legati ad altri eventi appartenenti ad altri processi);
 - **interagenti**, se sono assoggettati a vincoli di precedenza tra stati che appartengono a processi diversi (vincoli di precedenza fra le operazioni e vincoli di sincronizzazione).
 
-
 <!-- lezione 2021/10/06 -->
+##### Interazione tra Processi
+Esistono tre possibili tipi di interazione tra processi: *cooperazione*, *competizione*, *interferenza*.
+
+###### Cooperazione
+Comprende tutte le intearazioni *prevedibili* e *desiderate*, che sono in qualche modo dettate dall'algoritmo (date cioè dagli archi del grafo di precedenza ad ordinamento parziale). È insita nella logica che vogliamo rappresentare. Si può esprimere in 2 modi: **segnali temporali**, ovvero sincronizzazione pura, che esprime solo ed unicamente un vincolo di precedenza; **scambio di dati**, ovvero comunicazione vera e propria. In entrambi i casi esiste comunque un vincolo di precedenza tra gli eventi di processi diversi.\
+C'è una relazione di causa ed effetto tra l'esecuzione dell'operazione di invio da parte del processo mittente e l'operazione di ricezione da parte del processo ricevente, con un vincolo di precedenza tra questi eventi (*sincronizzazione* di due processi). Il linguaggio di programmazione deve fornire i costrutti linguistici necessari a specificare la sincronizzazione e la eventuale comunicazione tra i processi.\
+Esempio di cooperazione: interazione data da vincoli temporali (es: un processo esegue delle operazioni ogni 2 secondi, un altro ogni 3 ed un terzo li coordina attivando periodicamente tali processi).
+
+###### Competizione
+Consiste in un'interazione *prevedibile* e *non desiderata* (in quanto non fa parte dell'algoritmo che si vuole implementare, ma è solitamente dato da un limite della risorsa fisica o logica), ma *necessaria*. Infatti, la macchina concorrente, su cui i processi sono eseguiti, mette a disposizione un numero limitato di risorse condivise, disponibili nell'ambiente di esecuzione. Poiché alcune di queste non possono essere accedute o utilizzate contemporaneamente da più processi (o lo sono solo per un numero limitato), è necessario prevedere meccanismi che regolino la competizione, coordinando l'accesso alla risorsa da parte dei vari processi, in modo **mutuamente esclusivo**. Questo può determinare l'imposizione di vincoli di sincronizzazione (se una risorsa può essere usata da un solo processo alla volta, nella fase in cui sta venendo usata da un certo processo, nessun altro deve poterla utilizzare): un processo che tenta di accedere una risorsa già occupata (se non rispetta certi vincoli) dev'essere bloccato.\
+**Sezione critica**: indica una sequenza di istruzioni con cui un processo accede ad una risorsa condivisa mutuamente esclusiva. Ad una risorsa possono essere associate, in casi particolari, anche più di una sezione critica. Se su una risorsa vale la mutua esclusione, sezioni critiche appartenenti alla stessa classe non possono eseguire contemporaneamente.\
+Esempio di competizione: processi che devono accedere ad una stampante (risorsa mutuamente esclusiva).
+
+###### Interferenza
+È un tipo di interazione *non prevista* e *non desiderata*. Solitamente è provocata da errori del programmatore (infatti solitamente si cerca di eliminarle o escluderle), il quale non ha modellato correttamente l'interazione dei propri processi non sequenziali interagenti.\
+Può non manifestarsi, in quanto a volte dipende dalla velocità relativa dei processi; gli errori possono manifestarsi nel corso dell'esecuzione del programma, a seconda delle diverse condizioni di velocità di esecuzione dei processi. In questi casi si parla di errori dipendenti dal tempo.\
+Esempio tipico: deadlock.
+
+### Architetture e Linguaggi per la Programmazione Concorrente
+Avendo a disposizione una *macchina concorrente* **M** (in grado di eseguire più processi sequenziali contemporaneamente) e di un *linguaggio di programmazione* con il quale descrivere algoritmi non sequenziali, è possibile scrivere e far eseguire programmi concorrenti. L'elaborazione complessiva può essere descritta come un insieme di *processi sequenziali interagenti*.\
+Le **proprietà di un linguaggio di programmazione concorrente** sono:
+- fornire appositi costrutti con i quali sia possibile dichiarare moduli di programma destinati ad essere eseguiti come processi sequenziali distinti;
+- non tutti i processi vengono eseguiti contemporaneamente. Alcuni processi vengono svolti se, dinamicamente, si verificano particolari condizioni. È quindi necessario poter specificare quando un processo deve essere attivato e termianto;
+- devono essere presenti strumenti linguistici per specificare le interazioni che dinamicamente possono verificarsi tra i vari processi.
+
+### Architettura di una Macchina Concorrente
+<img width="70%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Architettura%20Macchina%20Concorrente%20(1).png" alt="Architettura Macchina Concorrente (1)"/>
+M offre un certo numero di unità di elaborazione virtuali, che però non sempre sono in numero sufficiente per supportare l'esecuzione contemporanea dei processi di un programma concorrente.\
+M è una macchina astratta ottenuta tramite tecniche software (o hardware) basandosi su una macchina fisica M' generalmente più semplice (con un numero di unità di elaborazione solitamente minore del numero dei processi).\
+
+<img width="60%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Architettura%20Macchina%20Concorrente%20(2).png" alt="Architettura Macchina Concorrente (2)"/>
+
+Al proprio interno M contiene ciò che dev'essere messo in atto quando viene richiesta l'esecuzione di processi concorrenti e tutto ciò che riguarda l'interazione (sincronizzazione con scambio di informazioni).\
+Il nucleo corrisponde al supporto a tempo di esecuzione del compilatore di un linguaggio concorrente e comprende sempre due funzionalità base:
+- meccanismo di **multiprogrammazione**, preposto alla gestione delle unità di elaborazione della macchina M', ovvero le unità reali. Questo meccanismo è realizzato dal kernel del SO, il quale dà la possibilità ad ogni processo creato all'intero dell'ambiente, di avere una visione diversa, come se avesse una CPU completamente dedicata. Ciò permette ai vari processi eseguiti sulla macchina astratta M di condividere l'uso delle unità reali di elaborazione (tale virtualizzazione si basa sulle politiche di *scheduling*) tramite l'allocazione in modo esclusivo ad ogni processo di un'unità virtuale di elaborazione. Di fatto la macchina astratta M offre l'illusione che il sistema sia composto da tante unità di elaborazione, quanti siano i processi in esecuzione;
+- meccanismo di **sincronizzazione** e **comunicazione**, estende le potenzialità delle unità reali di elaborazione, rendendo disponibile alle unità virtuali strumenti mediante i quali sincronizzarsi e comunicare.
+Oltre ai meccanismi di multiprogrammazione e interazione, è presente anche il meccanismo di **protezione** (controllo degli accessi alle risorse): importante per rilevare eventuali interferenze tra i processi; può essere realizzato in hardware o software nel supporto a tempo di esecuzione; comprende capabilities e ACL.
+
+#### Architettura della Macchina M
+In base all'organizzazione logica di M vengono definiti due modelli di interazione tra i processi:
+1. Modello a **memoria comune**, ovvero le macchine astratte M sono collegate ad un'unica memoria principale. La visione proposta è aderente al modello del *multiprocessore*. Se queste sono le caratteristiche della macchina astratta, le unità di elaborazione astratte/virtuali prevedono l'interazione dei processi tramite oggetti contenuti in memoria comune (modello ad ambiente globale).
+2. Modello a **scambio di messaggi**, ovvero gli elaboratori astratti realizzati dalla macchina M non condividono memoria. Sono posti in collegamento da una rete di comunicazione, ma non hanno possibilità di accedere alle stesse aree di memoria (tipico dei sistemi *multicomputer*). Ciascuna di queste aree virtuali viene fornita ad un certo processo, e sarà compito della macchina M fornire dei meccanismi opportuni che consentano la comunicazione fra i processi che eseguono (modello ad ambiente locale).
+
+### Costrutti Linguistici per la Specifica della Concorrenza
+Qualunque siano le caratteristiche della macchina astratta, il linguaggio di programmazione (concorrente) deve fornire costrutti che consentano di gestire i processi.\
+Esistono due modelli diversi:
+
+#### Fork/Join
+Questo modello comprende appunto due primitive fondamentali: *fork* e *join*.
+
+**Fork**: permette di creare e attivare un processo che inizia la propria esecuzione in *parallelo* con quella del processo chiamante.
+```
+NB: non va confusa con la system call di UNIX: in questo caso riguarda un modello più
+generale e, a differenza della primitiva UNIX, si passa una funzione, col codice da e-
+seguire, alla fork.
+```
+
+La fork ha un comportamento simile ad una exec: mentre quest'ultima implica l'attivazione di un processo che esegue il programma chiamato e la sospensione del programma chiamante, la fork prevede che il programma chiamante prosegua contemporaneamente con l'esecuzione della funzione chiamata. Coincide infatti con una biforcazione del grafo.
+
+**Join**: consente di sincronizzare un processo con la terminazione di un altro processo, precedentemente creato tramite una fork.
+
+In un grafo di precedenza, il nodo che rappresenta l'evento join ha due predecessori.
+
+```
+NB: a differenza della wait UNIX, nella join è necessario specificare il processo da
+attendere, mentre nella wait no, di conseguenza quest'ultima si mette in attesa della 
+terminazione di uno qualunque dei processi figli.
+```
+
+<img width="70%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Fork%20Join.png" alt="Fork/Join"/>
+
+#### Cobeign/Coend
+Questo modello trae ispirazione dalla programmazione strutturata, permettendo di esprimere la concorrenza tramite opportuni blocchi da inserire nel codice di opportuni programmi concorrenti. Si basa su due primitive fondamentali: *cobegin* e *coend*.
+
+**Cobegin**: specifica l'inizio di un blocco di codice che deve essere eseguito in parallelo. All'interno di questo blocco si possono specificare una serie di operazioni o processi: la caratteristica degli statement in questo blocco è che ognuno di essi verrà eseguito concorrentemente rispetto agli altri di tale blocco. Inoltre, è possibile innestare un blocco dentro l'altro. 
+
+**Coend**: indica la fine di un blocco di istruzioni parallele.
+
+```
+NB: fork/join è un formalismo più generale di cobegin/coend: tutti i grafi di preceden-
+za possono essere espressi tramite fork/join ma non tutti possono essere espressi con 
+cobegin/coend.
+```
+
+<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Cobegin%20Coend.png" alt="Cobegin/Coend"/>
+
+### Proprietà dei Programmi
+I seguenti concetti permettono di specificare cosa succede quando il programma viene eseguito, di conseguenza sono utili per verificare la correttezza dei programmi realizzati.
+
+**Traccia dell'esecuzione**: sequenza degli stati attraversati dal sistema di elaborazione durante l'esecuzione del programma. L'esecuzione di un programma è descritta dalla sua traccia.
+
+**Stato**: insieme dei valori delle variabili definite nel programma più le variabili "implicite" (ad esempio il valore del program counter, o di altri registri).
+
+#### Verifica della Correttezza di un Programma
+**Programma sequenziale**: nei programmi sequenziali ogni esecuzione di un certo programma P su un particolare insieme di dati D genera sempre la stessa traccia (la verifica può essere svolta facilmente tramite debugging).\
+**Programma concorrente**: nei programmi concorrenti l'esito dell'esecuzione dipende da quale sia l'effettiva sequenza cronologica di esecuzione delle istruzioni contenute, dunque ogni esecuzione di un certo programma P su un particolare insieme di dati D può dare origine a una traccia diversa, in quanto lo scheduling dei processi non è deterministico (la verifica è molto più difficile).
+
+#### Proprietà di Safety e Liveness
+**Proprietà di un programma**: attributo che è sempre vero, in ogni possibile traccia generata dalla sua esecuzione. Oltre alle proprietà di correttezza di un programma definite in precedenza, esistono anche altre proprietà, che solitamente si classificano in due categorie: *safety properties* e *liveness properties*.
+
+**Safety**: garantisce che durante l'esecuzione di un programma *non si entrerà mai in uno stato "errato"*, ovvero in cui le variabili assumono valori non desiderati.
+
+**Liveness**: garantisce che durante l'esecuzione del programma, *prima o poi si entrerà in uno stato "corretto"*, ovvero in cui le variabili assumono valori desiderati.
+
+##### Proprietà dei Programmi Sequenziali
+Le proprietà fondamentali che ogni programma sequenziale deve avere sono:
+- *la correttezza del risultato finale*, ovvero che per ogni esecuzione, al termine del programma, il risultato ottenuto sia giusto -> **Safety**;
+- *la terminazione*, ovvero prima o poi l'esecuzione del programma deve terminare -> **Liveness**.
+
+<!-- lezione 2021/10/12 -->
+##### Proprietà dei Programmi Concorrenti
+Le proprietà fondamentali che ogni programma concorrente deve avere sono:
+- *correttezza del risultato finale* -> **Safety**;
+- *terminazione*, -> **Liveness**;
+- *mutua esclusione nell'accesso a risorse condivise*, ovvero per ogni esecuzione non accadrà mai che più di un processo acceda contemporaneamente alla stessa risorsa -> **Safety**;
+- *assenza di deadlock*, ovvero per ogni esecuzione non si verificheranno mai situazioni di blocco critico -> **Safety**;
+- *asseenza di starvation*, ovvero prima o poi ogni processo potrà accedere alle risorse richieste -> **Liveness**.
+
+###### Verifica di Proprietà nei Programmi Concorrenti
+Poiché lo scheduling dei processi non è deterministico, il semplice testing su vari set di dati, per diverse ripetizioni dell'esecuzione, non dimostra rigorosamente il soddisfacimento di proprietà. Per questo motivo, un possibile approccio è l'utilizzo di una specifica "formale": tramite un processo di dimostrazione matematica si possono verificare le proprietà di un programma concorrente.
