@@ -289,13 +289,9 @@ generale e, a differenza della primitiva UNIX, si passa una funzione, col codice
 seguire, alla fork.
 ```
 
-*pic dimostrativa slide 56*
-
 La fork ha un comportamento simile ad una exec: mentre quest'ultima implica l'attivazione di un processo che esegue il programma chiamato e la sospensione del programma chiamante, la fork prevede che il programma chiamante prosegua contemporaneamente con l'esecuzione della funzione chiamata. Coincide infatti con una biforcazione del grafo.
 
 **Join**: consente di sincronizzare un processo con la terminazione di un altro processo, precedentemente creato tramite una fork.
-
-*immagine(?) slide 57*
 
 In un grafo di precedenza, il nodo che rappresenta l'evento join ha due predecessori.
 
