@@ -1,0 +1,3 @@
+realizzare app che gestisca accessi a risorse (parco in cui vissitatori possono accedere in gruppi da massimo 5 persone)
+
+capacità del parco limitata (maxP)
