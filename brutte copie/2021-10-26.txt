@@ -1,0 +1,21 @@
+come meccanismi (sincronizzazione) possono essere implementati dal nucleo.
+
+Esemplificazione come
+
+
+slide 27
+L'assegnazione della CPU viene realizzata dallo scheduler.
+
+Algoritmo con priorità (preemption) 
+con preemption - quando un processo con alta priorità arriva nello stato pronto, se la priorità è più alta del processo attualmente in esecuzione, gli viene assegnata la CPU, salvando lo stato di quello presente e ripristinando lo stato di questo.
+
+ci occupiamo del livello superiorie (che implementa le system call)
+Come può il nucleo implementare la sincronizzazione?
+Vediamo come può essere usato il semaforo per implementare la sincronizz su architettura monoprocessore.
+
+
+
+
+
+All'interno dell'implementazione della p c'è un momento in cui viene inserito il descrittore nella coda.
+
