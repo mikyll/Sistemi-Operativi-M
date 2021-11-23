@@ -19,3 +19,31 @@ Vediamo come può essere usato il semaforo per implementare la sincronizz su arc
 
 All'interno dell'implementazione della p c'è un momento in cui viene inserito il descrittore nella coda.
 
+
+
+
+
+slide 35
+
+
+
+la pila (stack) rappresenta l'area di lavoro di un processo.
+
+Registri importanti: Program Counter e Program State.
+Questi vengono utilizzati sia dall'ambiente di nucleo che dall'ambiente di processo.
+
+altri due registri importanti: SP1 (stack pointer), SP1' (stack pointer associato all'ambiente di nucleo(?))
+
+
+
+
+SMP Symmetric MultiProcessing
+
+Modello a nuclei distinti.
+
+Nei sistemi comunemente utilizzati (Linux, Windows) il modello utilizzato è SMP.
+Il modello a nuclei distinti è più scalabile, e si presta meglio per architetture con un numero di processori considerevole.
+
+SMP utilizza un unico nucleo dedicato alla gestione di tutte le risorse del sistema (di tutte le CPU presenti a livello architetturale);
+Nuclei distinti: prevede più nuclei all'interno dello stesso sistema, ognuno dedicato alla gestione di una CPU diversa. Ovviamente dovranno poter interagire tra di loro.
+Quindi qua si hanno tanti nuclei quanti sono le unità di elaborazione.
