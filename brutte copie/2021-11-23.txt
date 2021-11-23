@@ -1,0 +1,110 @@
+un task dev'essere dichiartao e definito. 
+
+La concorrenza in ada è basta sul concetto di task (processo)
+
+NB: nella dichiarazione indichiamo i servizi che espone nei confronti [...]:
+task <nome_task>
+
+è inoltre necessario cosa deve fare il task, quindi dev'esserci la definizione:
+task body <nome_task> is 
+	...sequenza istruzioni...
+end <nome_task>;
+
+
+procedure <modulo_programma> (NB: un programma Ada può avere più moduli)
+
+un programma Ada è comosto da una prima parte in cui si importano i moduli che ci servono.
+Poi ci sono delle varie procedure, all'interno delle quali definiamo cosa succede.
+
+NB: noi notiamo che nell'esempio, la dichiarazione è vuota.
+Questo perché la dichiarazione è opzionale, è necessaria solo nel caso in cui il task svolga dei servizi, ovvero si comporti da server (servitore).
+
+
+
+infine la procedure si conclude con un blocco begin-end
+che sarebbe l'equivalente del main, in cui vengono istanziati i task.
+
+In sostanza in tale programma abbiamo 3 processi:
+il main; il First_Task; il Second_Task.
+
+
+
+A noi interessa come interagiscono i vari task.
+
+La comunicazione è basata solo ed esclusivamente sul "rendez vous esteso"
+
+è una comunicazione di tipo asimmetrico: più processi possono interagire su un unico server.
+Fra i due processi interagenti bisogna avere un processo server che offre dei servizi che possono essere invocati da altri processi che svolgono il ruolo di client.
+
+Se un processo è server significa che offrirà delle operazione pubbliche (indicate come "entry"), che possono essere invocate da altri processi che svolgono il ruolo di client.
+
+server: definisce ed esegue operazioni tramite costrutto entry
+client: ne hanno visibilità e tramite chiamata ad operazione potranno chiamarle e "richiedere al server" il determinato servizio.
+
+L'interazione tra task avviene tramite entry call, meccanismo che segue semantica della comunicazione tramite sincronizzazione estesa: il client che chiama si sospende finché il server non riceve, esegue, completa e restituisce i risultati della richiesta.
+
+Se un server svolge dei servizi, nella sua dichiarazione dovrà esserci l'elenco dei servizi che il task offre.
+
+=> si usa il costrutto "is" nella dichiarazione per fare ciò
+
+nella definizione si usano begin ... end
+all'interno del quale il server dovrà indicare la definizione del servizio, ovvero come eventuali richieste provenienti da altri client per l'entry in considerazione, dovranno essere eseguite.
+
+Lista dei parametri formali è una lista che indica il numero ed il tipo dei parametri (e anche se sono parametri di input o di output: se input è un valore che il cliente passa al server; se output il valore rappresenterà un risultato ottenuto dal server).
+
+lato server esiste un'istruzione "accept" che serve per attendere ed accettare una set di entryname. La accept sospsende il server finché un client non invia una richiesta.
+
+
+
+richieste accodate in coda FIFO.
+
+Ad una stessa entry possono essere associate più accept nel corpo del server. Nulla vieta che nel corpo del server ci siano più accept riferite alla stessa entryname. A questo punto il cliente non sa come verrà gestita la sua richiesta, dipende dall'accept del server.
+
+una richiesta può essere eseguita in modo diverso in base a quale accept la accetta.
+
+
+
+
+
+select
+
+effetto or nella select:
+
+
+Ada è perfetto per applicazioni concorrenti in cui sono necessari vincoli temporali, ad esempio se dopo un tot ancora non è stata eseguita, si può esare l'or per inserire una deadline, oltre la quale il processo esegue qualcosa (è tipo una sleep UNX) -es slide 27
+
+
+slide 31
+in Go non esiste la guardia logica, ma bisogna costruirsela, in Ada esiste la possibilità (è built-in) di esprimere anche le guardie logiche, ovvero associare ad un ramo di accept anche una condizione.
+Per farlo si usa la keyword "when" - che consente di accettare l'eventuale richiesta 
+
+un comando con guardia alternativo può essere espresso da una select in cui ogni ramo è un comando con guardia in senso pieno del termine: un comando con guardia c'è una guardia logica (espressa col costrutto when) ed una guardia d'ingresso (espressa col costrutto accept)
+
+ogni ramo della select può essere strutturato in questo modo.
+
+
+guardia valida, guardia ritardata e guardia fallita
+
+
+
+
+
+compilatore Ada: gnat
+
+gnat make programma.adb
+
+esiste anche plugin per eclipse, xcode o altri IDE (www.adacore.com)
+
+c'è un ide gratuito
+
+
+
+
+
+
+
+
+
+
+
+approccio centralizzato: i processi si coordinano facendo riferimento ad un processo centrale chiamato coordinatore.
