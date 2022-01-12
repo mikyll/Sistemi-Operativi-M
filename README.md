@@ -257,7 +257,7 @@ La virtualizzazione non è un concetto nuovo, bensì nasce negli anni '60 coi si
 La virtualizzazione comporta numerosi vantaggi:
 - possibilità di avere più SO, anche differenti, sulla stessa architettura fisica;
 - isolamento degli ambienti d'esecuzione, utile specialmente per eseguire e testare software dalla sicurazza e affidabilità non certa (nel caso peggiore la singola VM va in crash);
-- abbattimento dei costi hardware, in quantosi possono concentrare più macchine (es. server) su un'unica architettura hardware, ed abbattimento dei costi di amministrazione;
+- abbattimento dei costi hardware, in quanto si possono concentrare più macchine (es. server) su un'unica architettura hardware, ed abbattimento dei costi di amministrazione;
 - gestione facilitata delle macchine (creazione, installazione -esistono template già preimpostati-, amministrazione, migrazione "a caldo", possibilità di adottare politiche di bilanciamento del carico e robustezza -disaster recovery-)
 
 ### Realizzazione del VMM
