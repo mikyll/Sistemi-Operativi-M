@@ -285,7 +285,7 @@ NB: d'ora in poi faremo sempre riferimento a VMM di sistema.
 ```
 
 #### Ring di Protezione
-L'architettura delle CPU prevede almeno due livelli di protezione (0 "modi di esecuzione"): supervisore/kernel (livello 0) e utente (livello >0). Ogni ring corrisponde ad una diversa modalità di funzionamento del processore:
+L'architettura delle CPU prevede almeno due livelli di protezione (o "modi di esecuzione"): supervisore/kernel (livello 0) e utente (livello >0). Ogni ring corrisponde ad una diversa modalità di funzionamento del processore:
 - a livello 0 è possibile eseguire istruzioni privilegiate della CPU;
 - a livello superiore a 0 non possono essere eseguite.
 
