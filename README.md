@@ -360,7 +360,7 @@ Una macchina virtuale può trovarsi nei seguenti stati:
 - **running** (o attiva): la macchina ha superato la fase di bootstrap ed è stata caricata nella *RAM* del server su cui è allocata;
 - **inactive** (powered off): la macchina è spenta ed è rappresentata nel *file system* tramite un file immagine;
 - **paused**: la macchina è in *attesa* di un evento (es: I/O richiesto da un processo nell'ambiente guest);
-- **suspended**: lo stato correnteviene salvato nel file system dal VMM. L'uscita da tale stato avviene tramite un'operazione di *resume*.
+- **suspended**: lo stato corrente viene salvato nel file system dal VMM. L'uscita da tale stato avviene tramite un'operazione di *resume*.
 
 suspend: il VMM salva lo stato della VM in memoria secondaria, mettendola in stand by;
 resume: il VMM ripristina lo stato della VM in memoria centrale (lo stato è quello in cui si trovava quando è stata sospesa). Questa operazione può avvenire su un nodo diverso da quello della suspend.
