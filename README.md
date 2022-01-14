@@ -845,7 +845,7 @@ Rientrano in questa categoria anche i vector processors (migliaia di unità di e
 **MISD - Multiple Instruction, Single Data**: il sistema è in grado di gestire un unico flusso di dati che ad ogni istante può essere elaborato con molteplici flussi di istruzioni. Non ci sono esempi particolarmente significativi da portare, ma è il caso dei "pipelined computer", dove le diverse unità di elaborazione sono messe in cascata (pipeline), e queste lavorano su quel flusso di dati, ognuna facendo qualcosa di differente.
 
 ### Tipi di Applicazioni
-Ricapitolando, il progetto di applicazioni concorrenti dev'essere sviluppato in base al tipo di architettura, ma anche in base ai vincoli dati dal Sistema Operativo.
+Ricapitolando, il progetto di applicazioni concorrenti dev'essere sviluppato in base al tipo di architettura, ma anche in base ai vincoli dati dal Sistema Operativo. Le applicazioni concorrenti possono essere di diverso tipo:
 
 1. **multithreaded**:
 	- si ha un'applicazione strutturata come un insieme di processi (thread) che:
