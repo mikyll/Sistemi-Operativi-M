@@ -1,0 +1,1 @@
+Uscita indipendente forse indica che ogni Ufficio è diverso e univoco, quindi non contano gli uffici occupati, ma quali.
