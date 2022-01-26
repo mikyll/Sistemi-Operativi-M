@@ -28,14 +28,6 @@ type Richiesta struct {
 	ack chan bool // canale di ACK
 }
 
-/*
-NB: la scelta del bool invece di un int è stata fatta in quanto il
-boolean in Go ha dimensione di un solo byte, mentre un int32 può
-avere da 4 a 8 byte di dimensione (in base al tipo dell'architettura,
-32bit o 64); e in questo caso, non era necessario restituire più di 2
-valori differenti all'utente.
-*/
-
 // ==================================================================
 // CANALI ===========================================================
 var entrataSA [3]chan Richiesta      // Ingresso Sala d'Aspetto
