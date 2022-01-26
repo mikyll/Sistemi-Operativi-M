@@ -1,5 +1,3 @@
-// Michele Righi - 0001025005
-// ==================================================================
 package main
 
 import (
@@ -137,7 +135,6 @@ func ponte() {
 		case r := <-when(!sp, entrataBarca):
 			nb++
 			fmt.Printf("[PONTE %s] È entrata una barca\n", getStatoPonte(sp))
-			//fmt.Printf("\n[[[DEBUG]]] SP: %s | B: %d (B attesa: %d) | V_A: %d (V_A attesa: %d), V_B: %d (V_B attesa: %d)\n\n", getStatoPonte(sp), nb, len(entrataBarca), nvA, len(entrataVeicolo[PUBBLICO_A])+len(entrataVeicolo[PRIVATO_A]), nvB, len(entrataVeicolo[PUBBLICO_B])+len(entrataVeicolo[PRIVATO_B]))
 			r.ack <- 1
 
 		case r := <-when(sp &&
@@ -146,7 +143,6 @@ func ponte() {
 			nvB == 0, entrataVeicolo[PUBBLICO_A]):
 			nvA++
 			fmt.Printf("[PONTE %s] È entrato un mezzo pubblico in senso A\n", getStatoPonte(sp))
-			//fmt.Printf("\n[[[DEBUG]]] SP: %s | B: %d (B attesa: %d) | V_A: %d (V_A attesa: %d), V_B: %d (V_B attesa: %d)\n\n", getStatoPonte(sp), nb, len(entrataBarca), nvA, len(entrataVeicolo[PUBBLICO_A])+len(entrataVeicolo[PRIVATO_A]), nvB, len(entrataVeicolo[PUBBLICO_B])+len(entrataVeicolo[PRIVATO_B]))
 			r.ack <- 1
 
 		case r := <-when(sp &&
@@ -155,7 +151,6 @@ func ponte() {
 			nvA == 0, entrataVeicolo[PUBBLICO_B]):
 			nvB++
 			fmt.Printf("[PONTE %s] È entrato un mezzo pubblico in senso B\n", getStatoPonte(sp))
-			//fmt.Printf("\n[[[DEBUG]]] SP: %s | B: %d (B attesa: %d) | V_A: %d (V_A attesa: %d), V_B: %d (V_B attesa: %d)\n\n", getStatoPonte(sp), nb, len(entrataBarca), nvA, len(entrataVeicolo[PUBBLICO_A])+len(entrataVeicolo[PRIVATO_A]), nvB, len(entrataVeicolo[PUBBLICO_B])+len(entrataVeicolo[PRIVATO_B]))
 			r.ack <- 1
 
 		case r := <-when(sp &&
@@ -165,7 +160,6 @@ func ponte() {
 			len(entrataVeicolo[PUBBLICO_A]) == 0, entrataVeicolo[PRIVATO_A]):
 			nvA++
 			fmt.Printf("[PONTE %s] È entrato un mezzo privato in senso A\n", getStatoPonte(sp))
-			//fmt.Printf("\n[[[DEBUG]]] SP: %s | B: %d (B attesa: %d) | V_A: %d (V_A attesa: %d), V_B: %d (V_B attesa: %d)\n\n", getStatoPonte(sp), nb, len(entrataBarca), nvA, len(entrataVeicolo[PUBBLICO_A])+len(entrataVeicolo[PRIVATO_A]), nvB, len(entrataVeicolo[PUBBLICO_B])+len(entrataVeicolo[PRIVATO_B]))
 			r.ack <- 1
 
 		case r := <-when(sp &&
@@ -175,14 +169,9 @@ func ponte() {
 			len(entrataVeicolo[PUBBLICO_B]) == 0, entrataVeicolo[PRIVATO_B]):
 			nvB++
 			fmt.Printf("[PONTE %s] È entrato un mezzo privato in senso B\n", getStatoPonte(sp))
-			//fmt.Printf("\n[[[DEBUG]]] SP: %s | B: %d (B attesa: %d) | V_A: %d (V_A attesa: %d), V_B: %d (V_B attesa: %d)\n\n", getStatoPonte(sp), nb, len(entrataBarca), nvA, len(entrataVeicolo[PUBBLICO_A])+len(entrataVeicolo[PRIVATO_A]), nvB, len(entrataVeicolo[PUBBLICO_B])+len(entrataVeicolo[PRIVATO_B]))
 			r.ack <- 1
 
 		case <-uscitaBarca:
-			/*if sp { // TEST
-				fmt.Println("[[[ERRORE]]] Barca esce durante TA")
-				os.Exit(-1)
-			}*/
 			fmt.Printf("[PONTE %s] È uscito dal ponte una barca\n", getStatoPonte(sp))
 			nb--
 			// se il ponte è vuoto e ci sono auto in attesa, inizio ad abbassare il ponte
@@ -193,13 +182,8 @@ func ponte() {
 				time.Sleep(time.Duration(2 * time.Second)) // Simulo la chiusura del ponte
 				sp = TA
 			}
-			//fmt.Printf("\n[[[DEBUG]]] SP: %s | B: %d (B attesa: %d) | V_A: %d (V_A attesa: %d), V_B: %d (V_B attesa: %d)\n\n", getStatoPonte(sp), nb, len(entrataBarca), nvA, len(entrataVeicolo[PUBBLICO_A])+len(entrataVeicolo[PRIVATO_A]), nvB, len(entrataVeicolo[PUBBLICO_B])+len(entrataVeicolo[PRIVATO_B]))
 
 		case x := <-uscitaVeicolo:
-			/*if !sp { // TEST
-				fmt.Println("[[[ERRORE]]] Veicolo esce durante TB")
-				os.Exit(-1)
-			}*/
 			if x == PUBBLICO_A || x == PRIVATO_A {
 				nvA--
 			} else if x == PUBBLICO_B || x == PRIVATO_B {
@@ -213,7 +197,6 @@ func ponte() {
 				time.Sleep(time.Duration(2 * time.Second)) // Simulo l'apertura del ponte
 				sp = TB
 			}
-			//fmt.Printf("\n[[[DEBUG]]] SP: %s | B: %d (B attesa: %d) | V_A: %d (V_A attesa: %d), V_B: %d (V_B attesa: %d)\n\n", getStatoPonte(sp), nb, len(entrataBarca), nvA, len(entrataVeicolo[PUBBLICO_A])+len(entrataVeicolo[PRIVATO_A]), nvB, len(entrataVeicolo[PUBBLICO_B])+len(entrataVeicolo[PRIVATO_B]))
 
 		case <-termina:
 			fmt.Printf("[PONTE] Termino\n")
@@ -232,18 +215,18 @@ func main() {
 	var nImbarcazioni int
 	var nAutoveicoli int
 
-	/*fmt.Printf("\nQuanti veicoli (max %d)? ", MAXA)
+	fmt.Printf("\nQuanti veicoli (max %d)? ", MAXA)
 	fmt.Scanf("%d\n", &nImbarcazioni)
 	fmt.Printf("\nQuante imbarcazioni (max %d)? ", MAXB)
-	fmt.Scanf("%d\n", &nAutoveicoli)*/
+	fmt.Scanf("%d\n", &nAutoveicoli)
 
 	// Inizializzazione canali
 	for i := 0; i < len(entrataVeicolo); i++ {
 		entrataVeicolo[i] = make(chan Richiesta, MAXBUFF)
 	}
 
-	nImbarcazioni = 10
-	nAutoveicoli = 50
+	/*nImbarcazioni = 10
+	nAutoveicoli = 50*/
 
 	// Esecuzione goroutine
 	go ponte()
