@@ -123,50 +123,20 @@ func filiale() {
 	for {
 		select {
 		case r := <-when(sala < MAXS, entrataSA[AMMINISTRATORE]):
-			// occupa il/i posto/i in sala
-			switch {
-			case r.t == AMMINISTRATORE || r.t == PROPRIETARIO_SOLO:
-				sala++
-				r.ack <- true
-				fmt.Printf("[FILIALE] Un %s è entrato in sala d'aspetto. Stato sala: %d/%d\n", getTipoUtente(r.t), sala, MAXS)
-			case r.t == PROPRIETARIO_ACC:
-				sala += 2
-				r.ack <- true
-				fmt.Printf("[FILIALE] Un %s è entrato in sala d'aspetto. Stato sala: %d/%d\n", getTipoUtente(r.t), sala, MAXS)
-			default:
-				r.ack <- false
-				fmt.Printf("[FILIALE] Tipo utente %d non valido!\n", r.t)
-			}
+			// occupa il posto in sala
+			sala++
+			r.ack <- true
+			fmt.Printf("[FILIALE] Un AMMINISTRATORE è entrato in sala d'aspetto. Stato sala: %d/%d\n", sala, MAXS)
 		case r := <-when(sala < MAXS && len(entrataSA[AMMINISTRATORE]) == 0, entrataSA[PROPRIETARIO_SOLO]):
-			// occupa il/i posto/i in sala
-			switch {
-			case r.t == AMMINISTRATORE || r.t == PROPRIETARIO_SOLO:
-				sala++
-				r.ack <- true
-				fmt.Printf("[FILIALE] Un %s è entrato in sala d'aspetto. Stato sala: %d/%d\n", getTipoUtente(r.t), sala, MAXS)
-			case r.t == PROPRIETARIO_ACC:
-				sala += 2
-				r.ack <- true
-				fmt.Printf("[FILIALE] Un %s è entrato in sala d'aspetto. Stato sala: %d/%d\n", getTipoUtente(r.t), sala, MAXS)
-			default:
-				r.ack <- false
-				fmt.Printf("[FILIALE] Tipo utente %d non valido!\n", r.t)
-			}
+			// occupa il posto in sala
+			sala++
+			r.ack <- true
+			fmt.Printf("[FILIALE] Un PROPRIETARIO SOLO è entrato in sala d'aspetto. Stato sala: %d/%d\n", sala, MAXS)
 		case r := <-when(sala+1 < MAXS && (len(entrataSA[AMMINISTRATORE]) == 0 && len(entrataSA[PROPRIETARIO_SOLO]) == 0), entrataSA[PROPRIETARIO_ACC]):
-			// occupa il/i posto/i in sala
-			switch {
-			case r.t == AMMINISTRATORE || r.t == PROPRIETARIO_SOLO:
-				sala++
-				r.ack <- true
-				fmt.Printf("[FILIALE] Un %s è entrato in sala d'aspetto. Stato sala: %d/%d\n", getTipoUtente(r.t), sala, MAXS)
-			case r.t == PROPRIETARIO_ACC:
-				sala += 2
-				r.ack <- true
-				fmt.Printf("[FILIALE] Un %s è entrato in sala d'aspetto. Stato sala: %d/%d\n", getTipoUtente(r.t), sala, MAXS)
-			default:
-				r.ack <- false
-				fmt.Printf("[FILIALE] Tipo utente %d non valido!\n", r.t)
-			}
+			// occupa i posti in sala
+			sala += 2
+			r.ack <- true
+			fmt.Printf("[FILIALE] Un PROPRIETARIO ACCOMPAGNATO è entrato in sala d'aspetto. Stato sala: %d/%d\n", sala, MAXS)
 		case r := <-when(ufficiOccupati < NU, entrataUfficio[SUPERBONUS]):
 			// libera il/i posto/i in sala d'aspetto e occupa un ufficio
 			switch {
