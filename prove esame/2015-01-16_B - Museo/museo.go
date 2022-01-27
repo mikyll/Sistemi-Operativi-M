@@ -1,3 +1,10 @@
+/*
+NB: nella traccia c'è scritto di controllare solo che il numero di
+clienti del museo non superi una certa soglia, quindi ho pensato
+intendesse solo i visitatori. In caso contrario, bisognerebbe
+aggiungere un controllo all'ingresso dei visitatori e degli operatori
+per evitare che la dimensione massima venga sforata.
+*/
 package main
 
 import (
