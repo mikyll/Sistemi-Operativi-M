@@ -6,9 +6,11 @@
 	<br/>
 	<a href="https://github.com/mikyll/Sistemi-Operativi-M/tree/main/capitoli">Capitoli</a>
 	·
+	<a href="https://github.com/mikyll/Sistemi-Operativi-M/tree/main/prove esame">Prove Esame</a>
+	·
 	<a href="https://github.com/mikyll/Sistemi-Operativi-M/tree/main/flashcard">Flashcards</a>
 	·
-	<a href="https://github.com/mikyll/Sistemi-Operativi-M/tree/main/brutte%20copie">Brutte Copie</a>
+	<a href="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/prove esame/2014-07-14%20-%20Airbolo/sol2_airbolo_madonna_che_meme_questo.go">Meme</a>
 	·
 	<a href="https://github.com/mikyll/Sistemi-Operativi-M/issues">Report a bug</a>
 </p>
