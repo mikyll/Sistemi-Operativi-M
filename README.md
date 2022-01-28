@@ -224,7 +224,7 @@ Esempi di virtualizzazione:
 - **virtualizzazione a livello di processo** - i SO multitasking consentono l'esecuzione parallela di più processi, ognuno dei quali dispone di una VM (CPU, memoria, dispositivi) dedicata. Questo tipo è realizzato dal kernel;
 - **virtualizzazione della memoria** - con memoria virtuale ogni processo vede uno spazio di indirizzamento di dimensioni indipendenti dalle reali dimensioni e dallo spazio effettivamente a disposizione. Anche questo è realizzato dal kernel del SO;
 - **astrazione** - un oggetto astratto (risorsa virtuale) come rappresentazione semplificata di un oggetto (risorsa fisica). Solitamente, l'astrazione serve per fornire una vista delle sole proprietà significative, nascondendo i dettagli realizzativi non necessari, ad esempio i tipi di dato ad alto livello (numeri intero, numeri in virgola mobile, ecc.) rispetto alla loro rappresentazione binaria nella cella di memoria. Un altro esempio sono i linguaggi di programmazione, in cui un'istruzione di alto livello è un'astrazione di ciò che avviene a più basso livello, in linguaggio macchina. Il disaccoppiamento è realizzato dalle operazioni (interfaccia) con le quali è possibile utilizzare l'oggetto;
-- **linguaggi di programmazione** - la capacità di portare lo stesso programma (scritto in un linguaggio di alto livello) su architetture diverse è possibile grazie alla definizione di una VM in grado di interpretare ed eseguire ogni istruzione del linguaggio, indipendentemente dall'architettura del sistema (SO e hardware). Possibili esempi sono gli interpreti (ad esempio Java Virtual Machine, capace di eseguire il bytecode Java), ed i compilatori.
+- **linguaggi di programmazione** - la capacità di portare lo stesso programma (scritto in un linguaggio di alto livello) su architetture diverse è possibile grazie alla definizione di una VM in grado di interpretare ed eseguire ogni istruzione del linguaggio, indipendentemente dall'architettura del sistema (SO e hardware). Possibili esempi sono gli interpreti (ad esempio Java Virtual Machine, cacpace di eseguire il bytecode Java), ed i compilatori.
 
 ### Virtualizzazione di un sistema di elaborazione
 Una singola piattaforma hardware viene condivisa da più elaboratori virtuali, ognuno gestito da un proprio sistema operativo. Il disaccoppiamento viene realizzato dal VMM, che è il mediatore unico tra le VM e l'hardware. I suoi compiti sono *consentire la condivisione da parte di più macchine virtuali di una singola piattaforma hardware*, garantendo *isolamento* tra di esse e *stabilità* del sistema. Il VMM deve realizzare una specie di sandbox per ciascuna VM (se ad esempio una va in crash, le altre non devono risentirne).
@@ -241,7 +241,7 @@ Consiste nella lettura di ogni singola istruzione del codice macchina che dev'es
 **Svantaggi**: produce un sovraccarico generalmente elevato poiché possono essere necessarie molte istruzioni dell'host per interpretare una singola istruzione sorgente.
 
 #### Compilazione Dinamica
-Piuttosto che una singola istruzione del sistema ospitato, vengono letti interi blocchi di istruzioni, che vengono tradotti (per la nuova architettura), ottimizzati e messi in esecuzione.\
+Invece una singola istruzione del sistema ospitato, vengono letti interi blocchi di istruzioni, che vengono tradotti (per la nuova architettura), ottimizzati e messi in esecuzione.\
 **Vantaggi**: migliori prestazioni rispetto al metodo precedente, in quanto si leggono interi blocchi di codice, che vengono tradotti ed ottimizzati, consentendo di sfruttare tutte le possibilità offerte dalla nuova architettura; inoltre, le parti di codice usate frequentemente possono essere bufferizzate per evitare di doverle ricompilare in seguito.
 Tutti i più noti emulatori utilizzano questa tecnica per implementare l'emulazione.
 
@@ -259,7 +259,7 @@ La virtualizzazione non è un concetto nuovo, bensì nasce negli anni '60 coi si
 La virtualizzazione comporta numerosi vantaggi:
 - possibilità di avere più SO, anche differenti, sulla stessa architettura fisica;
 - isolamento degli ambienti d'esecuzione, utile specialmente per eseguire e testare software dalla sicurazza e affidabilità non certa (nel caso peggiore la singola VM va in crash);
-- abbattimento dei costi hardware, in quanto si possono concentrare più macchine (es. server) su un'unica architettura hardware, ed abbattimento dei costi di amministrazione;
+- abbattimento dei costi hardware, in quantosi possono concentrare più macchine (es. server) su un'unica architettura hardware, ed abbattimento dei costi di amministrazione;
 - gestione facilitata delle macchine (creazione, installazione -esistono template già preimpostati-, amministrazione, migrazione "a caldo", possibilità di adottare politiche di bilanciamento del carico e robustezza -disaster recovery-)
 
 ### Realizzazione del VMM
@@ -287,7 +287,7 @@ NB: d'ora in poi faremo sempre riferimento a VMM di sistema.
 ```
 
 #### Ring di Protezione
-L'architettura delle CPU prevede almeno due livelli di protezione (o "modi di esecuzione"): supervisore/kernel (livello 0) e utente (livello >0). Ogni ring corrisponde ad una diversa modalità di funzionamento del processore:
+L'architettura delle CPU prevede almeno due livelli di protezione (0 "modi di esecuzione"): supervisore/kernel (livello 0) e utente (livello >0). Ogni ring corrisponde ad una diversa modalità di funzionamento del processore:
 - a livello 0 è possibile eseguire istruzioni privilegiate della CPU;
 - a livello superiore a 0 non possono essere eseguite.
 
@@ -362,7 +362,7 @@ Una macchina virtuale può trovarsi nei seguenti stati:
 - **running** (o attiva): la macchina ha superato la fase di bootstrap ed è stata caricata nella *RAM* del server su cui è allocata;
 - **inactive** (powered off): la macchina è spenta ed è rappresentata nel *file system* tramite un file immagine;
 - **paused**: la macchina è in *attesa* di un evento (es: I/O richiesto da un processo nell'ambiente guest);
-- **suspended**: lo stato corrente viene salvato nel file system dal VMM. L'uscita da tale stato avviene tramite un'operazione di *resume*.
+- **suspended**: lo stato correnteviene salvato nel file system dal VMM. L'uscita da tale stato avviene tramite un'operazione di *resume*.
 
 suspend: il VMM salva lo stato della VM in memoria secondaria, mettendola in stand by;
 resume: il VMM ripristina lo stato della VM in memoria centrale (lo stato è quello in cui si trovava quando è stata sospesa). Questa operazione può avvenire su un nodo diverso da quello della suspend.
@@ -487,8 +487,8 @@ modelli, politiche e meccanismi.
 
 #### Modelli
 Un modello di protezione definisce i *soggetti*, gli *oggetti* ai quali i soggetti hanno accesso ed i *diritti* di accesso:
-- **soggetti** - rappresentano la parte attiva di un sistema, ovvero le entità che possono richiedere l'accesso alle risorse. Ad esempio: gli utenti o i processi che eseguono _per conto degli utenti_;
-- **oggetti** - costituiscono la parte passiva di un sistema, ovvero le risorse fisiche e logiche alle quali si può accedere e su cui si può operare. Ad esempio i file, o i processi intesi come risorsa (solitamente in un sistema di protezione i soggetti sono gli utenti, e i processi sono oggetti);
+- **soggetti** - rappresentano la parte attiva di un sistema, ovvero le entità che possono richiedere l'accesso alle risorse. Ad esempio: gli utenti o i processi che eseguono per conto degli utenti;
+- **oggetti** - costituiscono la parte passiva di un sistema, ovvero le risorse fisiche e logiche alle quali si può accedere e su cui si può operare. Ad esempio i file, o i processi intesi come risorsa (solitamente in un sistema di protezione i soggetti sono gli utenti, e i processo sono oggetti);
 - **diritti di accesso** - sono le operazioni con le quali è possibile operare sugli oggetti. Ad esempio, in Linux i diritti di accesso sono lettura, scrittura, esecuzione.
 ```
 NB: un soggetto può avere diritti di accesso anche per altri soggetti (es: processo che
@@ -499,7 +499,7 @@ Un dominio di protezione è unico per ogni soggetto, mentre un soggetto (ad esem
 
 #### Politiche
 Le politiche di protezione definiscono le regole con le quali i soggetti possono accedere agli oggetti. Mentre il modello è qualcosa di insito nel sistema, le politiche generalmente vengono scelte da chi opera su quel sistema. Si classificano in 3 diverse tipologie:
-- **DAC** (Discretional Access Control) - il creatore di un oggetto controlla i diritti di accesso per quell'oggetto (tipologia adottata da UNIX, che fornisce un meccanismo per definire e interpretare per ciascun file i 3 bit di `read`, `write` ed `execute`, per il proprietario, il gruppo e gli altri). La definizione delle politiche è decentralizzata.
+- **DAC** (Discretional Access Control) - il creatore di un oggetto controlla i diritti di accesso per quell'oggetto (tipologia adottata da UNIX, che fornisce un meccanismo per definire e interpretare per ciascun file i 3 bit di read, write ed execute, per il proprietario, il gruppo e gli altri). La definizione delle politiche è decentralizzata.
 - **MAC** (Mandatory Access Control) - i diritti d'accesso vengono definiti in modo centralizzato. Questa soluzione viene utilizzata in sistemi di alta sicurezza per garantire assoluta confidenzialità e i diritti vengono gestiti da un'entità centrale.
 - **RBAC** (Role Based Access Control) - ad un ruolo vengono assegnati specifici diritti di accesso sulle risorse. Gli utenti possono appartenere a diversi ruoli. I diritti attribuiti ad ogni ruolo vengono assegnati in modo centralizzato.
 **Principio del Privilegio Minimo** (o POLA - Principle Of Least Authority): ad ogni soggetto sono garantiti i diritti di accesso solo agli oggetti strettamente necessari per la sua esecuzione. Questa è una caratteristica desiderabile per tutte le politiche di protezione.
@@ -508,7 +508,7 @@ Le politiche di protezione definiscono le regole con le quali i soggetti possono
 I meccanismi di protezione sono gli strumenti messi a disposizione dal sistema di protezione per imporre una determinata politica.
 Principi di realizzazione:
 - **flessibilità del sistema di protezione**: i meccanismi di protezione devono essere sufficientemente generali per consentire per consentire l'applicazione di diverse politiche di protezione;
-- **separazione tra meccanismi e politiche**: la politica definisce *cosa va fatto* e il meccanismo *come va fatto*. È desiderabile la massima indipendenza tra le due componenti.
+- **separazione tra meccanismi e politiche**: la politica definisce *cosa va fatto* ed il meccanismo *come va fatto*. È desiderabile la massima indipendenza tra le due componenti.
 
 ### Dominio di Protezione
 Un dominio definisce un insieme di coppie, ognuna contenente l'identificatore di un oggetto e l'insieme delle operazioni che il soggetto associato a tale dominio può eseguire su ciascun oggetto (diritti di accesso).
@@ -842,12 +842,12 @@ ficace.
 ```
 Rientrano in questa categoria anche i vector processors (migliaia di unità di elaborazione, non troppo potenti, ma che messe insieme e se controllate opportunamente, possono risolvere particolari classi di problemi in modo piuttosto efficiente e veloce).
 
-**MIMD - Multiple Instruction, Multiple Data**: insieme di nodi di elaborazione ognuno dei quali può eseguire flussi di istruzioni diverse su dati diversi. Ogni nodo può essere utilizzato da un processo che svolge operazioni diverse su dati differenti. Rientrano in questa categoria i sistemi multiprocessore (quelli che probabilmente conosciamo meglio), ma anche i MultiComputers.
+**MIND - Multiple Instruction, Multiple Data**: insieme di nodi di elaborazione ognuno dei quali può eseguire flussi di istruzioni diverse su dati diversi. Ogni nodo può essere utilizzato da un processo che svolge operazioni diverse su dati differenti. Rientrano in questa categoria i sistemi multiprocessore (quelli che probabilmente conosciamo meglio), ma anche i MultiComputers.
 
-**MISD - Multiple Instruction, Single Data**: il sistema è in grado di gestire un unico flusso di dati che ad ogni istante può essere elaborato con molteplici flussi di istruzioni. Non ci sono esempi particolarmente significativi da portare, ma è il caso dei "pipelined computer", dove le diverse unità di elaborazione sono messe in cascata (pipeline), e queste lavorano su quel flusso di dati, ognuna facendo qualcosa di differente.
+**MISD - Multiple Instruction, Single Data**: il sistema è in grado di gestire un unico flusso di dati che ad ogni istante può essere elaborato con molteplici flussi di istruzioni. Non ci sono esempi particolarmente significativi da portare, ma è il caso dei "pipelined computer", dove lee diverse unità di elaborazione sono messe in cascata (pipeline), che lavora su quel flusso di dati, ognuna facendo qualcosa di differente.
 
 ### Tipi di Applicazioni
-Ricapitolando, il progetto di applicazioni concorrenti dev'essere sviluppato in base al tipo di architettura, ma anche in base ai vincoli dati dal Sistema Operativo. Le applicazioni concorrenti possono essere di diverso tipo:
+Ricapitolando, il progetto di applicazioni concorrenti dev'essere sviluppato in base al tipo di architettura, ma anche in base ai vincoli dati dal Sistema Operativo.
 
 1. **multithreaded**:
 	- si ha un'applicazione strutturata come un insieme di processi (thread) che:
@@ -955,11 +955,9 @@ Le **proprietà di un linguaggio di programmazione concorrente** sono:
 
 ### Architettura di una Macchina Concorrente
 <img width="70%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Architettura%20Macchina%20Concorrente%20(1).png" alt="Architettura Macchina Concorrente (1)"/>
-
 M offre un certo numero di unità di elaborazione virtuali, che però non sempre sono in numero sufficiente per supportare l'esecuzione contemporanea dei processi di un programma concorrente.\
-M è una macchina astratta ottenuta tramite tecniche software (o hardware) basandosi su una macchina fisica M' generalmente più semplice (con un numero di unità di elaborazione solitamente minore del numero dei processi).
+M è una macchina astratta ottenuta tramite tecniche software (o hardware) basandosi su una macchina fisica M' generalmente più semplice (con un numero di unità di elaborazione solitamente minore del numero dei processi).\
 
-<br/>
 <img width="60%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Architettura%20Macchina%20Concorrente%20(2).png" alt="Architettura Macchina Concorrente (2)"/>
 
 Al proprio interno M contiene ciò che dev'essere messo in atto quando viene richiesta l'esecuzione di processi concorrenti e tutto ciò che riguarda l'interazione (sincronizzazione con scambio di informazioni).\
@@ -1051,5 +1049,10 @@ Le proprietà fondamentali che ogni programma concorrente deve avere sono:
 ###### Verifica di Proprietà nei Programmi Concorrenti
 Poiché lo scheduling dei processi non è deterministico, il semplice testing su vari set di dati, per diverse ripetizioni dell'esecuzione, non dimostra rigorosamente il soddisfacimento di proprietà. Per questo motivo, un possibile approccio è l'utilizzo di una specifica "formale": tramite un processo di dimostrazione matematica si possono verificare le proprietà di un programma concorrente.
 
+### Modelli di Interazione tra Processi
+L'interazione tra processi può avvenire sostanzialmente secondo due modelli:
+- modello a *memoria comune* (ambiente globale, memoria condivisa). In questo caso, la macchina astratta aderisce al modello multiprocessore, cioé offre ai programmi (che sono gli utilizzatori di tale macchina) un "modello" basato su un insieme di unità virtuali di elaborazione, ciascuna per l'esecuzione di un diverso processo, che condividono la stessa memoria. I processi possono vedere e accedere alle stesse aree di memoria.
+- modello a *scambio di messaggi* (ambiente locale, memoria distribuita). In questo caso, i processori non condivisono memoria gli uni con gli altri, ma ognuno fa riferimento alla propria "memoria privata".
 
 ## 04 - Modello a Memoria Comune [![Vai al Capitolo Singolo](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/icon-document.png)](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/capitoli/04%20-%20Modello%20a%20Memoria%20Comune.md "Vai al Capitolo Singolo")
+
