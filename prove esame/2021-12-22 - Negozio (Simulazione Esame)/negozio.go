@@ -282,7 +282,8 @@ func negozio(nc int) {
 			commessi[r.id] = 0 // inizializzo il contatore dei clienti assegnati a questo commesso
 			vuoleUscire[r.id] = false
 			disponibili++
-			fmt.Printf("[NEGOZIO] È entrato il COMMESSO %d. Disponibili: %d/%d\n", r.id, disponibili, nc)
+			fmt.Printf("[NEGOZIO] È entrato il COMMESSO %d. Commessi disponibili: %d/%d.\n", r.id, disponibili, nc)
+			fmt.Printf("\t[NEGOZIO] Stato negozio: %d+%d = %d/%d. Mascherine: %d/%d\n\n", ncl, nco, ncl+nco, MAX, nm, MAXM)
 			r.ack <- 1
 		case r := <-when(nm > 0 &&
 			nco+ncl < MAX &&
@@ -299,6 +300,7 @@ func negozio(nc int) {
 				disponibili--
 			}
 			fmt.Printf("[NEGOZIO] È entrato il CLIENTE ABITUALE %d e gli è stato assegnato il commesso %d (%d/3).\n", r.id, i, commessi[i])
+			fmt.Printf("\t[NEGOZIO] Stato negozio: %d+%d = %d/%d. Mascherine: %d/%d\n\n", ncl, nco, ncl+nco, MAX, nm, MAXM)
 			// restituisco al cliente l'ID del commesso
 			r.ack <- i
 		case r := <-when(nm > 0 &&
@@ -317,6 +319,7 @@ func negozio(nc int) {
 				disponibili--
 			}
 			fmt.Printf("[NEGOZIO] È entrato il CLIENTE OCCASIONALE %d e gli è stato assegnato il commesso %d (%d/3).\n", r.id, i, commessi[i])
+			fmt.Printf("\t[NEGOZIO] Stato negozio: %d+%d = %d/%d. Mascherine: %d/%d\n\n", ncl, nco, ncl+nco, MAX, nm, MAXM)
 			// restituisco al cliente l'ID del commesso
 			r.ack <- i
 
@@ -328,7 +331,8 @@ func negozio(nc int) {
 				disponibili--
 				commessi[r.id] = FUORI
 				ackUscita[r.id] = nil
-				fmt.Printf("[NEGOZIO] È uscito il COMMESSO %d. Disponibili: %d/%d\n", r.id, disponibili, nc)
+				fmt.Printf("[NEGOZIO] È uscito il COMMESSO %d. Commessi disponibili: %d/%d.\n", r.id, disponibili, nc)
+				fmt.Printf("\t[NEGOZIO] Stato negozio: %d+%d = %d/%d. Mascherine: %d/%d\n\n", ncl, nco, ncl+nco, MAX, nm, MAXM)
 				r.ack <- 1
 			} else { // ha clienti assegnati, quindi non può uscire e attende
 				vuoleUscire[r.id] = true
@@ -339,14 +343,17 @@ func negozio(nc int) {
 			//printStatoCommessi(commessi, disponibili) // DEBUG
 			ncl--
 			commessi[i]--
-			fmt.Printf("[NEGOZIO] È uscito un CLIENTE associato al commesso %d (%d/3). Stato negozio: %d + %d / %d (Clienti+Commessi/Max)\n", i, commessi[i], ncl, nco, MAX)
+			fmt.Printf("[NEGOZIO] È uscito un CLIENTE associato al commesso %d (%d/3).\n", i, commessi[i])
+			fmt.Printf("\t[NEGOZIO] Stato negozio: %d+%d = %d/%d. Mascherine: %d/%d\n\n", ncl, nco, ncl+nco, MAX, nm, MAXM)
 			if commessi[i] == 2 {
 				disponibili++ // il commesso i-esimo torna disponibile
 			}
 			if commessi[i] == 0 && vuoleUscire[i] { // il commesso esce
+				nco--
 				disponibili--
 				commessi[i] = -1
-				fmt.Printf("[NEGOZIO] il COMMESSO %d può uscire\n", i)
+				fmt.Printf("[NEGOZIO] È uscito il COMMESSO %d. Commessi disponibili: %d/%d.\n", i, disponibili, nc)
+				fmt.Printf("\t[NEGOZIO] Stato negozio: %d+%d = %d/%d. Mascherine: %d/%d\n\n", ncl, nco, ncl+nco, MAX, nm, MAXM)
 				ackUscita[i] <- 1 // notifico al commesso che può uscire
 				ackUscita[i] = nil
 			}
