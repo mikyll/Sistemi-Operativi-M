@@ -356,3 +356,8 @@ Le proprietà fondamentali che ogni programma concorrente deve avere sono:
 
 ###### Verifica di Proprietà nei Programmi Concorrenti
 Poiché lo scheduling dei processi non è deterministico, il semplice testing su vari set di dati, per diverse ripetizioni dell'esecuzione, non dimostra rigorosamente il soddisfacimento di proprietà. Per questo motivo, un possibile approccio è l'utilizzo di una specifica "formale": tramite un processo di dimostrazione matematica si possono verificare le proprietà di un programma concorrente.
+
+### Modelli di Interazione tra Processi
+L'interazione tra processi può avvenire sostanzialmente secondo due modelli:
+- modello a *memoria comune* (ambiente globale, memoria condivisa). In questo caso, la macchina astratta aderisce al modello multiprocessore, cioé offre ai programmi (che sono gli utilizzatori di tale macchina) un "modello" basato su un insieme di unità virtuali di elaborazione, ciascuna per l'esecuzione di un diverso processo, che condividono la stessa memoria. I processi possono vedere e accedere alle stesse aree di memoria.
+- modello a *scambio di messaggi* (ambiente locale, memoria distribuita). In questo caso, i processori non condivisono memoria gli uni con gli altri, ma ognuno fa riferimento alla propria "memoria privata".
