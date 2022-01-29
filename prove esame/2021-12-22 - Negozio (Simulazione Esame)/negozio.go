@@ -120,6 +120,48 @@ func getPrimoDisponibileEquo(c []int) int {
 	return -1
 }
 
+// Soluzione equa As Fuck: restituisce il primo commesso disponibile, con meno clienti, iniziando la ricerca da un indice casuale
+func getPrimoDisponibileEquoAF(c []int) int {
+	si := rand.Intn(len(c))
+	for i := si; i < len(c); i++ {
+		if c[i] == 0 {
+			return i
+		}
+		if i == len(c)-1 {
+			i = 0
+			continue
+		}
+		if i == si-1 {
+			break
+		}
+	}
+	for i := si; i < len(c); i++ {
+		if c[i] == 1 {
+			return i
+		}
+		if i == len(c)-1 {
+			i = 0
+			continue
+		}
+		if i == si-1 {
+			break
+		}
+	}
+	for i := si; i < len(c); i++ {
+		if c[i] == 2 {
+			return i
+		}
+		if i == len(c)-1 {
+			i = 0
+			continue
+		}
+		if i == si-1 {
+			break
+		}
+	}
+	return -1
+}
+
 func printStatoCommessi(c []int, d int) {
 	res := "\nSTATO COMMESSI - disp: " + fmt.Sprintf("%d", d) + " | "
 	for i := 0; i < len(c); i++ {
@@ -250,7 +292,7 @@ func negozio(nc int) {
 			//printStatoCommessi(commessi, disponibili) // DEBUG
 			nm--                                   // decremento il numero di mascherine nel distributore
 			ncl++                                  // incremento il numero di clienti nel negozio
-			i := getPrimoDisponibileEquo(commessi) // prendo il primo commesso disponibile
+			i := getPrimoDisponibileEquo(commessi) // prendo il primo commesso disponibile (non ci preoccupiamo che non ci siano commessi disponibili perché lo ha già verificato la condizione del when)
 			commessi[i]++                          // incremento il numero di clienti che sta seguendo
 			// controllo se ha raggiunto il max numero di clienti che può seguire (in caso aggiorno disponibili)
 			if commessi[i] == 3 {
@@ -268,7 +310,7 @@ func negozio(nc int) {
 			//printStatoCommessi(commessi, disponibili) // DEBUG
 			nm--                                   // decremento il numero di mascherine nel distributore
 			ncl++                                  // incremento il numero di clienti nel negozio
-			i := getPrimoDisponibileEquo(commessi) // prendo il primo commesso disponibile
+			i := getPrimoDisponibileEquo(commessi) // prendo il primo commesso disponibile (non ci preoccupiamo che non ci siano commessi disponibili perché lo ha già verificato la condizione del when)
 			commessi[i]++                          // incremento il numero di clienti che sta seguendo
 			// controllo se ha raggiunto il max numero di clienti che può seguire (in caso aggiorno disponibili)
 			if commessi[i] == 3 {
