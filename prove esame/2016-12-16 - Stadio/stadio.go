@@ -1,3 +1,4 @@
+// Svolto da: Michele Righi
 package main
 
 import (

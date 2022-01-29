@@ -1,3 +1,4 @@
+// Svolto da: Michele Righi
 /*
 NB: nella traccia c'è scritto di controllare solo che il numero di
 clienti del museo non superi una certa soglia, quindi ho pensato
