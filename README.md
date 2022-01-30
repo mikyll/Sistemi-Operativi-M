@@ -232,7 +232,7 @@ Una singola piattaforma hardware viene condivisa da più elaboratori virtuali, o
 ### Emulazione
 Consiste nell'esecuzione di programmi compilati per una particolare architettura (e quindi con un certo set di istruzioni) su un sistema di elaborazione dotato di un diverso insieme di istruzioni. Vengono emulate interamente le singole istruzioni dell'architettura ospitata, consentendo completa interoperabilità tra ambienti eterogenei. Tramite l'emulazione, sistemi operativi o applicazioni pensati per determinate architetture, possono eseguire senza essere modificati, su architetture completamente differenti.\
 **Vantaggi**: interoperabilità tra ambienti eterogenei.\
-**Svantaggi**: problemi di efficienza (basse performance).
+**Svantaggi**: problemi di efficienza (basse performance).\
 Nel tempo questo approccio si è ramificato seguendo due strade: interpretazione e ricompilazione dinamica.
 
 #### Interpretazione
