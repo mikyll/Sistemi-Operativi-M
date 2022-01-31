@@ -316,7 +316,7 @@ L'architettura della CPU si dice **naturalmente virtualizzabile** (o con support
 Tuttavia, non tutte le architetture sono naturalmente virtualizzabili (es. Intel IA32) e alcune istruzioni privilegiate non provocano una trap, anzi, in alcuni casi causano il crash del sistema.
 
 #### Realizzazione del VMM in Architetture Non Virtualizzabili
-Nel caso in cui un processore non fornisca supporto nativo alla virtualizzazione, è necessario ricorrere a soluzioni software. Alcune possibili sono: *fast binary translation*, *paravirtualizzazione*.
+Nel caso in cui un processore non fornisca supporto nativo alla virtualizzazione, per la realizzazione del VMM è necessario ricorrere a soluzioni software. Alcune possibili sono: *fast binary translation*, *paravirtualizzazione*.
 
 ##### Fast Binary Translation (FTB)
 Sfrutta un'idea simile alla compilazione dinamica: il VMM scansiona il codice dei SO guest prima dell'esecuzione, per sostituire a runtime i blocchi contenenti istruzioni privilegiate con blocchi equivalenti dal punto di vista funzionale, ma che contengano invece chiamate al VMM. I blocchi tradotti vengono salvati in cache per eventuali riutilizzi futuri.\
