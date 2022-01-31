@@ -456,7 +456,7 @@ Le VM devono poter accedere ai dispositivi che sono disponibili a livello hardwa
 **Back-end driver** è il driver vero e proprio, che permette, tramite un'interfaccia del VMM chiamata *Safe Hardware Interface*, di comunicare ed utilizzare il dispostivo collegato a livello hardware. Tipicamente viene installato all'interno di una VM particolare che è sempre ancorata al nodo fisico (dominio 0 - solitamente qui vengono installati tutti i driver di ogni dispositivo presente connesso a livello fisico in quel nodo).\
 **Front-end driver** è un driver "astratto", generico, non riferito adun dispositivo particolare, che viene installato tipicamente nel kernel del SO di una VM guest. Questo driver, all'occorrenza si collega al back-end driver specifico.
 ```
-NB: non c'è niente che vieti di installare un back-end direttametne su una VM di domain U,
+NB: non c'è niente che vieti di installare un back-end direttamente su una VM di domain U,
 ma può convenire concentrarli tutti nel domain 0, sia perché siamo certi che quella macchi-
 na non si sposterà mai da lì, essendo ancorata all'hardware, sia per motivi di portabilità.
 ```
