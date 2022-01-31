@@ -65,14 +65,14 @@
           <ul>
             <li><a href="#architettura">Architettura</a></li>
             <li><a href="#realizzazione">Realizzazione</a></li>
-            <li><a href="#gestione-della-memoria-e-paginazione">Gestione della Memoria e Paginazione</a></li>
-            <li><a href="#cenni-su-virtualizzazione-della-cpu">Cenni su Virtualizzazione della CPU</a></li>
-            <li><a href="#virtualizzazione-dei-dispositivi-io">Virtualizzazione dei Dispositivi (I/O)</a></li>
-              <ul>
+            <li><a href="#gestione-della-memoria-e-paginazione">Gestione della Memoria e Paginazione</a>
+							<ul>
                 <li><a href="#protezione-memory-split">Protezione: Memory Split</a></li>
                 <li><a href="#protezione-balloon-process">Protezione: Balloon Process</a></li>
               </ul>
-            </li>
+						</li>
+            <li><a href="#cenni-su-virtualizzazione-della-cpu">Cenni su Virtualizzazione della CPU</a></li>
+            <li><a href="#virtualizzazione-dei-dispositivi-io">Virtualizzazione dei Dispositivi (I/O)</a></li>
             <li><a href="#gestione-delle-interruzioni">Gestione delle Interruzioni</a></li>
             <li><a href="#migrazione-live">Migrazione Live</a></li>
 					</ul>
