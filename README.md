@@ -65,14 +65,14 @@
           <ul>
             <li><a href="#architettura">Architettura</a></li>
             <li><a href="#realizzazione">Realizzazione</a></li>
-            <li><a href="#gestione-della-memoria-e-paginazione">Gestione della Memoria e Paginazione</a></li>
-            <li><a href="#cenni-su-virtualizzazione-della-cpu">Cenni su Virtualizzazione della CPU</a></li>
-            <li><a href="#virtualizzazione-dei-dispositivi-io">Virtualizzazione dei Dispositivi (I/O)</a></li>
-              <ul>
+            <li><a href="#gestione-della-memoria-e-paginazione">Gestione della Memoria e Paginazione</a>
+							<ul>
                 <li><a href="#protezione-memory-split">Protezione: Memory Split</a></li>
                 <li><a href="#protezione-balloon-process">Protezione: Balloon Process</a></li>
               </ul>
-            </li>
+						</li>
+            <li><a href="#cenni-su-virtualizzazione-della-cpu">Cenni su Virtualizzazione della CPU</a></li>
+            <li><a href="#virtualizzazione-dei-dispositivi-io">Virtualizzazione dei Dispositivi (I/O)</a></li>
             <li><a href="#gestione-delle-interruzioni">Gestione delle Interruzioni</a></li>
             <li><a href="#migrazione-live">Migrazione Live</a></li>
 					</ul>
@@ -232,7 +232,7 @@ Una singola piattaforma hardware viene condivisa da più elaboratori virtuali, o
 ### Emulazione
 Consiste nell'esecuzione di programmi compilati per una particolare architettura (e quindi con un certo set di istruzioni) su un sistema di elaborazione dotato di un diverso insieme di istruzioni. Vengono emulate interamente le singole istruzioni dell'architettura ospitata, consentendo completa interoperabilità tra ambienti eterogenei. Tramite l'emulazione, sistemi operativi o applicazioni pensati per determinate architetture, possono eseguire senza essere modificati, su architetture completamente differenti.\
 **Vantaggi**: interoperabilità tra ambienti eterogenei.\
-**Svantaggi**: problemi di efficienza (basse performance).
+**Svantaggi**: problemi di efficienza (basse performance).\
 Nel tempo questo approccio si è ramificato seguendo due strade: interpretazione e ricompilazione dinamica.
 
 #### Interpretazione
@@ -316,7 +316,7 @@ L'architettura della CPU si dice **naturalmente virtualizzabile** (o con support
 Tuttavia, non tutte le architetture sono naturalmente virtualizzabili (es. Intel IA32) e alcune istruzioni privilegiate non provocano una trap, anzi, in alcuni casi causano il crash del sistema.
 
 #### Realizzazione del VMM in Architetture Non Virtualizzabili
-Nel caso in cui un processore non fornisca supporto nativo alla virtualizzazione, è necessario ricorrere a soluzioni software. Alcune possibili sono: *fast binary translation*, *paravirtualizzazione*.
+Nel caso in cui un processore non fornisca supporto nativo alla virtualizzazione, per la realizzazione del VMM è necessario ricorrere a soluzioni software. Alcune possibili sono: *fast binary translation*, *paravirtualizzazione*.
 
 ##### Fast Binary Translation (FTB)
 Sfrutta un'idea simile alla compilazione dinamica: il VMM scansiona il codice dei SO guest prima dell'esecuzione, per sostituire a runtime i blocchi contenenti istruzioni privilegiate con blocchi equivalenti dal punto di vista funzionale, ma che contengano invece chiamate al VMM. I blocchi tradotti vengono salvati in cache per eventuali riutilizzi futuri.\
@@ -326,7 +326,7 @@ Sfrutta un'idea simile alla compilazione dinamica: il VMM scansiona il codice de
 <img width="40%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/01%20-%20Virtualizzazione/Fast%20Binary%20Translation.png" alt="Fast Binary Translation"/>
 
 ##### Paravirtualizzazione
-È l'approccio più diffuso al giorno d'oggi, oltre a FBT. Il VMM (hypervisor) offre ai SO guest un'interfaccia virtuale (hypercall API) alla quale i SO guest devono fare riferimento per avere accesso alle risorse. ```NB: così come il *Sistema* Operativo fornisce delle *system* call, l'*Hyper*visor fornisce delle *hyper* call.``` Ciò consente  di eseguire istruzioni privilegiate chiamando direttamente la relativa hyper call, senza dover generare interrupt al VMM. Xen utilizza questa tecnica.\
+È l'approccio più diffuso al giorno d'oggi, oltre a FBT. Il VMM (hypervisor) offre ai SO guest un'interfaccia virtuale (hypercall API) alla quale i SO guest devono fare riferimento per avere accesso alle risorse. Le istruzioni non privilegiate vengono eseguite direttamente dai SO guest, mentre per le istruzioni privilegiate, eseguono delle hypercall. ```NB: così come il *Sistema* Operativo fornisce delle *system* call, l'*Hyper*visor fornisce delle *hyper* call.``` Ciò consente  di eseguire istruzioni privilegiate chiamando direttamente la relativa hyper call, senza dover generare interrupt al VMM. Xen utilizza questa tecnica.\
 **Vantaggi**: la struttura del VMM è semplificata e si ottengono prestazioni migliori, in quanto non si ha il ritardo dovuto alla compilazione di FTB.\
 **Svantaggi**: vi è la necessità di porting dei SO guest (i kernel devono essere resi compatibili, soluzione che è preclusa a molti sistemi operativi proprietari, fra cui Windows).
 
@@ -351,8 +351,8 @@ In questo modo si ottiene **protezione della memoria**: una violazione dei vinco
 
 #### Funzionamento dei VMM nell'architettura x86 classica
 Anche in questo caso è presente il problema del ring deprivileging, in quanto viene dedicato il ring 0 alla VMM e conseguentemente i SO guest vengono collocati in ring a privilegi ridotti. Vengono comunemente utilizzate 2 tecniche:
-- **0/1/3**: il SO viene spostato dal ring 0 (dove nativamente dovrebbe trovarsi) al ring 1, lasciando le applicazioni al ring 3, mentre al ring 0 viene installato il VMM;
-- **0/3/3**: il SO viene spostato direttamente al ring 3, dove si trovano anche le applicazioni, mentre sul ring 0 viene installato il VMM. In questa modalità non è possibile generare eccezioni, quindi devono essere intrapresi meccanismi molto sofisticati con un controllo continuo da parte del VMM.
+- **0/1/3**: VMM (0), SO (1), applicazioni (3). Il SO viene spostato dal ring 0 (dove nativamente dovrebbe trovarsi) al ring 1, lasciando le applicazioni al ring 3, mentre al ring 0 viene installato il VMM;
+- **0/3/3**: VMM (0), SO (3), applicazioni (3). Il SO viene spostato direttamente al ring 3, dove si trovano anche le applicazioni, mentre sul ring 0 viene installato il VMM. In questa modalità non è possibile generare eccezioni, quindi devono essere intrapresi meccanismi molto sofisticati con un controllo continuo da parte del VMM.
 
 ### Gestione di VM
 Il compito fondamentale del VMM è quello di gestire le VM (creazione, accensione/spegnimento, eliminazione, migrazione live).
@@ -411,11 +411,11 @@ quelle successive ne richiedono meno perché salvano solo le pagine modificate.
 Sebbene la precopia sia la modalità oggi più diffusa, ne esistono anche altre, ad esempio *post-copy*, in cui la macchina viene sospesa e vengono copiate (non iterativamente) pagine e stato. Così facendo si ottiene un tempo totale di migrazione più basso, ma un downtime dei servizi forniti dalla VM molto più elevato.
 
 ### XEN
-XEN è un progetto che nasce in ambito accademico a Cambridge. Nasce come hypervisor (VMM paravirtualizzato), richiede che le VM che girano sopra xen abbiano un kernel adattato all'interfaccia che xen offre ai propri utilizzatori. Per quanto riguarda il porting di Linux ha coinvolto circa 3000 linee di codice del kernel, per adattarlo in modo che potesse dialogare con le API di XEN.
-Dal punto di vista commerciale ha limitato la gamma di kernel installabili, per quanto riguarda i SO proprietari, nonostante un tentativo di porting dei Sistemi Operativi (ad esempio Windows, che non è stato portato a termine).
+XEN è un progetto che nasce in ambito accademico a Cambridge. Nasce come hypervisor (VMM) paravirtualizzato, richiede che le VM che girano sopra xen abbiano un kernel adattato all'interfaccia che xen offre ai propri utilizzatori. Per quanto riguarda il porting di Linux ha coinvolto circa 3000 linee di codice del kernel, per adattarlo in modo che potesse dialogare con le API di XEN.
+Dal punto di vista commerciale ha limitato la gamma di kernel installabili, per quanto riguarda i SO proprietari, nonostante un tentativo di porting dei Sistemi Operativi (ad esempio Windows XP, che non è stato portato a termine).
 
 #### Architettura
-XEN è costituito da un VMM *hypervisor*, che si appoggia direttamente sull'hardware (virtualizzazione di sistema - quindi è necessario avere spazio e in caso togliere il SO preesistente) e si occupa della virtualizzazione della CPU, della memoria e dei dispositivi di ogni VM. In XEN le macchine virtuali vengono chiamate *domain* e su ogni sistema XEN c'è una VM speciale chiamata *domain 0* che è privilegiata: a livello architetturale è come tutte le altre ma, tramite un'interfaccia di controllo fornita da XEN, può amministrare tutto il sistema. Questa interfaccia è accessibile solo dal domain 0, ed è separata dall'hypervisor stesso, scelta che permette di ottenere una separazione dei meccanismi dalle politiche: all'interno delle applicazioni che consento la configurazione ed il controllo del sistema abbiamo le politiche (espresse dall'utente), che vengono poi implementate e messe in pratica dall'hypervisor. Infatti, tipicamente nel domain 0 girano applicazioni che consentono all'amministratore di configurare il sistema virtualizzato e operando sulla console di questa VM è possibile creare una VM guest (di domain U - utente), eliminarla, migrarla, ecc.
+XEN è costituito da un VMM *hypervisor*, che si appoggia direttamente sull'hardware (virtualizzazione di sistema - quindi è necessario avere spazio e in caso togliere il SO preesistente) e si occupa della virtualizzazione della CPU, della memoria e dei dispositivi per ogni VM. In XEN le macchine virtuali vengono chiamate *domain* e su ogni sistema XEN c'è una VM speciale chiamata *domain 0* che è privilegiata: a livello architetturale è come tutte le altre ma, tramite un'interfaccia di controllo fornita da XEN, può amministrare tutto il sistema. Questa interfaccia è accessibile solo dal domain 0, ed è separata dall'hypervisor stesso, scelta che permette di ottenere una separazione dei meccanismi dalle politiche: all'interno delle applicazioni che consento la configurazione ed il controllo del sistema abbiamo le politiche (espresse dall'utente), che vengono poi implementate e messe in pratica dall'hypervisor. Infatti, tipicamente nel domain 0 girano applicazioni che consentono all'amministratore di configurare il sistema virtualizzato e operando sulla console di questa VM è possibile creare una VM guest (di domain U - utente), eliminarla, migrarla, ecc.
 
 #### Realizzazione
 Un VMM assomiglia per certi versi al kernel di un SO: deve gestire in modo appropriato l'hardware e fornire un accesso particolare agli utilizzatori (che nel caso di un sistema virtualizzato non sono gli utenti ma le VM.
@@ -441,7 +441,7 @@ mo in presenza di memoria virtuale).
 ```
 Per motivi di efficienza, poiché chiaramente nella commutazione tra una VM e l'altra c'è problema di reperire il codice di XEN, lo spazio di indirizzamento di ogni VM è strutturato a "segmenti": nei primi 64MiB viene allocato XEN (ring 0), poi c'è una parte relativa al Kernel del SO guest (ring 1), poi c'è lo spazio utente, che verrà utilizzato dalle applicazioni (ring 3).\
 I VM guest si occupano delle politiche di gestione della paginazione, mentre i meccanismi, ovvero l'effettiva implementazione della paginazione, sono compito del VMM, in quanto il kernel del SO guest, non può occuparsene, non essendo nel ring privilegiato 0. Ciò garantisce maggiore protezione in quanto si ha separazione tra politiche (a carico dei guest - alto livello) e meccanismi (a carico del VMM - basso livello).
-Con questa soluzione, quando viene creato un nuovo processo nello spazio del guest, fra le altre cose dev'essere creata una Tabella delle Pagine (PT) associata a tale processo. Ovviamente, poiché come detto tale operazione non può essere fatta dal kernel del sistema operativo che ospita quel processo (in quanto si trova a ring 1), dev'essere fatta da qualcun'altro. Quindi ciò che succede è che il guest richiede una nuova PT all'hypervisor, il quale la crea e vi aggiunge anche lo spazio riservato a XEN; così facendo XEN registra la tabella e acquisisce il diritto di scrittura esclusivo (i guesto potranno solo leggerle), e ogni volta che il guest di tale TP dovrà aggiornarla, proverà a scriverci generando un trap *protection fault*, che verrà catturata e gestita da XEN, permettendogli di verifcare la correttezza della richiesta ed aggiornare effettivamente, in seguito, la Tabella delle Pagine.
+Con questa soluzione, quando viene creato un nuovo processo nello spazio del guest, fra le altre cose dev'essere creata una Tabella delle Pagine (PT) associata a tale processo. Ovviamente, poiché come detto tale operazione non può essere fatta dal kernel del sistema operativo che ospita quel processo (in quanto si trova a ring 1), dev'essere fatta da qualcun'altro. Quindi ciò che succede è che il guest richiede una nuova PT all'hypervisor, il quale la crea e vi aggiunge anche lo spazio riservato a XEN; così facendo XEN registra la tabella e acquisisce il diritto di scrittura esclusivo (i guest potranno solo leggerle), e ogni volta che il guest di tale TP dovrà aggiornarla, proverà a scriverci generando un trap *protection fault*, che verrà catturata e gestita da XEN, permettendogli di verificare la correttezza della richiesta ed aggiornare effettivamente, in seguito, la Tabella delle Pagine.
 
 ##### Protezione: Balloon Process
 Per com'è gestita la protezione in XEN, l'unica componente capace di allocare memoria è il VMM (ring 0), ma può farlo solo in seguito a richeiste delle VM guest, in quanto come detto, le politiche si trovano in alto livello (ring 3), mentre i meccanismi a basso livello (ring 0). Però, in alcuni casi (es: attivazione nuova VM, operazione per la quale serve acquisire memoria necessaria per allocare lo spazio di indirizzamento di quella macchina virtuale), può essere necessario al VMM dover ottenere nuove pagine. Questa possibilità, ovvero di richiedere pagine, il VMM non ce l'ha. Può farlo solo in seguito a richieste da parte dei guest. Per risolvere questo problema, su XEN è stato adottata una soluzione (peculiare per la paravirtualizzazione) chiamata **balloon process**: in ogni guest c'è un processo in costante esecuzione, che è in grado di dialogare direttamente con l'hypervisor. In caso di necessità di pagine, il VMM può chiedere a tali processi di "gonfiarsi", ovvero richiedere al proprio SO ulteriori pagine. Tale richiesta provoca l'allocazione di nuove pagine al balloon process che, una volta ottenute, le cede al VMM.
@@ -452,11 +452,11 @@ Il VMM definisce un'architettura virtuale simile a quella del processore, nella 
 Il VMM si occupa dello scheduling delle VM, seguendo un algoritmo molto generale (in grado di soddisfare dei vincoli temporali molto stringenti) chiamato *Borrowed Virtual Time*, che si basa sulla nozione di virtual-time: è un tempo che va avanti solo fintanto che la VM è attiva, ovvero se si trova in uno stato di sospensione il tempo si ferma e riprende quando viene attivato. Xen adotta due clock, uno relativo al real-time, l'altro al virtual-time.
 
 #### Virtualizzazione dei dispositivi (I/O)
-Le VM devono poter accedere ai dispositivi che sono disponibili a livello hardware. La scelta di XEN è quella, ovviamente di virtualizzare l'interfaccia di ogni dispositivo, ma farlo tramite due tipi di driver: *back-end driver* e *front-end driver*.\
+Le VM devono poter accedere ai dispositivi che sono disponibili a livello hardware. La scelta di XEN è quella, ovviamente, di virtualizzare l'interfaccia di ogni dispositivo, ma farlo tramite due tipi di driver: *back-end driver* e *front-end driver*.\
 **Back-end driver** è il driver vero e proprio, che permette, tramite un'interfaccia del VMM chiamata *Safe Hardware Interface*, di comunicare ed utilizzare il dispostivo collegato a livello hardware. Tipicamente viene installato all'interno di una VM particolare che è sempre ancorata al nodo fisico (dominio 0 - solitamente qui vengono installati tutti i driver di ogni dispositivo presente connesso a livello fisico in quel nodo).\
 **Front-end driver** è un driver "astratto", generico, non riferito adun dispositivo particolare, che viene installato tipicamente nel kernel del SO di una VM guest. Questo driver, all'occorrenza si collega al back-end driver specifico.
 ```
-NB: non c'è niente che vieti di installare un back-end direttametne su una VM di domain U,
+NB: non c'è niente che vieti di installare un back-end direttamente su una VM di domain U,
 ma può convenire concentrarli tutti nel domain 0, sia perché siamo certi che quella macchi-
 na non si sposterà mai da lì, essendo ancorata all'hardware, sia per motivi di portabilità.
 ```
@@ -471,7 +471,7 @@ Ovviamente, per consentire la comunicazione tra back-end driver e front-end driv
 **Svantaggi**: il meccanismo di comunicazione fra i due tipi di driver appesantisce l'accesso ai dispositivi.
 
 #### Gestione delle Interruzioni
-La gestione delle interruzioni viene virtualizzata in modo molto semplice: ogni interruzione viene gestita direttamente dal SO guest, eccezione fatta per la *page fault*, che richiede accesso al registro CR2, il quale contiene l'indirizzo che ha provocato il page fault. Poiché tale registro è accessibile solo a ring 0, la gestione del page fault deve coinvolgere il VMM: la routine di gesstione eseguita da XEN legge CR2, lo copia in una variabile nello spazio del SO ospitato, al quale viene restituito il controllo per poter gestire il page fault.
+La gestione delle interruzioni viene virtualizzata in modo molto semplice: ogni interruzione viene gestita direttamente dal SO guest, eccezione fatta per la *page fault*, che richiede accesso al registro CR2, il quale contiene l'indirizzo che ha provocato il page fault. Poiché tale registro è accessibile solo a ring 0, la gestione del page fault deve coinvolgere il VMM: la routine di gestione eseguita da XEN legge CR2, lo copia in una variabile nello spazio del SO ospitato, al quale viene restituito il controllo per poter gestire il page fault.
 
 #### Migrazione Live
 Il comando di migrazione viene eseguito da un demone di migrazione che si trova nel domain 0 del server di origine della macchina da migrare. La soluzione è basata sulla precopy e le pagine da migrare vengono compresse per ridurre l'occupazione di banda.
@@ -576,7 +576,7 @@ L'operazione di propagazione può essere realizzata in due modi:
 ##### Diritto Owner
 Il diritto *owner* realizza il concetto di "proprietario di una risorsa" (oggetto). Il soggetto che possiede tale diritto di accesso, nei sistemi che lo prevedono, ha la possibilità di concedere/revocare un qualunque diritto di accesso sull'oggetto che gli appartiene (ovvero possiede il diritto owner su tale oggetto) ad un qualunque altro soggetto.\
 In una matrice degli accessi, ciò si traduce nella presenza, in ciascuna colonna, di una ed una sola cella nella quale è presente un diritto owner. Per ogni risorsa (dunque per ogni colonna) ci dev'essere un solo soggetto che ne è il proprietario. Ciò significa che tale soggetto ha un ruolo privilegiato nei confronti di quella risorsa ed è l'unico soggetto capace di revocare o concedere diritti di accesso su quella risorsa ad altri soggetti.
-Ad esempio, se *S2* ha il diritto 'owner' su *O2* allora può revocare il diritto 'execute' su *O* al soggetto *S1*.
+Ad esempio, se *S2* ha il diritto 'owner' su *O2* allora può revocare il diritto 'execute' su *O2* al soggetto *S1*, oppure anche a se stesso.
 
 <img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Owner.png" alt="Matrice degli Accessi e Diritto Owner"/>
 
@@ -621,7 +621,7 @@ La rappresentazione concreta dello stato di protezione dev'essere ottimizzata si
 ##### ACL: Lista degli Accessi
 Ne viene assegnata una a ciascun oggetto ed ha una struttura composta da un insieme di elementi, ognuno dei quali contiene la coppia <soggetto, insieme dei diritti> limitatamente ai soggetti con un insieme non vuoto di diritti per l'oggetto.
 Quando un qualunque soggetto *S* tenta un'operazione *M* su un oggetto *O*, il sistema di protezione va a verificare nella ACL associata ad *O* se è presente un elemento riferito al soggetto che sta tentando l'accesso e, se esiste, controlla che contenga il diritto per eseguire *M* (ovvero sia presenta la coppia <*S*, *Rk*> con *M* appartenente a *Rk*).\
-In certi casi, per velocizzare l'accesso, viene prevista una lista di default: se è prevista, esistono dei diritti comunia a tutti i soggetti, dunque si va a vedere prima nella lsita di default e, se la ricerca non va a buon fine, si va a vedere nello specifico, elemento per elemento. Chiaramente, se la ricerca non ha successo, l'accesso viene negato.
+In certi casi, per velocizzare l'accesso, viene prevista una lista di default: se è prevista, esistono dei diritti comuni a tutti i soggetti, dunque si va a vedere prima nella lsita di default e, se la ricerca non va a buon fine, si va a vedere nello specifico, elemento per elemento. Chiaramente, se la ricerca non ha successo, l'accesso viene negato.
 
 **Utenti e Gruppi**: molti sistemi, per identificare un soggetto, prevedono non solo il nome utente (UID - User IDentifier), ma anche il gruppo (GID - Group IDentifier) a cui appartiene. Un gruppo aggrega un insieme di utenti, ha un nome, e può essere incluso nelle ACL. È importante sapere che un utente può appartenere anche a più gruppi, ma in un certo istante può appartenere ad un solo gruppo alla volta. Nel caso siano presenti i gruppi, una entry della ACL ha la forma UID, GID: \<insieme di diritti\>.
 Quando un soggetto <utente, gruppo> prova ad accedere ad una risorsa in un certo modo, il tentativo di accesso comporta una ricerca nell'ACL dell'oggetto: se compare il modo con il quale l'utente sta cercando di accedere alla risorsa, allora l'operazione viene consentita.
@@ -664,9 +664,9 @@ Dunque non c'è soluzione assoluta, o generalmente migliore dell'altra: nella re
 Ad esempio, in UNIX, per ogni risorsa (file, in quanto UNIX è file-centrico, ovvero tutte le risorse sono presenti nel filesystem come file) per ogni oggetto viene mantenuta una struttura contenente 12 bit "di protezione". Sono memorizzati sul disco e fanno parte dell'i-node, che è rappresentato sulla memoria di massa all'interno dell'i-list.
 Se ci pensiamo bene sono una forma semplificata di ACL: i 12 bit (di cui 9 per i diritti di utente, gruppo e altri) sono una forma semplificata di ACL, in quanto esprimono cosa gli utenti possono o non possono fare. È semplificata in quanto non si ha il dettaglio di un particolare utente, a differenza di Sistemi Operativi come Windows, ma solo dell'utente proprietario (oltre che del gruppo e degli altri utenti).
 
-**Soluzione ibrida**: ogni volta che un processo cerca di accedere ad un oggetto (file), questo viene aperto e nella tabella dei file aperti viene caricato un elemento che altro non è che la capability che il soggetto che l'ha aperto ha nei confronti di quell'oggetto.
+**Soluzione ibrida**: ACL memorizzate in memoria secondaria (persistente), mentre le CL in memoria centrale (volatile). Ogni volta che un soggetto (es: processo) tenta di accedere ad un oggetto per la prima volta, si analizza la ACL relativa a quell'oggetto. Se esiste una entry contenente il soggetto, e se fra i diritti di accesso c'è l'operazione richiesta dal soggetto, viene fornita la capability relativa a quell'oggetto, la quale viene salvata in memoria volatile. Così facendo, il soggetto può accedere all'oggetto più volte, senza che sia necessario analizzare di nuovo la ACL. Dopo l'ultimo accesso, la capability viene distrutta (rimossa dalla memoria volatile).
 
-Esempio: quando cerco di aprire un file in scrittura, viene fatta una verifica sulla ACL (che controlla se posso effettuare quell'operazione); se la verifica va a buon fine, il file viene aperto e nella tabella dei file aperti viene caricato un elemento che concettualmente rappresenta il diritto di quel processo ad accedere in scrittura sul file; quindi viene aggiunta una capability alla tabella dei file aperti. Di fatto la tabella dei file aperti è una CL.
+Esempio: quando cerco di aprire un file in scrittura, viene fatta una verifica sulla ACL (che controlla se posso effettuare quell'operazione); se la verifica va a buon fine, il file viene aperto e nella tabella dei file aperti viene caricato un elemento che concettualmente rappresenta il diritto di quel processo (capability) ad accedere in scrittura sul file; quindi viene aggiunta la capability dell'oggetto per il soggetto in questione, alla tabella dei file aperti. Di fatto la tabella dei file aperti è una CL.
 
 **Differenze**: la ACL si trova in memoria secondaria in modo persistente, la CL è in memoria volatile (e solitamente ha vita più breve): quando il processo finisce di operare sul file, l'elemento viene rimosso e quando il processo termina la tabella dei file aperti viene distrutta.
 
@@ -842,7 +842,7 @@ ficace.
 ```
 Rientrano in questa categoria anche i vector processors (migliaia di unità di elaborazione, non troppo potenti, ma che messe insieme e se controllate opportunamente, possono risolvere particolari classi di problemi in modo piuttosto efficiente e veloce).
 
-**MIND - Multiple Instruction, Multiple Data**: insieme di nodi di elaborazione ognuno dei quali può eseguire flussi di istruzioni diverse su dati diversi. Ogni nodo può essere utilizzato da un processo che svolge operazioni diverse su dati differenti. Rientrano in questa categoria i sistemi multiprocessore (quelli che probabilmente conosciamo meglio), ma anche i MultiComputers.
+**MIMD - Multiple Instruction, Multiple Data**: insieme di nodi di elaborazione ognuno dei quali può eseguire flussi di istruzioni diverse su dati diversi. Ogni nodo può essere utilizzato da un processo che svolge operazioni diverse su dati differenti. Rientrano in questa categoria i sistemi multiprocessore (quelli che probabilmente conosciamo meglio), ma anche i MultiComputers.
 
 **MISD - Multiple Instruction, Single Data**: il sistema è in grado di gestire un unico flusso di dati che ad ogni istante può essere elaborato con molteplici flussi di istruzioni. Non ci sono esempi particolarmente significativi da portare, ma è il caso dei "pipelined computer", dove lee diverse unità di elaborazione sono messe in cascata (pipeline), che lavora su quel flusso di dati, ognuna facendo qualcosa di differente.
 
@@ -932,7 +932,7 @@ Le attività rappresentate dai processi possono essere:
 Esistono tre possibili tipi di interazione tra processi: *cooperazione*, *competizione*, *interferenza*.
 
 ###### Cooperazione
-Comprende tutte le intearazioni *prevedibili* e *desiderate*, che sono in qualche modo dettate dall'algoritmo (date cioè dagli archi del grafo di precedenza ad ordinamento parziale). È insita nella logica che vogliamo rappresentare. Si può esprimere in 2 modi: **segnali temporali**, ovvero sincronizzazione pura, che esprime solo ed unicamente un vincolo di precedenza; **scambio di dati**, ovvero comunicazione vera e propria. In entrambi i casi esiste comunque un vincolo di precedenza tra gli eventi di processi diversi.\
+Comprende tutte le interazioni *prevedibili* e *desiderate*, che sono in qualche modo dettate dall'algoritmo (date cioè dagli archi del grafo di precedenza ad ordinamento parziale). È insita nella logica che vogliamo rappresentare. Si può esprimere in 2 modi: **segnali temporali**, ovvero sincronizzazione pura, che esprime solo ed unicamente un vincolo di precedenza; **scambio di dati**, ovvero comunicazione vera e propria. In entrambi i casi esiste comunque un vincolo di precedenza tra gli eventi di processi diversi.\
 C'è una relazione di causa ed effetto tra l'esecuzione dell'operazione di invio da parte del processo mittente e l'operazione di ricezione da parte del processo ricevente, con un vincolo di precedenza tra questi eventi (*sincronizzazione* di due processi). Il linguaggio di programmazione deve fornire i costrutti linguistici necessari a specificare la sincronizzazione e la eventuale comunicazione tra i processi.\
 Esempio di cooperazione: interazione data da vincoli temporali (es: un processo esegue delle operazioni ogni 2 secondi, un altro ogni 3 ed un terzo li coordina attivando periodicamente tali processi).
 
