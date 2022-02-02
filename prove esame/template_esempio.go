@@ -40,8 +40,8 @@ const MAXPROC = 10
 const MAX = 5 // capacità
 
 const TIPO1 = 0 // Risorsa di tipo1 (stampante)
-const TIPO2 = 1 // Risorsa di tipo1 (computer)
-const TIPO3 = 2 // Risorsa di tipo1 (telefono)
+const TIPO2 = 1 // Risorsa di tipo2 (computer)
+const TIPO3 = 2 // Risorsa di tipo3 (telefono)
 
 const NM = 5         // Numero di mascherine rifornite dall'operatore
 const DIM_STANZA = 5 // massimo numero di utenti che possono essere contemporaneamente presenti nella stanza
