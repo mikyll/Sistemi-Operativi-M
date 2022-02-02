@@ -969,7 +969,7 @@ Oltre ai meccanismi di multiprogrammazione e interazione, è presente anche il m
 
 #### Architettura della Macchina M
 In base all'organizzazione logica di M vengono definiti due modelli di interazione tra i processi:
-1. Modello a **memoria comune**, ovvero le macchine astratte M sono collegate ad un'unica memoria principale. La visione proposta è aderente al modello del *multiprocessore*. Se queste sono le caratteristiche della macchina astratta, le unità di elaborazione astratte/virtuali prevedono l'interazione dei processi tramite oggetti contenuti in memoria comune (modello ad ambiente globale).
+1. Modello a **memoria comune**, ovvero gli elaboratori di M sono collegati ad un'unica memoria principale. La visione proposta è aderente al modello del *multiprocessore*. Se queste sono le caratteristiche della macchina astratta, le unità di elaborazione astratte/virtuali prevedono l'interazione dei processi tramite oggetti contenuti in memoria comune (modello ad ambiente globale).
 2. Modello a **scambio di messaggi**, ovvero gli elaboratori astratti realizzati dalla macchina M non condividono memoria. Sono posti in collegamento da una rete di comunicazione, ma non hanno possibilità di accedere alle stesse aree di memoria (tipico dei sistemi *multicomputer*). Ciascuna di queste aree virtuali viene fornita ad un certo processo, e sarà compito della macchina M fornire dei meccanismi opportuni che consentano la comunicazione fra i processi che eseguono (modello ad ambiente locale).
 
 ### Costrutti Linguistici per la Specifica della Concorrenza
