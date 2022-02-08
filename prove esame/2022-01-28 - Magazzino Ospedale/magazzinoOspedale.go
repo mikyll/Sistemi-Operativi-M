@@ -115,17 +115,13 @@ func addetto(id int) {
 		sleepRandTime(3)
 
 		// 3. Fine prelievo (Rilascio risorsa)
-		finePrelievo <- r
-		fmt.Printf("[ADDETTO %d] Ho finito di prelevare le mascherine %s\n", id, strings.ToUpper(getTipo(tipo)))
-
-		/*select {
-		case <-termina:
-			fmt.Printf("[ADDETTO %d] Termino\n", id)
-			done <- true
-			return
-		default:
-			continue
-		}*/
+		finePrelievo <- r // ERRORE (-2 punti): serviva una send sincrona (<-r.ack)
+		/*
+			Spiegazione:
+			L'addetto fa più cicli: se la richiesta del fine rifornimento non è stata ancora gestita, potrebbe essere presa in carico una nuova richiesta di prelievo,
+			senza aver decrementato il contatore di quelle disponibili.
+			Di conseguenza, verrà decrementato dopo che viene accettato un nuovo prelievo e si avrà un numero di mascherine negativo.
+		*/
 	}
 	done <- true
 	fmt.Printf("[ADDETTO %d] Termino\n", id)
