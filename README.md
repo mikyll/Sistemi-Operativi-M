@@ -728,7 +728,7 @@ sono essere combinati.
 ### Architetture dei Sistemi ad Elevata Sicurezza
 **Sistemi Operativi Fidati**: sistemi per cui è possibile definire (e in certi casi dimostrare formalmente) determinati requisiti o regole di sicurezza.
 
-**Reference Monitor (RM)**: elemento di controllo realizzato nell'hardware del sistema operativo, che regola l'accesso dei soggetti agli oggetti sulla base di parametri di sicurezza del soggetto e dell'oggetto (in pratica ha il compito di imporre il rispetto delle regole di sicurezza). Poiché ad ogni singola iterazione deve fare delle verifiche e ciò ha un costo, spesso si tende ad implementarlo, almeno in parte, a livello hardware.
+**Reference Monitor (RM)**: elemento di controllo realizzato nell'hardware e dal sistema operativo, che regola l'accesso dei soggetti agli oggetti sulla base di parametri di sicurezza del soggetto e dell'oggetto (in pratica ha il compito di imporre il rispetto delle regole di sicurezza). Poiché ad ogni singola iterazione deve fare delle verifiche e ciò ha un costo, spesso si tende ad implementarlo, almeno in parte, a livello hardware.
 
 **Trusted Computing Base (TCB)**: il RM ha accesso ad una base di calcolo fidata, chiamata *TCB*. Questa contiene delle informazioni che tracciano la classificazione dei soggetti e degli oggetti all'interno del sistema.
 
