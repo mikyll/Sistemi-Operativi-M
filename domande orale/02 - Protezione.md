@@ -121,10 +121,26 @@
   I modelli Bell-La Padula e BIBA sono in conflitto e non possono essere utilizzati contemporaneamente. Le politiche di sicurezza multilivello coesistono con le regole imposte dal sistema di protezione (ACL/CL) e hanno la *priorità* su quest'ultime.
 </details>
 
-### 7. Sistemi Trusted
+### 7. Cosa sono i Sistemi Trusted, quali sono i componenti principali e che proprietà devono avere
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  Un sistema trusted è un sistema operativo per il quale
+  Un sistema trusted è un sistema per il quale è possibile definire formalmente dei requisiti di sicurezza. L'architettura di tale sistema prevede 2 componenti fondamentali:
+  - **Reference Monitor (RM)**, è un elemento di controllo realizzato dall'HW e dal SO, che <u>regola l'accesso</u> dei soggetti agli oggetti <u>in base alle regole di sicurezza</u> (ad esempio fornite da un modello di sicurezza multilivello, tipo Bell-La Padula).
+  - **Trusted Computing Base (TCB)**, è un elemento che <u>contiene i livelli di sicurezza</u> di soggetti (privilegi di sicurezza) e oggetti (classificazione rispetto alla sicurezza).
+  
+  I Sistemi Trusted devono rispettare le seguenti proprietà:
+  - **mediazione completa**, ovvero le regole di sicurezza devono essere applicate ad ogni accesso alle risorse, e non solo. Dunque, essendo questa un'operazionee piuttosto frequente, per motivi di efficienza è necessario che la soluzione venga implementata (almeno parzialmente) via HW;
+  - **isolamento**, ovvero sia RM che TCB devono essere isolati e protetti rispetto a modifiche non autorizzate (anche ad esempio da parte del kernel del SO);
+  - **verificabilità**, ovvero dev'essere possibile dimostrare formalmente che il RM esegua correttamente il suo compito (imponendo il rispetto delle regole di sicurezza, e fornendo mediazione completa ed isolamento). Questo solitamente è un requisito difficile da soddisfare in un sistema general-purpose.
+  
+  **Audit File**: è una specie di file di log, che mantiene tutte le informazioni sulle operazioni eseguite più importanti e di interesse dal punto di vista della sicurezza del sistema, ad esempio modifiche autorizzate alla TCB o tentativi di violazione.
+  
+  ###### Classificazione della Sicurezza dei Sistemi di Calcolo
+  Secondo l'Orange Book (documento pubblicato dal Dipartimento della Difesa americano), la sicurezza di un sistema viene classificata in base a 4 categorie:
+  - Categoria **D: Minimal Protection**. Non prevede sicurezza. Es: MS-DOS.
+  - Categoria **C: Discretionary Protection**. Es: Unix.
+  - Categoria **B: Mandatory Protection**. Introduzione di livelli di sicurezza (es: Bell-La Padula).
+  - Categoria **A: Verified Protection**.
 </details>
