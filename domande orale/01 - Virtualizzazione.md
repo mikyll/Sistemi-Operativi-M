@@ -18,7 +18,7 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  Il VMM è l'unico mediatore tra HW e SF, e ha il compito di consentire la condivisione di una singola macchina HW a più VM guest, realizzando per ciascuna una sandbox al fine di garantire isolamento e stabilità (del sistema e delle singole VM). Nel caso di un VMM di sistema dev'essere l'unico componente ad avere il pieno controllo dell'HW e a poter eseguire le istruzioni privilegiate (unico componente ad eseguire a ring 0).
+  Il VMM è l'unico mediatore tra HW e SW, e ha il compito di consentire la condivisione di una singola macchina HW a più VM guest, realizzando per ciascuna una sandbox al fine di garantire isolamento e stabilità (del sistema e delle singole VM). Nel caso di un VMM di sistema dev'essere l'unico componente ad avere il pieno controllo dell'HW e a poter eseguire le istruzioni privilegiate (unico componente ad eseguire a ring 0).
   Ha il compito di gestione delle VM: creazione, spegnimento/accensione, eliminazione, migrazione live.
 </details>
 
