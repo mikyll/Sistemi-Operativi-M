@@ -72,25 +72,53 @@
   **Soluzione Ibrida**: vengono combinati i due metodi. La ACL viene memorizzata in <u>memoria persistente</u> (secondaria) e, quando un soggetto tenta di accedere ad un oggetto per la prima volta, se il diritto invocato è presente nella ACL, viene restituita la CL relativa al soggetto richiedente, e salvata in <u>memoria volatile</u> (RAM). In questo modo il soggetto può accedere all'oggetto più volte senza dover analizzare nuovamente la ACL. Dopo l'ultimo accesso, la CL viene distrutta dalla memoria volatile.
 </details>
 
-### 5. Diritti di Accesso: Copy Flag (*), Owner, Control, Switch
+### 5. Diritti di Accesso: Copy Flag (*), Owner, Control, Switch. È Possibile Capire Quale Politica Si Sta Utilizzando?
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
+  **Copy Flag** (\*): è un diritto di accesso esercitato da un soggetto su un particolare diritto di accesso per un oggetto, che permette la propagazione di tale diritto ad altri soggetti. La propagazione può essere realizzata in due modi: *trasferimento* (il soggetto iniziale perde il diritto), e *copia* (il soggetto iniziale mantiene il diritto).
   
+  **Owner**: possedere tale diritto su un oggetto permette di assegnare e revocare un qualunque diritto di accesso su tale oggetto ad altri soggetti.
+  
+  **Control**: se un soggetto S1 possiede tale diritto su un altro soggetto S2, S1 può revocare a S2 un qualunque diritto di accesso per oggetti nel suo dominio (di S2).
+  
+  **Switch**: se un soggetto possiede tale diritto su un altro soggetto, può spostarsi nel dominio di quest'ultimo.
+  
+  In certi casi è possibile capire quale politica il sistema di protezione sta adottando in base alla presenza di certi diritti. Copy flag e owner, ad esempio, indicano esplicitamente l'utilizzo di una politica DAC (decentralizzata).
 </details>
-
-### 6. È possibile capire quale politica si sta utilizzando?
-Owner e Copyflag indicano esplicitamente l'uso di una politica DAC.
-
-
 
 ### 6. Sicurezza Multilivello: Modello Bell-La Padula e BIBA + Esempio Cavallo di Troia
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
+  In alcuni ambienti è necessario un controllo più stretto sulle regole di accesso alle risorse (es: militare). I sistemi di sicurezza multilivello prevedono che vengano stabilite regole generali non modificabili senza aver ottenuto dei permessi speciali (basato su politica MAC, ovvero controllo degli accessi obbligatorio). In un sistema di sicurezza multilivello, i soggetti e gli oggetti sono classificati in livelli (classi di accesso) e vengono imposte delle regole di sicurezza che controllano il flusso delle informazioni tra i livelli.
   
+  ##### Modello Bell-La Padula
+  È progettato per garantire la segretezza (confidenzialità) dei dati, ma non l'integrità. Associa al sistema di protezione (matrice degli accessi), un modello di sicurezza multilivello, che prevede 2 regole:
+  1. **Semplice sicurezza**, permette ad un processo in esecuzione ad un determinato livello, di <u>leggere solo oggetti di livello pari o inferiore</u>;
+  2. **Star (o di integrità)**, permette ad un processo in esecuzione ad un determinato livello, di <u>scrivere solo oggetti di livello pari o superiore</u>.
+  
+  <img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Flusso%20Modello%20Bell-La%20Padula.png"/>
+  
+  Esempio di **difesa da un Trojan**, con modello Bell-La Padula:
+  S1 possiede un file F1 da proteggere, con permessi di lettura/scrittura che appartengono solo a lui (S1);
+  S2 è ostile e vuole rubarli, e possiede un file eseguibile CT (Cavallo di Troia), che ha installato nel sistema, assieme ad un file F2 che usa come "tasca posteriore".
+  ACL:
+  - S2 ha permessi di lettura/scrittura per F2 (tasca posteriore);
+  - S2 dà a S1 il permesso di scrittura su F2;
+  - S2 dà a S1 il permesso di esecuzione su CT;
+  - F1 (file da proteggere) è leggibile solo da S1.
+  S2 induce S1 ad eseguire CT che, essendo eseguito a nome di S1, può leggere F1 e scrivere su F2. In quanto sia lettura che scrittura soddisfano i vincoli della ACL.<br/>
+  Tuttavia, se il sistema prevedesse il modello di sicurezza multilivello Bell-La Padula, e ci fossero ad esempio 2 livelli (*riservato*, per processi e file di S1, e *pubblico*, per processi e file di S2), il processo che esegue CT assumerebbe il livello di S1 (riservato), dunque potrebbe leggere il file F1 da proteggere, in quanto di pari livello (proprietà di semplice sicurezza rispettata), ma non potrebbe scrivere sul file F2, in quanto di livello inferiore (proprietà star violata). Dunque l'accesso, nonostante è consentito dalla ACL, viene negato.
+  
+  ##### Modello BIBA
+  È progettato per garantire l'integrità dei dati, ma non la segretezza. Prevede anch'esso 2 regole:
+  1. **Semplice sicurezza**, permette ad un processo in esecuzione ad un determinato livello, di <u>scrivere solo oggetti di livello pari o inferiore</u>;
+  2. **Star (o di integrità)**, permette ad un processo in esecuzione ad un determinato livello, di <u>leggere solo oggetti di livello pari o superiore</u>.
+  
+  I modelli Bell-La Padula e BIBA sono in conflitto e non possono essere utilizzati contemporaneamente. Le politiche di sicurezza multilivello coesistono con le regole imposte dal sistema di protezione (ACL/CL) e hanno la *priorità* su quest'ultime.
 </details>
 
 ### 7. Sistemi Trusted
@@ -98,5 +126,5 @@ Owner e Copyflag indicano esplicitamente l'uso di una politica DAC.
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  
+  Un sistema trusted è un sistema operativo per il quale
 </details>
