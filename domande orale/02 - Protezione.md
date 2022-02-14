@@ -121,7 +121,7 @@
   I modelli Bell-La Padula e BIBA sono in conflitto e non possono essere utilizzati contemporaneamente. Le politiche di sicurezza multilivello coesistono con le regole imposte dal sistema di protezione (ACL/CL) e hanno la *priorità* su quest'ultime.
 </details>
 
-### 7. Cosa sono i Sistemi Trusted, quali sono i componenti principali e che proprietà devono avere
+### 7. Cosa sono i Sistemi Trusted, Quali Sono i Componenti Principali e Che Proprietà Devono Avere
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
