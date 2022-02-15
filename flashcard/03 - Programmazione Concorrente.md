@@ -44,11 +44,11 @@
   
   Una delle attività più importanti per chi sviluppa programmi è la verifica di correttezza dei programmi realizzati.
   
-  ##### Proprietà dei Programmi Sequenziali
+  Proprietà dei Programmi Sequenziali:
   1. **Safety**, ovvero la correttezza del risultato finale (il programma non entrerà mai in uno stato in cui le variabili assumono valori non desiderati).
   2. **Liveness**, ovvero la terminazione del programma (prima o poi il programma entrerà in uno stato in cui le variabili assumono valori desiderati).
   
-  ##### Proprietà dei Programmi Non Sequenziali
+  Proprietà dei Programmi Non Sequenziali:
   1. **Safety**, correttezza del risultato finale.
   2. **Liveness**, terminazione del programma.
   3. **Mutua Esclusione nell'Accesso a Risorse Condivise**, ovvero per ogni esecuzione non si deve mai verificare che più di un processo acceda contemporaneamente ad una stessa risorsa (mutuamente esclusiva).
