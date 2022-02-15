@@ -1,3 +1,5 @@
+
+
 <h1 align="center">MODELLO A MEMORIA COMUNE</h1>
 
 ### 1. Aspetti Caratterizzanti del Modello a Memoria Comune e Regione Critica Condizionale
@@ -39,10 +41,11 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  Il Semaforo di Mutua Esclusione (o semaforo binario), viene <u>inizializzato a 1</u> e viene utilizzato per realizzare le sezioni critiche di una stessa classe, seguendo il protocollo: prima viene eseguita una P, poi una V, ovvero ```P(mutex); <sezione_critica>; V(mutex);```, dove mutex è un semaforo inizializzato a 1.
+  Il Semaforo di Mutua Esclusione (o semaforo binario), viene <u>inizializzato a 1</u> e viene utilizzato per realizzare le sezioni critiche di una stessa classe, seguendo il <u>protocollo: prima viene eseguita una P, poi una V</u>, ovvero ```P(mutex); <sezione_critica>; V(mutex);```, dove mutex è un semaforo inizializzato a 1.
   
-  Ipotesi: Il semaforo è inizializzato a 1, e vengono eseguite prima la P poi la V
-  Tesi: 1. le sezioni critiche della stessa classe vengono eseguite in mutua esclusione;
+  **Ipotesi**: Il semaforo è inizializzato a 1, e vengono eseguite prima la P poi la V.<br/>
+  **Tesi**:
+  1. le sezioni critiche della stessa classe vengono eseguite in mutua esclusione;
   2. non devono verificarsi deadlock;
   3. un processo che non sta eseguendo una sezione critica non deve impedire agli altri di eseguire la stessa sezione critica (o sezioni della stessa classe).
   
@@ -50,7 +53,7 @@
   La tesi di mutua esclusione equivale a dire che il <u>numero di processi nella sezione critica</u> Nsez è maggiore o uguale a 0, e minore o uguale a 1, ovvero ```Nsez ≥ 0 e 1 ≥ Nsez```.
   
   Dato che è necessaria una P per entrare nella sezione critica, ed una V per uscire, si ha che il numero dei processi nella sezione critica è dato dal numero di volte in cui è stata eseguita una P, meno il numero di volte in cui è stata eseguita una v, ovvero: ```Nsez = np - nv```.<br/>
-  Ma dalla Relazione di Invarianza sappiamo che (I = 1): 1 + nv ≥ np, dunque 1 ≥ np - nv, ovvero ```1 ≥ Nsez```<br/>
+  Ma dalla Relazione di Invarianza sappiamo che (I = 1): 1 + nv ≥ np, dunque 1 ≥ np - nv, ovvero ```1 ≥ Nsez```.<br/>
   Inoltre, poiché il protocollo impone che P(mutex) preceda V(mutex), sappiamo che in qualunque istante dell'esecuzione ```np ≥ nv```, dunque np - nv ≥ 0, ovvero ```Nsez ≥ 0```. □
   
   ###### Dimostrazione di 2
@@ -58,20 +61,29 @@
   1. tutti i processi sarebbero in attesa su P(mutex), portando il contatore del semaforo a 0, dunque ```val = 0```;
   2. nessun processo sarebbe nella sezione critica, ovvero ```Nsez = np - nv = 0```.
   
-  Sapendo che val = I + nv - np, sostituendo otteniamo val = 1 - (np - nv), ovvero ```val = 1 - Nsez```, ma se val = 0 e Nsez = 0, otteniamo ```0 = 1 - 0```, che è assurdo. □
+  Sapendo che val = I + nv - np, sostituendo otteniamo val = 1 - (np - nv), ovvero ```val = 1 - Nsez```, ma se val = 0 e Nsez = 0, otteniamo ```0 = 1 - 0```, che è impossibile (assurdo). □
   
   ###### Dimostrazione di 3
   La tesi prevede che non ci siano processi in sezione critica, ovvero ```Nsez = 0```.
   
-  Sostituendo nella relazione di invarianza otteniamo che: ```val = 1 - 0 = 1```, ovvero <u>P non è bloccante</u> (in quanto la P si blocca solo se val = 0).
+  Sostituendo nella relazione di invarianza otteniamo che: ```val = 1 - 0 = 1```, ovvero <u>P non è bloccante</u> (in quanto la P si blocca solo se val = 0). □
 </details>
 
-### 4. 
+### 4. Semaforo Evento + Dimostrazione
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
+  Il semaforo evento è un semaforo binario utilizzato per imporre un <u>vincolo di precedenza</u> tra le operazioni dei processi.
+  Dato un processo *p* che esegue un'operazione *a*, si vuole che *a* possa essere eseguita solo dopo che un altro processo *q* abbia eseguito un'operazione *b*.
+  Il semaforo evento S è <u>inizializzato a 0</u> e segue il <u>protocollo: prima di eseguire *a* il processo *p* esegue P(S); il processo *q* dopo aver eseguito *b* esegue V(S)</u>.
   
+  **Ipotesi**: il semaforo è inizializzato a 0, ed i 2 processi seguono il protocollo definito ```p: P(S); a;  q: b; V(S);```.
+  **Tesi**: *a* viene eseguita sempre prima di *b*.
+  
+  ###### Dimostrazione
+  Dimostriamo la tesi per assurdo. Supponiamo che sia possibile che *a* venga eseguita in un istante precedente a quello in cui viene eseguita *b*. In questo modo avremmo che è stata eseguita una V(S) ma non una P(S), ovvero ```nv = 1``` e ```np = 0```.<br/>
+  Ma per la relazione di invarianza, sappiamo che I + nv ≥ np, ovvero ```0 + 0 ≥ 1```, che è impossibile (assurdo). □
 </details>
 
 ### 5. 
@@ -92,5 +104,3 @@
 
 Semaforo: definizione formale e proprietà.
 Dimostrazioni delle sue proprietà (strumento di sincronizzazione generale che può risolvere tutti i problemi di sincronizzazione)
-
-semaforo di mutua esclusione + dimostrazione
