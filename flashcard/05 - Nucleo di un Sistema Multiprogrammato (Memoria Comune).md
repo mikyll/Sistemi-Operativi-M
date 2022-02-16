@@ -162,7 +162,7 @@
   **Gestione Ottimale delle Risorse Computazionali**: il modello <u>SMP</u> fornisce i presupposti per un migliore bilanciamento del carico tra le CPU (load balancing), poiché lo <u>scheduler decide su quale CPU (fra tutte) allocare un processo</u>. Al contrario, nel modello a Nuclei Distinti, ogni processo è vincolato ad essere schedulato sempre sullo stesso nodo.
 </details>
 
-### 5. Implementazione del Semaforo in Sistemi Multiprocessore + Particolarità del Semaforo nel Modello a Nuclei Distinti
+### 5. Implementazione del Semaforo in Sistemi Multiprocessore + Implementazione del Semaforo, delle Relative Operazioni ed il Meccanismo di Segnalazione tra i Nuclei nel caso di Context Switch
 <!-- + Esempio di Interazione chiesto dalla prof -->
 
 <details>
