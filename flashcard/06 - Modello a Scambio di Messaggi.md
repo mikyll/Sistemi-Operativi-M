@@ -64,33 +64,49 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
+  Supponiamo di avere un processo server che fornisce diversi servizi, ognuno dei quali viene attivato in seguito alla ricezione di un messaggio su un canale diverso, da parte di un processo client.
+  **Problema**: poiché ci sono più canali, il server deve ciclicamente eseguire una receive su ciascun canale, per verificare lo stato delle richieste. Tuttavia, poiché la receive ha semantica bloccante, il <ins>server potrebbe bloccarsi</ins> leggendo da un canale, <ins>mentre sono presenti messaggi in attesa di essere letti su altri canali</ins>.
+  **Soluzione**: si potrebbe realizzare una <ins>receive con semantica non bloccante</ins>. Il server, prima di eseguire la receive da un canale, ne controlla lo stato:
+  - se sono presenti messaggi, ne legge uno;
+  - altrimenti, se nel canale non sono presenti messaggi, passa al successivo.
+  <!-- ad esempio, in Go si potrebbe realizzare una funzione non_blocking_receive, che verifica con len() lo stato del canale e, se c'è almeno un messaggio, ovvero len() > 0, effettua la receive e resituisce il valore; altrimenti, restituisce un valore nullo oppure un errore. -->
   
+  In questo modo la receive non sospende mai il processo server, generando però un **ulteriore problema**: l'<ins>attesa attiva</ins> (se tutti i canali sono vuoti, il server continua ad iterare).
+  
+  **Meccanismo di Ricezione Ideale**:
+  - consente al server di <ins>verificare contemporaneamente la disponibilità di messaggi su più canali</ins>;
+  - abilita la <ins>ricezione di un messaggio da un qualunque canale contenente messaggi</ins>;
+  - <ins>quando tutti i canali sono vuoti, blocca il processo in attesa che arrivi un messaggio</ins>, qualunque sia il canale su cui arriva.
+  
+  Questo meccanismo è realizzabile tramite i *comandi con guardia*.
 </details>
 
-### 5. 
+### 5. Discutere il Comando con Guardia
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
+  Il comando con guardia permette di realizzare un meccanismo di ricezione ideale.<br/>
+  Sintassi: ```<guardia> -> <istruzione>;```<br/>
+  dove ```<guardia>``` è costituita dalla coppia ```(<espressione_booleana>, <receive>)```.<br/>
+  L'espressione boooleana viene detta **guardia logica**, mentre l'operazione di receive viene detta **guardia d'ingresso** ed ha semantica <ins>bloccante</ins>.
   
+  La valutazione di una guardia può fornire 3 diversi valori:
+  1. **guardia fallita**, se l'espressione booleana ha il valore <ins>false</ins>;
+  2. **guardia ritardata**, se l'espressione booleana ha valore <ins>true</ins> e nel canale su cui viene eseguita <ins>non ci sono messaggi</ins>;
+  3. **guardia verificata**, se l'espressione booleana ha valore <ins>true</ins> e nel canale <ins>c'è almeno un messaggio</ins> (dunque la receive può essere eseguita subito).
+  
+  L'esecuzione di un comando con guardia determina un effetto diverso in base alla valutazione della guardia:
+  1. in caso di *guardia fallita*, il comando termina senza produrre alcun effetto;
+  2. in caso di *guardia ritardata*, il processo si sospende finché non arriva un messaggio sul canale, dopodiché verrà eseguita la receive e successivamente l'istruzione;
+  3. in caso di *guardia valida*, il processo esegue la receive e successivamente l'istruzione.
+  
+  **Comando con Guardia Alternativo** (select): racchiude un numero arbitrario di comandi con guardia semplici. Esso valuta le guardie di tutti i rami e si possono verificare 3 casi:
+  1. se *tutte le guardie sono fallite*, il comando termina;
+  2. se *tutte le guardie non fallite sono ritardate*, il processo in esecuzione si sospende in attesa che arrivi un messaggio, dopodiché verrà eseguita la receive relativa e successivamente l'istruzione;
+  3. se *una o più guardie sono valide*, viene scelto in modo non deterministo uno dei rami con guardia valida, di cui viene eseguita la relativa receive e successivamente l'istruzione.
+  
+  NB: la scelta del ramo fra quelli con guardia valida è non deterministica per non imporre una politica preferenziale tra i vari casi.
+  
+  **Comando con Guardia Ripetitivo**: ha un comportamento analogo al caso "alternativo", ma il ciclo ricomincia tutte le volte che viene eseguita un'istruzione, terminando solo se tutte le guardie sono fallite.
 </details>
-
-### 6. 
-
-<details>
-  <summary><b>Visualizza risposta</b></summary>
-  
-  
-</details>
-
-### Semantiche per primitive nel modello a scambio di messaggi: confronto tra send sincrone e asincrone (vantaggi e svantaggi).
-
-### receive con semantica bloccante/non bloccante -> canali molti-a-uno (non bloccante->attesa attiva) -> spiegazione di comando con guardia
-
-### modello a scambio di messaggi: quali sono le semantiche di ricezione
-
-### scambio di mess: panoramica di possibili semantiche send e receive (domanda generale da approfondire molto)
-
-### Utilità di associare ad una guardia l'accept (=differenziazione delle varie richieste così che la receive non sia bloccate, possibilità di realizzare server pronti a ricevere ogni richiesta) 
-
-### Quali strumenti può utilizzare un processo nel modello a scambio di messaggi per ricevere i messaggi (primitiva receive e discussione sul comportamento bloccante e i comandi con guardia composta da booleano, receive e comandi da eseguire. Valori che può assumere la guardia: ritardata, attiva e fallita)
