@@ -31,7 +31,7 @@
   Proprietà:
   - la <ins>carenza espressiva</ins> rende difficile la verifica dei programmi, in quanto la ricezione del messaggio può avvenire in un istante successivo all'invio e, di conseguenza, il messaggio ricevuto non contiene informazioni attribuibili allo stato attuale del mittente;
   - <ins>favorisce il grado di concorrenza/parallelismo</ins>, in quanto l'invio di un messaggio non costituisce un punto di sincronizzazione per mittente e destinatario;
-  - serve un buffer di capacità limitata, in quanto un buffer di dimensioni illimitate non è concretamente realizzabile e, per mantenere inalterata la semantica, bisogna sospendere il processo mittente se il buffer è pieno).
+  - <ins>serve un buffer di capacità limitata</ins>, in quanto un buffer di dimensioni illimitate non è concretamente realizzabile e, per mantenere inalterata la semantica, bisogna sospendere il processo mittente se il buffer è pieno).
   
   **Comunicazione Sincrona** (o rendez-vous semplice): <ins>il primo processo</ins> che esegue l'operazione di comunicazione (invio o ricezione) <ins>si sospende</ins>, in attesa che l'altro sia pronto ad eseguire l'operazione corrispondente.<br/>
   Proprietà:
