@@ -9,15 +9,15 @@
   Un sistema di protezione permette di definire delle tecniche di controllo degli accessi. Questo si esprime tramite 3 concetti fondamentali:
   ##### Modello
   Definisce:
-  - **oggetti**, ovvero la <u>parte passiva</u>, le risorse fisiche e logiche, ad esempio i file;
-  - **soggetti**, ovvero la <u>parte attiva</u>, le entità che possono richiedere l'accesso alle risorse, ad esempio utenti e processi;
-  - **diritti di accesso**, ovvero le <u>operazioni</u> con cui i soggetti possono operare sugli oggetti, ad esempio lettura e scrittura.
+  - **oggetti**, ovvero la <ins>parte passiva</ins>, le risorse fisiche e logiche, ad esempio i file;
+  - **soggetti**, ovvero la <ins>parte attiva</ins>, le entità che possono richiedere l'accesso alle risorse, ad esempio utenti e processi;
+  - **diritti di accesso**, ovvero le <ins>operazioni</ins> con cui i soggetti possono operare sugli oggetti, ad esempio lettura e scrittura.
   NB: un soggetto può avere diritti di accesso sia per oggetti che per soggetti.
   ##### Politiche
   Definiscono le *regole* con cui i soggetti possono accedere agli oggetti. Si classificano in 3 tipologie:
-  - **Discretionary Access Control (DAC)**, prevede che il proprietario di un oggetto ne controlli i diritti di accesso (gestione delle politiche decentralizzata, come accade in UNIX);
-  - **Mandatory Access Control (MAC)**, prevede che i diritti vengano decisi in modo centralizzato (tipico dei sistemi ad alta sicurezza, ad esempio enti governativi);
-  - **Role Based Access Control (RBAC)**, prevede che i diritti di accesso alle risorse vengano assegnati in base al ruolo, che viene assegnato in modo centralizzato (gli utenti possono appartenere a diversi ruoli).
+  - **Discretionary Access Control (DAC)**, prevede che il <ins>proprietario</ins> di un oggetto ne controlli i diritti di accesso (gestione delle politiche decentralizzata, come accade in UNIX);
+  - **Mandatory Access Control (MAC)**, prevede che i diritti vengano decisi in modo <ins>centralizzato</ins> (tipico dei sistemi ad alta sicurezza, ad esempio enti governativi);
+  - **Role Based Access Control (RBAC)**, prevede che i diritti di accesso alle risorse vengano assegnati in base al <ins>ruolo, che viene assegnato in modo centralizzato</ins> (gli utenti possono appartenere a diversi ruoli).
   ##### Meccanismi
   Sono gli strumenti messi a disposizione dal sistema di protezione per imporre una determinata politica e vanno realizzati per rispettare:
   - **flessibilità** del sistema di protezione, ovvero devono essere abbastanza generali da permettere l'applicazione di diverse politiche;
@@ -32,7 +32,7 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  Se il érincipio del Minimo Privilegio (Principle Of Least Authority - POLA) viene rispettato, ad ogni soggetto sono garantiti i diritti di accesso dei soli oggetti strettamente necessari alla sua esecuzione. Il rispetto di questo principio è desiderabile a prescindere dalla politica adottata.
+  Se il Principio del Minimo Privilegio (Principle Of Least Authority - POLA) viene rispettato, ad <ins>ogni soggetto</ins> sono garantiti i <ins>diritti di accesso dei soli oggetti strettamente necessari alla sua esecuzione<ins>. Il rispetto di questo principio è desiderabile a prescindere dalla politica adottata.
   
   Per implementarlo è possibile adottare un'associazione processo-dominio dinamica, che permetta di effettuare, a tempo di esecuzione del processo, il passaggio da un dominio ad un altro, in base alle risorse ad esso necessario in qualsiasi istante della sua esecuzione.
 </details>
@@ -57,19 +57,19 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  La matrice degli accessi permette di rappresentare, a livello astratto, lo <u>stato di protezione</u> di un sistema in un determinato istante, ad esempio utilizzando le righe per indicare i soggetti, e le colonne per gli oggetti, mentre i singoli elementi contengono i vari diritti di accesso. Offre ai meccanismi le informazioni che gli consentono di verificare il rispetto dei vincoli di accesso.
+  La matrice degli accessi permette di rappresentare, a livello astratto, lo <ins>stato di protezione</ins> di un sistema in un determinato istante, ad esempio utilizzando le righe per indicare i soggetti, e le colonne per gli oggetti, mentre i singoli elementi contengono i vari diritti di accesso. Offre ai meccanismi le informazioni che gli consentono di verificare il rispetto dei vincoli di accesso.
   
   Solitamente il numero dei soggetti e soprattutto degli oggetti tende ad essere molto grande (e i diritti di accesso generalmente sono sparsi). Dunque, la matrice degli accessi non può essere realizzata come un'unica struttura Ns x No, in quanto ciò non sarebbe ottimale per l'occupazione della memoria né per l'efficienza negli accessi. Per questo motivo, la realizzazione concreta dev'essere ottimizzata, ed esistono 2 approcci:
-  - **Access Control List (ACL)**, si basa su una rappresentazione per <u>colonne</u> e prevede che ad ogni <u>oggetto</u> sia associata una lista di coppie <soggetto, insieme-dei-diritti> (o <soggetto, gruppo, insieme-dei-diritti>), solo per i soggetti con un insieme non vuoto di diritti per l'oggetto.
+  - **Access Control List (ACL)**, si basa su una rappresentazione per <ins>colonne</ins> e prevede che ad ogni <ins>oggetto</ins> sia associata una lista di coppie <soggetto, insieme-dei-diritti> (o <soggetto, gruppo, insieme-dei-diritti>), solo per i soggetti con un insieme non vuoto di diritti per l'oggetto.
   Quando dev'essere fatta un'operazione M su un oggetto Oj dal soggetto Si, il meccanismo di protezione cerca nell'ACL corrispondente all'oggetto Oj l'entry corrispondente al soggetto Si e controlla se è presente il diritto di eseguire M. La ricerca può essere fatta anche su una lista che contiene i diritti di accesso comuni a tutti i soggetti.
-  La <u>revoca</u> di un diritto di accesso è molto <u>semplice</u> con ACL, in quanto basta fare riferimento all'oggetto coinvolto.
-  - **Capability List (CL)**, si basa su una rappresentazione per <u>righe</u> e prevede che per ogni <u>soggetto</u> si abbia una lista di coppie <oggetto, insieme-dei-diritti>, che prendono nome di *capability* (capability = coppia).
+  La <ins>revoca</ins> di un diritto di accesso è molto <ins>semplice</ins> con ACL, in quanto basta fare riferimento all'oggetto coinvolto.
+  - **Capability List (CL)**, si basa su una rappresentazione per <ins>righe</ins> e prevede che per ogni <ins>soggetto</ins> si abbia una lista di coppie <oggetto, insieme-dei-diritti>, che prendono nome di *capability* (capability = coppia).
   Per proteggere le CL da manomissioni, esse vengono memorizzate nello spazio del kernel e l'utente può far riferimento solo ad un puntatore che identifica la sua posizione nella lista.
-  La <u>revoca</u> di un diritto di accesso è più <u>complesso</u> perché è necessario verificare, per ogni dominio (soggetto), se contiene capability che fanno riferimento all'oggetto considerato.
+  La <ins>revoca</ins> di un diritto di accesso è più <ins>complesso</ins> perché è necessario verificare, per ogni dominio (soggetto), se contiene capability che fanno riferimento all'oggetto considerato.
   
   Entrambe le soluzioni presentano **problemi di efficienza**: con le ACL i diritti di accesso di un particolare soggetto sono sparsi nelle varie ACL; con CL, l'informazione relativa a tutti i diritti di accesso applicabili ad un certo oggetto è sparsa nelle varie CL.
   
-  **Soluzione Ibrida**: vengono combinati i due metodi. La ACL viene memorizzata in <u>memoria persistente</u> (secondaria) e, quando un soggetto tenta di accedere ad un oggetto per la prima volta, se il diritto invocato è presente nella ACL, viene restituita la CL relativa al soggetto richiedente, e salvata in <u>memoria volatile</u> (RAM). In questo modo il soggetto può accedere all'oggetto più volte senza dover analizzare nuovamente la ACL. Dopo l'ultimo accesso, la CL viene distrutta dalla memoria volatile.
+  **Soluzione Ibrida**: vengono combinati i due metodi. La ACL viene memorizzata in <ins>memoria persistente</ins> (secondaria) e, quando un soggetto tenta di accedere ad un oggetto per la prima volta, se il diritto invocato è presente nella ACL, viene restituita la CL relativa al soggetto richiedente, e salvata in <ins>memoria volatile</ins> (RAM). In questo modo il soggetto può accedere all'oggetto più volte senza dover analizzare nuovamente la ACL. Dopo l'ultimo accesso, la CL viene distrutta dalla memoria volatile.
 </details>
 
 ### 5. Diritti di Accesso: Copy Flag (*), Owner, Control, Switch. È Possibile Capire Quale Politica Si Sta Utilizzando?
@@ -97,8 +97,8 @@
   
   ##### Modello Bell-La Padula
   È progettato per garantire la segretezza (confidenzialità) dei dati, ma non l'integrità. Associa al sistema di protezione (matrice degli accessi), un modello di sicurezza multilivello, che prevede 2 regole:
-  1. **Semplice sicurezza**, permette ad un processo in esecuzione ad un determinato livello, di <u>leggere solo oggetti di livello pari o inferiore</u>;
-  2. **Star (o di integrità)**, permette ad un processo in esecuzione ad un determinato livello, di <u>scrivere solo oggetti di livello pari o superiore</u>.
+  1. **Semplice sicurezza**, permette ad un processo in esecuzione ad un determinato livello, di <ins>leggere solo oggetti di livello pari o inferiore</ins>;
+  2. **Star (o di integrità)**, permette ad un processo in esecuzione ad un determinato livello, di <ins>scrivere solo oggetti di livello pari o superiore</ins>.
   
   <img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Flusso%20Modello%20Bell-La%20Padula.png"/>
   
@@ -115,8 +115,8 @@
   
   ##### Modello BIBA
   È progettato per garantire l'integrità dei dati, ma non la segretezza. Prevede anch'esso 2 regole:
-  1. **Semplice sicurezza**, permette ad un processo in esecuzione ad un determinato livello, di <u>scrivere solo oggetti di livello pari o inferiore</u>;
-  2. **Star (o di integrità)**, permette ad un processo in esecuzione ad un determinato livello, di <u>leggere solo oggetti di livello pari o superiore</u>.
+  1. **Semplice sicurezza**, permette ad un processo in esecuzione ad un determinato livello, di <ins>scrivere solo oggetti di livello pari o inferiore</ins>;
+  2. **Star (o di integrità)**, permette ad un processo in esecuzione ad un determinato livello, di <ins>leggere solo oggetti di livello pari o superiore</ins>.
   
   I modelli Bell-La Padula e BIBA sono in conflitto e non possono essere utilizzati contemporaneamente. Le politiche di sicurezza multilivello coesistono con le regole imposte dal sistema di protezione (ACL/CL) e hanno la *priorità* su quest'ultime.
 </details>
@@ -127,8 +127,8 @@
   <summary><b>Visualizza risposta</b></summary>
   
   Un sistema trusted è un sistema per il quale è possibile definire formalmente dei requisiti di sicurezza. L'architettura di tale sistema prevede 2 componenti fondamentali:
-  - **Reference Monitor (RM)**, è un elemento di controllo realizzato dall'HW e dal SO, che <u>regola l'accesso</u> dei soggetti agli oggetti <u>in base alle regole di sicurezza</u> (ad esempio fornite da un modello di sicurezza multilivello, tipo Bell-La Padula).
-  - **Trusted Computing Base (TCB)**, è un elemento che <u>contiene i livelli di sicurezza</u> di soggetti (privilegi di sicurezza) e oggetti (classificazione rispetto alla sicurezza).
+  - **Reference Monitor (RM)**, è un elemento di controllo realizzato dall'HW e dal SO, che <ins>regola l'accesso</ins> dei soggetti agli oggetti <ins>in base alle regole di sicurezza</ins> (ad esempio fornite da un modello di sicurezza multilivello, tipo Bell-La Padula).
+  - **Trusted Computing Base (TCB)**, è un elemento che <ins>contiene i livelli di sicurezza</ins> di soggetti (privilegi di sicurezza) e oggetti (classificazione rispetto alla sicurezza).
   
   I Sistemi Trusted devono rispettare le seguenti proprietà:
   - **mediazione completa**, ovvero le regole di sicurezza devono essere applicate ad ogni accesso alle risorse, e non solo. Dunque, essendo questa un'operazionee piuttosto frequente, per motivi di efficienza è necessario che la soluzione venga implementata (almeno parzialmente) via HW;
