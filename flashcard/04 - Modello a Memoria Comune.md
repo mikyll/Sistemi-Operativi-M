@@ -97,17 +97,62 @@
   
   **Generalizzazione del Problema del Rendez-Vous**: se i processi sono N > 2, è necessaria una struttura più complessa, chiamata *barriera di sincronizzazione*.
   
-  **Barriera di Sincronizzazione**: 
+  **Barriera di Sincronizzazione**: strumento che permette di subordinare l'esecuzione di una serie di operazioni *Pib* (i = 1, ..., N) al completamento di una serie di operazioni *Pia* (i = 1, ..., N).<br/>
+  La barriera è composta da:
+  - un semaforo binario <u>mutex, inizializzato a 1</u>;
+  - un semaforo evento <u>barrier, inizializzato a 0</u>;
+  - un <u>contatore done, inizializzato a 0</u>, che rappresenta il numerod i processi che hanno completato la prima operazione (*Pia*).
   
+  Ogni processo che termina l'operazione *Pia* richiede il mutex. Una volta ottenuto, incrementa done e, se done == N (ovvero tutti i processi hanno completato le rispettive operazioni *Pia*), chiama V(barrier). In seguito compliche termina attende la V(barrier) eseguita dall'ultimo proecsso che ha completato la propria operazione, prima di chiamare le rispettive V(barrier
+  
+  Implementazione in pseudo-C del processo i-esimo:
+  ```C
+  <operazione Pia>
+  P(mutex);
+  done++;
+  if(done == N)
+	V(barrier);
+  V(mutex);
+  P(barrier);
+  V(barrier);
+  <operazione Pib>
+  ```
+  In questo modo ogni processo attende la V(barrier) eseguita dall'ultimo processo (N-esimo) che completa la propria operazione *Pia*, prima di chiamare le rispettive V e iniziare la sequenza di risveglio degli N processi, facendo tornare il semaforo barrier a 0.
 </details>
 
-### 6. 
+### 6. Descrivere l'Implementazione di un Semaforo nel Kernel di un Sistema Monoprocessore
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
+  Un semaforo può essere rappresentato come una struttura dati contenente un contatore *c* ed una coda *q* (politica FIFO). Una *P* su un semaforo con *c* == 0 sospende il processo corrente *p* e lo inserisce in *q* mediante una push; altrimenti, se *c* > 0, il contatore *c* viene decrementato. Una *V* su un semaforo con la coda *q* vuota incrementa il contatore, mentre se *q* non è vuota estra un processo *p* da *q* mediante una pop.
   
+  Implementazione in pseudo-C, supponendo che le <u>interruzioni</u> siano <u>disabilitate</u> durante l'esecuzione di *P* e *V*, in modo da garantire l'atomicità:
+  ```C
+  typedef struct {
+	int c;
+	queue q;
+  } semaphore;
+  
+  void P(semaphore s)
+  {
+	if (s.c > 0)
+	{
+		s.c--;
+	} else {
+		// sospensione del processo corrente p, nella coda s.q
+	}
+  }
+  void V(semaphore s)
+  {
+	if (!isEmpty(s.q))
+	{
+		// estrazione del primo processo p in attesa, dalla coda s.q
+		// risveglio del processo p
+	} else {
+		s.c++;
+	}
+  }
+  ```
+  NB: l'implementazione di *P* e *V* è realizzata dal kernel della macchina concorrente e dipende dal tipo di architettura HW (monoprocessore, multiprocessore, ...) e da come il kernel rappresenta e gestisce i processi concorrenti.
 </details>
-
-Semaforo: definizione formale e proprietà.
-Dimostrazioni delle sue proprietà (strumento di sincronizzazione generale che può risolvere tutti i problemi di sincronizzazione)
