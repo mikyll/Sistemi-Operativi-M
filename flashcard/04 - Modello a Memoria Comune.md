@@ -1,5 +1,3 @@
-
-
 <h1 align="center">MODELLO A MEMORIA COMUNE</h1>
 
 ### 1. Aspetti Caratterizzanti del Modello a Memoria Comune e Regione Critica Condizionale
@@ -86,7 +84,7 @@
   Ma per la relazione di invarianza, sappiamo che I + nv ≥ np, ovvero ```0 + 0 ≥ 1```, che è impossibile (assurdo). □
 </details>
 
-### 5. Problema del Rendez-Vous e Barriera di Sincronizzazione
+### 5. Problema del Rendez-Vous + Barriera di Sincronizzazione
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
