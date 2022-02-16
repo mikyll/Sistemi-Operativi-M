@@ -15,9 +15,9 @@
   Caratteristiche:
   1. direzione del flusso dei dati che il canale può trasferire (*monodirezionale* o *bidirezionale*);
   2. designazione dei processi mittente e destinatario:
-	- *link* = uno-a-uno (canale simmetrico);
-	- *port* = molti-a-uno (canale asimmetrico);
-	- *mailbox* = molti-a-molti (canale asimmetrico);
+		- *link* = uno-a-uno (canale simmetrico);
+		- *port* = molti-a-uno (canale asimmetrico);
+		- *mailbox* = molti-a-molti (canale asimmetrico);
   3. tipo di sincronizzazione fra i processi comunicanti (comunicazione *asincrona*, *sincrona* o con *sincronizzazione estesa*).
 </details>
 
