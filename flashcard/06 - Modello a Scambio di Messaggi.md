@@ -1,24 +1,25 @@
+
 <h1 align="center">MODELLO A SCAMBIO DI MESSAGGI</h1>
 
 ### 1. Definire le Caratteristiche del Modello a Scambio di Messaggi ed il Concetto di Canale di Comunicazione
 
 <details>
-	<summary><b>Visualizza risposta</b></summary>
-
-Nel modello a scambio di messaggi:
-- ogni processo può accedere esclusivamente alle <u>risorse allocate nella propria memoria locale/privata</u>;
-- ogni risorsa del sistema è accessibile direttamente ad un solo processo (<u>gestore</u>);
-- se una risorsa è necessaria a più processi, ciascuno di questi (client) dovrà <u>delegare l'unico processo in grado di operarvi</u> (server/gestore), il quale restituirà successivamente i risultati;
-- il meccanismo di base per qualunque tipo di interazione fra i processi è lo <u>scambio di messaggi</u>.
-	
-**Canale di Comunicazione**: collegamento logico mediante il quale 2 o più processi comunicano. L'astrazione del canale è realizzata dal kernel come meccanismo primitivo per lo scambio di informazioni, mentre è compito dei linguaggi di programmazione offrire gli strumenti linguistici di alto livello per istanziarli ed utilizzarli.<br/>
-Caratteristiche:
-1. <u>direzione del flusso dei dati</u> che il canale può trasferire (*monodirezionale* o *bidirezionale*);
-2. designazione dei processi mittente e destinatario:
-	- *link* = uno-a-uno (canale simmetrico);
-	- *port* = molti-a-uno (canale asimmetrico);
-	- *mailbox* = molti-a-molti (canale asimmetrico);
-3. tipo di sincronizzazione fra i processi comunicanti (comunicazione *asincrona*, *sincrona* o con *sincronizzazione estesa*).
+  <summary><b>Visualizza risposta</b></summary>
+  
+  Nel modello a scambio di messaggi:
+  - ogni processo può accedere esclusivamente alle <ins>risorse allocate nella propria memoria locale/privata</ins>;
+  - ogni risorsa del sistema è accessibile direttamente ad un solo processo (<ins>gestore</ins>);
+  - se una risorsa è necessaria a più processi, ciascuno di questi (client) dovrà <ins>delegare l'unico processo in grado di operarvi</ins> (server/gestore), il quale restituirà successivamente i risultati;
+  - il meccanismo di base per qualunque tipo di interazione fra i processi è lo <ins>scambio di messaggi</ins>.
+  
+  **Canale di Comunicazione**: collegamento logico mediante il quale 2 o più processi comunicano. L'astrazione del canale è realizzata dal kernel come meccanismo primitivo per lo scambio di informazioni, mentre è compito dei linguaggi di programmazione offrire gli strumenti linguistici di alto livello per istanziarli ed utilizzarli.<br/>
+  Caratteristiche:
+  1. direzione del flusso dei dati che il canale può trasferire (*monodirezionale* o *bidirezionale*);
+  2. designazione dei processi mittente e destinatario:
+	  - *link* = uno-a-uno (canale simmetrico);
+	  - *port* = molti-a-uno (canale asimmetrico);
+	  - *mailbox* = molti-a-molti (canale asimmetrico);
+  4. tipo di sincronizzazione fra i processi comunicanti (comunicazione *asincrona*, *sincrona* o con *sincronizzazione estesa*).
 </details>
 
 ### 2. 
