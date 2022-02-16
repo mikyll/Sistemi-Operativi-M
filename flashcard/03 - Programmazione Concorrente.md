@@ -20,11 +20,11 @@
   <summary><b>Visualizza risposta</b></summary>
   
   Esistono 3 possibili tipi di interazione fra processi:
-  1. **Cooperazione**, comprende tutte le interazioni <u>prevedibili e desiderate</u>, che sono in qualche modo dettate dall'algoritmo (ovvero date dagli archi del grafo di precedenza ad ordinamento parziale). Si può esprimere in 2 modi, entrambi dei quali esprimono un *vincolo di precedenza*:
-  - mediante <u>segnali temporali</u>, ovvero pura sincronizzazione;
-  - mediante <u>scambio di dati</u>, ovvero con comunicazione.
-  2. **Concorrenza**, consiste in un'interazione <u>prevedibile ma non desiderata</u>, in quanto non fa parte dell'algoritmo, ma è imposta dai limiti delle risorse a cui i processi devono accedere, ad esempio una risorsa che può essere acceduta solo in modo mutuamente esclusivo. In questo caso si prevede il concetto di *sezione critica*, ovvero la sequenza di istruzioni con cui un processo accede ad un oggetto condiviso mutuamente esclusivo. Ad una risorsa possono essere associate anche più di una sezione critica, di classi differenti.
-  3. **Interferenza**, consiste in un'interazione <u>non prevedibile e non desiderata</u> solitamente causata da *errori del programmatore* (es: deadlock).
+  1. **Cooperazione**, comprende tutte le interazioni <ins>prevedibili e desiderate</ins>, che sono in qualche modo dettate dall'algoritmo (ovvero date dagli archi del grafo di precedenza ad ordinamento parziale). Si può esprimere in 2 modi, entrambi dei quali esprimono un *vincolo di precedenza*:
+  - mediante <ins>segnali temporali</ins>, ovvero pura sincronizzazione;
+  - mediante <ins>scambio di dati</ins>, ovvero con comunicazione.
+  2. **Concorrenza**, consiste in un'interazione <ins>prevedibile ma non desiderata</ins>, in quanto non fa parte dell'algoritmo, ma è imposta dai limiti delle risorse a cui i processi devono accedere, ad esempio una risorsa che può essere acceduta solo in modo mutuamente esclusivo. In questo caso si prevede il concetto di *sezione critica*, ovvero la sequenza di istruzioni con cui un processo accede ad un oggetto condiviso mutuamente esclusivo. Ad una risorsa possono essere associate anche più di una sezione critica, di classi differenti.
+  3. **Interferenza**, consiste in un'interazione <ins>non prevedibile e non desiderata</ins> solitamente causata da *errori del programmatore* (es: deadlock).
 </details>
 
 ### 3. Costrutti Linguistici per la Specifica della Concorrenza
@@ -33,8 +33,8 @@
   <summary><b>Visualizza risposta</b></summary>
   
   Il linguaggio concorrente deve fornire costrutti che consentano di gestire i processi. Esistono 2 modelli differenti:
-  - **Fork/Join**, comprende una primitiva <u>fork</u> per la *creazione* e l'*attivazione* di un processo che eseguirà in parallelo, ed una primitiva <u>join</u> per la sincronizzazione con la terminazione di un processo. Nel grafo di precedenza, una fork coincide con una biforcazione, mentre una join con un nodo avente due precedenti.
-  - **Cobegin/Coend**, comprende una primitiva <u>cobegin</u> per la specifica di un *blocco di codice che deve essere eseguito in parallelo*, ed una primitiva <u>coend</u> per la specifica della terminazione del blocco. Le istruzioni contenute all'interno vengono eseguite in parallelo ed è possibile innestare dei blocchi uno dentro l'altro.
+  - **Fork/Join**, comprende una primitiva <ins>fork</ins> per la *creazione* e l'*attivazione* di un processo che eseguirà in parallelo, ed una primitiva <ins>join</ins> per la sincronizzazione con la terminazione di un processo. Nel grafo di precedenza, una fork coincide con una biforcazione, mentre una join con un nodo avente due precedenti.
+  - **Cobegin/Coend**, comprende una primitiva <ins>cobegin</ins> per la specifica di un *blocco di codice che deve essere eseguito in parallelo*, ed una primitiva <ins>coend</ins> per la specifica della terminazione del blocco. Le istruzioni contenute all'interno vengono eseguite in parallelo ed è possibile innestare dei blocchi uno dentro l'altro.
 </details>
 
 ### 4. Proprietà dei Programmi Sequenziali e Concorrenti
