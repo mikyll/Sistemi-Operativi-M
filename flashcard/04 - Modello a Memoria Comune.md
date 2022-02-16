@@ -10,7 +10,7 @@
   **Regione Critica Condizionale**: formalismo che consente di *esprimere* qualunque vincolo di sincronizzazione. Si esprime come: ```region R << Sa; when(C) Sb; >>```, dove R è la risorsa condivisa, Sa ed Sb sono istruzioni, e C una condizione da verificare.<br/>
   Il corpo (tra virgolette) rappresenta una sezione critica che dev'essere eseguita in mutua esclusione, e consiste in un'operazione su R. Una volta terminata Sa viene valutata la condizione C:
   - se è *vera* si prosegue con Sb;
-  - se è *falsa* si <u>attende</u> che C diventi vera.
+  - se è *falsa* si <ins>attende</ins> che C diventi vera.
 </details>
 
 ### 2. Semaforo: Definizione e Proprietà
@@ -31,7 +31,7 @@
   **Proprietà del Semaforo**: dato un semaforo ```S```, siano ```val``` il suo valore (intero non negativo), ```I``` il valore ≥0 a cui viene inizializzato, ```nv``` il numero di volte che l'operazione V(S) è stata eseguita, ```np``` il numero di volte che P(S) è stata eseguita.
   
   **Relazione di Invarianza**: ad ogni istante è possibile esprimere il valore del semaforo come ```val = I + nv - np```, da cui (poiché val ≥0) I + nv - np ≥ 0, dunque: ```I + nv ≥ np``` (Relazione di Invarianza).<br/>
-  La relazione di invarianza è <u>sempre soddisfatta</u> per ogni semaforo.
+  La relazione di invarianza è <ins>sempre soddisfatta</ins> per ogni semaforo.
 </details>
 
 ### 3. Semaforo di Mutua Esclusione + Dimostrazione
@@ -39,7 +39,7 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  Il Semaforo di Mutua Esclusione (o semaforo binario), viene <u>inizializzato a 1</u> e viene utilizzato per realizzare le sezioni critiche di una stessa classe, seguendo il <u>protocollo: prima viene eseguita una P, poi una V</u>, ovvero ```P(mutex); <sezione_critica>; V(mutex);```, dove mutex è un semaforo inizializzato a 1.
+  Il Semaforo di Mutua Esclusione (o semaforo binario), viene <ins>inizializzato a 1</ins> e viene utilizzato per realizzare le sezioni critiche di una stessa classe, seguendo il <ins>protocollo: prima viene eseguita una P, poi una V</ins>, ovvero ```P(mutex); <sezione_critica>; V(mutex);```, dove mutex è un semaforo inizializzato a 1.
   
   **Ipotesi**: Il semaforo è inizializzato a 1, e vengono eseguite prima la P poi la V.<br/>
   **Tesi**:
@@ -48,14 +48,14 @@
   3. un processo che non sta eseguendo una sezione critica non deve impedire agli altri di eseguire la stessa sezione critica (o sezioni della stessa classe).
   
   ###### Dimostrazione di 1
-  La tesi di mutua esclusione equivale a dire che il <u>numero di processi nella sezione critica</u> Nsez è maggiore o uguale a 0, e minore o uguale a 1, ovvero ```Nsez ≥ 0 e 1 ≥ Nsez```.
+  La tesi di mutua esclusione equivale a dire che il <ins>numero di processi nella sezione critica</ins> Nsez è maggiore o uguale a 0, e minore o uguale a 1, ovvero ```Nsez ≥ 0 e 1 ≥ Nsez```.
   
   Dato che è necessaria una P per entrare nella sezione critica, ed una V per uscire, si ha che il numero dei processi nella sezione critica è dato dal numero di volte in cui è stata eseguita una P, meno il numero di volte in cui è stata eseguita una v, ovvero: ```Nsez = np - nv```.<br/>
   Ma dalla Relazione di Invarianza sappiamo che (I = 1): 1 + nv ≥ np, dunque 1 ≥ np - nv, ovvero ```1 ≥ Nsez```.<br/>
   Inoltre, poiché il protocollo impone che P(mutex) preceda V(mutex), sappiamo che in qualunque istante dell'esecuzione ```np ≥ nv```, dunque np - nv ≥ 0, ovvero ```Nsez ≥ 0```. □
   
   ###### Dimostrazione di 2
-  La tesi è l'assenza di deadlock, che dimostriamo per <u>assurdo</u>. Se ci fosse un deadlock:
+  La tesi è l'assenza di deadlock, che dimostriamo per <ins>assurdo</ins>. Se ci fosse un deadlock:
   1. tutti i processi sarebbero in attesa su P(mutex), portando il contatore del semaforo a 0, dunque ```val = 0```;
   2. nessun processo sarebbe nella sezione critica, ovvero ```Nsez = np - nv = 0```.
   
@@ -64,7 +64,7 @@
   ###### Dimostrazione di 3
   La tesi prevede che non ci siano processi in sezione critica, ovvero ```Nsez = 0```.
   
-  Sostituendo nella relazione di invarianza otteniamo che: ```val = 1 - 0 = 1```, ovvero <u>P non è bloccante</u> (in quanto la P si blocca solo se val = 0). □
+  Sostituendo nella relazione di invarianza otteniamo che: ```val = 1 - 0 = 1```, ovvero <ins>P non è bloccante</ins> (in quanto la P si blocca solo se val = 0). □
 </details>
 
 ### 4. Semaforo Evento + Dimostrazione
@@ -72,9 +72,9 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  Il semaforo evento è un semaforo binario utilizzato per imporre un <u>vincolo di precedenza</u> tra le operazioni dei processi.
+  Il semaforo evento è un semaforo binario utilizzato per imporre un <ins>vincolo di precedenza</ins> tra le operazioni dei processi.
   Dato un processo *p* che esegue un'operazione *a*, si vuole che *a* possa essere eseguita solo dopo che un altro processo *q* abbia eseguito un'operazione *b*.
-  Il semaforo evento S è <u>inizializzato a 0</u> e segue il <u>protocollo: prima di eseguire *a* il processo *p* esegue P(S); il processo *q* dopo aver eseguito *b* esegue V(S)</u>.
+  Il semaforo evento S è <ins>inizializzato a 0</ins> e segue il <ins>protocollo: prima di eseguire *a* il processo *p* esegue P(S); il processo *q* dopo aver eseguito *b* esegue V(S)</ins>.
   
   **Ipotesi**: il semaforo è inizializzato a 0, ed i 2 processi seguono il protocollo definito ```p: P(S); a;  q: b; V(S);```.
   **Tesi**: *a* viene eseguita sempre prima di *b*.
@@ -97,9 +97,9 @@
   
   **Barriera di Sincronizzazione**: strumento che permette di subordinare l'esecuzione di una serie di operazioni *Pib* (i = 1, ..., N) al completamento di una serie di operazioni *Pia* (i = 1, ..., N).<br/>
   La barriera è composta da:
-  - un semaforo binario <u>mutex, inizializzato a 1</u>;
-  - un semaforo evento <u>barrier, inizializzato a 0</u>;
-  - un <u>contatore done, inizializzato a 0</u>, che rappresenta il numerod i processi che hanno completato la prima operazione (*Pia*).
+  - un semaforo binario <ins>mutex, inizializzato a 1</ins>;
+  - un semaforo evento <ins>barrier, inizializzato a 0</ins>;
+  - un <ins>contatore done, inizializzato a 0</ins>, che rappresenta il numerod i processi che hanno completato la prima operazione (*Pia*).
   
   Ogni processo che termina l'operazione *Pia* richiede il mutex. Una volta ottenuto, incrementa done e, se done == N (ovvero tutti i processi hanno completato le rispettive operazioni *Pia*), chiama V(barrier). In seguito compliche termina attende la V(barrier) eseguita dall'ultimo proecsso che ha completato la propria operazione, prima di chiamare le rispettive V(barrier
   
@@ -125,7 +125,7 @@
   
   Un semaforo può essere rappresentato come una struttura dati contenente un contatore *c* ed una coda *q* (politica FIFO). Una *P* su un semaforo con *c* == 0 sospende il processo corrente *p* e lo inserisce in *q* mediante una push; altrimenti, se *c* > 0, il contatore *c* viene decrementato. Una *V* su un semaforo con la coda *q* vuota incrementa il contatore, mentre se *q* non è vuota estra un processo *p* da *q* mediante una pop.
   
-  Implementazione in pseudo-C, supponendo che le <u>interruzioni</u> siano <u>disabilitate</u> durante l'esecuzione di *P* e *V*, in modo da garantire l'atomicità:
+  Implementazione in pseudo-C, supponendo che le <ins>interruzioni</ins> siano <ins>disabilitate</ins> durante l'esecuzione di *P* e *V*, in modo da garantire l'atomicità:
   ```C
   typedef struct {
 	int c;
