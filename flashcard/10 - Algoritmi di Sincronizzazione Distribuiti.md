@@ -86,10 +86,33 @@
 	- altrimenti (*Tr* ≥ *Ts*), non risponde e <ins>mette la richiesta ricevuta in coda</ins>;
 3. **HELD**, se sta eseguendo la sezione critica, nel qual caso <ins>la richiesta viene messa in coda</ins>.
   
-  Esempio:<br/>
-  Abbiamo 5 processi: *P1* in stato **HELD**, *P2* in **RELEASED**, *P3* in **WANTED** con ```ts(m) = 3```, *P4* in **RELEASED**, *P5* in **WANTED** con ```ts(m) = 5```.
-  1. *P1* riceve le richieste di *P3* e *P5* e le mette in coda, in quanto si trova in stato HELD (sta attualmente eseguendo la sezione critica); *P2* risponde ```OK``` a *P3* e *P5*; *P3*
+  ##### Algoritmo Token-Ring
+  + Esempio
+</details>
 
+### 4. Algoritmi di Sincronizzazione Distribuiti: Elezione del Coordinatore
+
+<details>
+  <summary><b>Visualizza risposta</b></summary>
+  
+  
+</details>
+
+### 5. Spiegare degli Esempi forniti dalla Prof
+
+##### Esempio Algoritmo di Ricart-Agrawala
+  Abbiamo 5 processi:
+  - *P1* in stato **HELD**;
+  - *P2* in **RELEASED**;
+  - *P3* in **WANTED** con **```ts(m) = 3```**;
+  - *P4* in **RELEASED**;
+  - *P5* in **WANTED** con **```ts(m) = 5```**.
+  
+  Spiegare come e in quale ordine vengono gestite le richieste, secondo l'algoritmo di *Ricart-Agrawala*.
+
+<details>
+  <summary><b>Visualizza risposta</b></summary>
+  
 <table>
 	<tr>
 		<td width="5%" align="center"><b>Stato</b></td>
@@ -158,24 +181,6 @@
 		</td>
 	</tr>
   </table>
-  ##### Algoritmo Token-Ring
-  + Esempio
-</details>
-
-### 4. Algoritmi di Sincronizzazione Distribuiti: Elezione del Coordinatore
-
-<details>
-  <summary><b>Visualizza risposta</b></summary>
-  
-  
-</details>
-
-### 5. 
-
-<details>
-  <summary><b>Visualizza risposta</b></summary>
-  
-  
 </details>
 
 ### 6. 
