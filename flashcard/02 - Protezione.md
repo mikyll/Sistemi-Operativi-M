@@ -34,7 +34,7 @@
   
   Se il Principio del Minimo Privilegio (Principle Of Least Authority - POLA) viene rispettato, ad <ins>ogni soggetto</ins> sono garantiti i <ins>diritti di accesso dei soli oggetti strettamente necessari alla sua esecuzione<ins>. Il rispetto di questo principio è desiderabile a prescindere dalla politica adottata.
   
-  Per implementarlo è possibile adottare un'associazione processo-dominio dinamica, che permetta di effettuare, a tempo di esecuzione del processo, il passaggio da un dominio ad un altro, in base alle risorse ad esso necessario in qualsiasi istante della sua esecuzione.
+  Per implementarlo è possibile adottare un'*associazione processo-dominio dinamica*, che permetta di effettuare, a tempo di esecuzione del processo, il passaggio da un dominio ad un altro, in base alle risorse ad esso necessario in qualsiasi istante della sua esecuzione.
 </details>
 
 ### 3. Cos'è il Dominio di Protezione. Dominio statico/dinamico e Cambio di Dominio
