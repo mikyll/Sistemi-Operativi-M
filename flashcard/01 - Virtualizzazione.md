@@ -110,11 +110,15 @@ Se l'architettura del processore non prevede supporto nativo alla virtualizzazio
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  **Virtualizzazione CPU**: Il VMM definisce un'architettura virtuale simile a quella del processore, in cui però le istruzioni privilegiate sono sostituite con hypercall (necessità di porting dei SO guest): l'invocazione di una hypercall determina il passaggio da ring 1 a ring 0. Due clock: real-time (processore), virtual-time (VM).<br/>
+  **Virtualizzazione CPU**: Il VMM definisce un'architettura virtuale simile a quella del processore, in cui però le istruzioni privilegiate sono sostituite con hypercall (necessità di porting dei SO guest): l'invocazione di una hypercall determina il passaggio da ring 1 a ring 0. Due clock: real-time (processore), virtual-time (VM).
+  
   **Virtualizzazione Driver**: Per consentire alle VM guest di accedere ai dispositivi disponibili a livello HW, XEN virtualizza l'interfaccia di ciascuno, tramite 2 tipi di driver:
   - **back-end driver**, è il driver vero e proprio, solitamente installato nel domain 0;
   - **front-end driver**, è il driver "astratto", semplificato e generico installato nel kernel del SO guest, che all'occorrenza si collega al back-end specifico.
-  Per la gestione delle richieste viene utilizzata una struttura ad anello chiamata "asyncronous I/O ring" (buffer FIFO circolare), in cui i front-end driver depositano le richieste, che vengono estratte dal back-end driver. Questa soluzione garantisce portabilità, isolamento e semplificazione del VMM.<br/>
+
+Per la gestione delle richieste viene utilizzata una struttura ad anello chiamata "asyncronous I/O ring" (buffer FIFO circolare), in cui i front-end driver depositano le richieste, che vengono estratte dal back-end driver. Questa soluzione garantisce portabilità, isolamento e semplificazione del VMM.
+  
   **Virtualizzazione delle Interruzioni**: Ogni interruzione viene gestita direttamente dal SO guest, ad eccezione dei page fault, in quanto questa richiede l'accesso al registro CR2 (accessibile solo a ring 0), che contiene l'indirizzo di chi l'ha provocato. Dunque la routine di gestione dei page fault prevede che il VMM legga il valore di CR2, lo copi in una variabile del SO guest, e vi restituiscac il controllo.
+  
   **Migrazione Live**: la migrazione live su XEN è guest based, e avviene sfruttando un demone che si trova nel domain 0 (del server sorgente). Si adotta la pre-copy con compressione delle pagine per ridurre l'occupazione di banda.
 </details>
