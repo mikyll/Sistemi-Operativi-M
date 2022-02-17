@@ -1,3 +1,8 @@
+[[Index](https://github.com/mikyll/Sistemi-Operativi-M/tree/main/flashcard)]&nbsp;&nbsp;
+[[<<](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/01%20-%20Virtualizzazione.md)]
+[[&nbsp;<&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/02%20-%20Protezione.md)]
+[[&nbsp;>&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/04%20-%20Modello%20a%20Memoria%20Comune.md)]
+[[>>]()]
 
 <h1 align="center">PROGRAMMAZIONE CONCORRENTE</h1>
 
