@@ -2,7 +2,7 @@
 [[<<](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/01%20-%20Virtualizzazione.md)]
 [&nbsp;<&nbsp;]
 [[&nbsp;>&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/02%20-%20Protezione.md)]
-[[>>]()]
+[[>>](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/11%20-%20HPC.md)]
 
 <h1 align="center">VIRTUALIZZAZIONE</h1>
 
