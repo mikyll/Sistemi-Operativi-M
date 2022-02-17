@@ -11,7 +11,7 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  Nel modello a memoria comune ogni interazione tra i processi avviene tramite oggetti contenuti in memoria comune. Ogni applicazione è vista come un insieme di componenti attivi (processi) e componenti passivi (risorse). I processi possono avere diritto di accesso sulle risorse, di cui necessitano per portare a termine il loro compito. Una risorsa può essere dedicata o condivisa, ed allocata staticamente o dinamicamente.
+  Nel modello a memoria comune ogni interazione tra i processi avviene tramite oggetti contenuti in memoria comune. Ogni applicazione è vista come un insieme di componenti *attivi* (processi) e componenti *passivi* (risorse). I processi possono avere diritto di accesso sulle risorse, di cui necessitano per portare a termine il loro compito. Una risorsa può essere dedicata o condivisa, ed allocata staticamente o dinamicamente.
   
   **Regione Critica Condizionale**: formalismo che consente di *esprimere* qualunque vincolo di sincronizzazione. Si esprime come: ```region R << Sa; when(C) Sb; >>```, dove R è la risorsa condivisa, Sa ed Sb sono istruzioni, e C una condizione da verificare.<br/>
   Il corpo (tra virgolette) rappresenta una sezione critica che dev'essere eseguita in mutua esclusione, e consiste in un'operazione su R. Una volta terminata Sa viene valutata la condizione C:
@@ -30,7 +30,8 @@
   **Definizione Semaforo**: il semaforo ```S``` è una variabile intera non negativa ```val ≥ 0```, alla quale è possibile accedere solo mediante due operazioni mutuamente esclusive ```P``` e ```V```:
   - ```void P(sem S): region S << when(C > 0) S.val-- >>```
   - ```void V(sem S): region S << S.val++ >>```
-  Il semaforo viene associato ad una risorsa e, quando un processo vuole operare su tale risorsa, esso chiama una P (down/richiesta):
+
+Il semaforo viene associato ad una risorsa e, quando un processo vuole operare su tale risorsa, esso chiama una P (down/richiesta):
   - se il valore del semaforo è positivo, il processo lo decrementa, esegue le sue operazioni, dopodiché chiama una V (up/rilascio);
   - altrimenti (se il valore del semaforo è 0), si mette in attesa finché un altro processo, che sta attualmente usando la risorsa gestita dal semaforo, non chiama una V, incrementandone il valore.
   
