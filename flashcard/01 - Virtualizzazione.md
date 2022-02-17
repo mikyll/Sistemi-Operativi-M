@@ -27,11 +27,11 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  I diversi tipi di VMM si classificano in base a due parametri:
-  1. il *livello* a cui si collocano:
+I diversi tipi di VMM si classificano in base a due parametri:
+1. il *livello* a cui si collocano:
     - **VMM di Sistema** - il VMM esegue <ins>direttamente sull'HW</ins> e consiste in un sistema operativo leggero che viene corredato dei driver per pilotare le varie periferiche. In assenza di multiboot è necessario disinstallare il sistema operativo preesistente.
     - **VMM Ospitato** - il VMM è un'<ins>applicazione</ins> che esegue su un sistema operativo preinstallato, al pari delle altre applicazioni. Le singole VM guest sono anch'esse applicazioni.
-  2. la *modalità di dialogo* tra le VM guest ed il VMM per l'utilizzo dell'HW sottostante:
+2. la *modalità di dialogo* tra le VM guest ed il VMM per l'utilizzo dell'HW sottostante:
     - **Virtualizzazione Pura** - le VM guest utilizzano la <ins>stessa insterfaccia</ins> (istruzioni macchina) <ins>fornita dall'architettura fisica</ins>. Generalmente è il caso di HW con supporto nativo alla virtualizzazione.
     - **Paravirtualizzazione** - il VMM presenta alle VM guest un'interfaccia "virtuale", differente da quella fornita dall'HW (<ins>hypercall API</ins>). È una delle possibili soluzioni software che vengono adottate quando l'HW non fornisce supporto nativo alla virtualizzazione. È il caso di XEN.
 </details>
@@ -41,11 +41,12 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  I principali problemi che si possono presentare, nella realizzazione del VMM, sono dovuti ai <ins>ring di protezione</ins>. I ring di protezione, o modalità di esecuzione, sono uno strumento utilizzato dai processori per incrementare il livello di protezione tra i diversi componenti e separare i compiti. Soltiamente vi sono almeno 2 ring: il ring 0 (supervisor o kernel) è l'unico in cui è possibile eseguire le istruzioni privilegiate della CPU; i ring >0 (utente) sono quelli in cui non è possibile eseguire le istruzioni privilegiate. Poiché in un sistema virtualizzato con VMM di sistema, il VMM dev'essere l'unico componente in grado di mantenere in qualunque momento il pieno controllo dell'HW, esso è anche l'unico componente che può e deve eseguire a ring 0. Di conseguenza:
-  1. Si può avere **ring deprivileging**, quando il SO di una macchina virtuale si trova ad eseguire ad un ring inferiore (che non gli è proprio) e di conseguenza non può utilizzare le istruzioni privilegiate del processore. Una possibile soluzione a questo problema è l'utilizzo del meccanismo **trap&emulate**, secondo cui quando un SO guest tenta di eseguire un'istruzione privilegiata, la CPU scatena una notifica (*trap*) al VMM e gli trasferisce il controllo. Dopodiché, il VMM controlla la correttezza della richiesta e ne emula (*emulate*) il comportamento.
-  Esempio: se le VM potessero eseguire le istruzioni privilegiate, un SO guest potrebbe chiamare la popf, un'istruzione privilegiata che permette di disabilitare le interruzioni. Ma in questo modo verrebbero disabilitate le interruzioni di tutto il sistema, ed il VMM non potrebbe più riacquisire il controllo dell'HW. Invece, il comportamento desiderato è che venissero disabilitate solo le istruzioni della singola VM che ha effettuato tale chiamata, comportamento realizzabile tramite l'approccio *trap&emulate*.
-  2. Si può avere **ring compression**, se ad esempio il processore prevede due soli ring di protezione 0 ed 1. In questo caso, il VMM si troverà a ring 0, mentre sia SO guest che applicazioni si troveranno ad eseguire nello stesso ring utente 1, con scarso livello di protezione tra SO e applicazioni.
-  3. Si possono verificare problemi dovuti al **ring aliasing**, quando alcune istruzioni non privilegiate permettono di accedere in lettura ad alcuni registri la cui gestione dovrebbe essere riservata al VMM, con possibili inconsistenze. Ad esempio il registro CS contiene il current privilege level (CPL) e un SO potrebbe leggere un valore diverso rispetto a quello in cui pensa di eseguire.
+  I principali problemi che si possono presentare, nella realizzazione del VMM, sono dovuti ai **ring di protezione**. I ring di protezione, o modalità di esecuzione, sono uno strumento utilizzato dai processori per incrementare il livello di protezione tra i diversi componenti e separare i compiti. Soltiamente vi sono almeno 2 ring: il <ins>ring 0</ins> (supervisor o kernel) è l'unico in cui è possibile eseguire le istruzioni privilegiate della CPU; i <ins>ring >0</ins> (utente) sono quelli in cui non è possibile eseguire le istruzioni privilegiate. Poiché in un sistema virtualizzato con VMM di sistema, <ins>il VMM dev'essere l'unico componente in grado di mantenere in qualunque momento il pieno controllo dell'HW</ins>, esso è anche l'unico componente che può e deve eseguire a ring 0. Di conseguenza:
+  1. Si può avere **ring deprivileging**, quando il SO di una macchina virtuale si trova ad eseguire ad un ring inferiore (che non gli è proprio) e di conseguenza non può utilizzare le istruzioni privilegiate del processore.<br/>
+  Una possibile <ins>soluzione</ins> a questo problema è l'utilizzo del meccanismo **trap&emulate**, secondo cui quando un SO guest tenta di eseguire un'istruzione privilegiata, la CPU scatena una notifica (*trap*) al VMM e gli trasferisce il controllo. Dopodiché, il VMM controlla la correttezza della richiesta e ne emula (*emulate*) il comportamento.<br/>
+  Esempio: se le VM potessero eseguire le istruzioni privilegiate, un SO guest potrebbe chiamare la ```popf```, un'istruzione privilegiata che permette di disabilitare le interruzioni. Ma in questo modo verrebbero disabilitate le interruzioni di tutto il sistema, ed il VMM non potrebbe più riacquisire il controllo dell'HW. Invece, il comportamento desiderato è che venissero disabilitate solo le istruzioni della singola VM che ha effettuato tale chiamata, comportamento realizzabile tramite l'approccio *trap&emulate*.
+  2. Si può avere **ring compression**, se ad esempio il processore prevede due soli ring di protezione 0 ed 1. In questo caso, il VMM si troverà a ring 0, mentre sia SO guest che applicazioni si troveranno ad eseguire nello stesso ring utente 1, con *scarso livello di protezione* tra SO e applicazioni.
+  3. Si possono verificare problemi dovuti al **ring aliasing**, quando alcune istruzioni non privilegiate permettono di accedere in lettura ad alcuni registri la cui gestione dovrebbe essere riservata al VMM, con *possibili inconsistenze*. Ad esempio il registro CS contiene il current privilege level (CPL) e un SO potrebbe leggere un valore diverso rispetto a quello in cui pensa di eseguire.
 </details>
 
 ### 5. Supporto HW alla Virtualizzazione
@@ -53,7 +54,7 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  L'architettura di una CPU si dice naturalmente virtualizzabile se prevede l'**invio di trap allo stato supervisor** (ring 0) ogni volta che un livello di protezione differente tenta di eseguire istruzioni privilegiate. In questo caso la realizzazione del VMM è semplificata, in quanto l'approccio trap&emulate ha il support dell'HW, e vi è supporto all'esecuzione diretta (le istruzioni non privilegiate vengono eseguite direttamente dalle VM guest).
+  L'architettura di una CPU si dice **naturalmente virtualizzabile** se <ins>prevede l'invio di trap allo stato supervisor</ins> (ring 0) ogni volta che un livello di protezione differente tenta di eseguire istruzioni privilegiate. In questo caso la realizzazione del VMM è semplificata, in quanto l'approccio trap&emulate ha il support dell'HW, e vi è supporto all'esecuzione diretta (le istruzioni non privilegiate vengono eseguite direttamente dalle VM guest).
 </details>
 
 ### 6. Realizzazione VMM in Architetture Non Virtualizzabili: FTB e Paravirtualizzazione, PRO e CONTRO
