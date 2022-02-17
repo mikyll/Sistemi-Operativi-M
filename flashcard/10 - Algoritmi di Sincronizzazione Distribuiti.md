@@ -43,20 +43,57 @@
   2. *A* è l'evento di invio di un messaggio e *B* è l'evento di ricezione dello stesso, allora *A* → *B*;
   3. vale la proprietà transitiva, ovvero se *A* → *B*, e *B* → *C*, allora *A* → *C*.
   
-  Assumiamo quindi che ad ogni evento *e* venga associato un timestamp *C(e)* e che tutti i processi concordino su questo, è necessario che *A* → *B* se e solo se *C(A)* < *C(B)*. Dunque, se all'interno di un processo *A* precede *B*, avremo che *C(A)* < *C(B)*; se *A* è l'evento di invio e *B* l'evento di ricezione dello stesso messaggio, allora *C(A)* < *C(B)*.
+  Assumiamo quindi che ad ogni evento *e* venga associato un timestamp *C(e)* e che tutti i processi concordino su questo, per cui vale la proprietà *: ```A → B ⟺ C(A) < C(B)```. Dunque, se all'interno di un processo *A* precede *B*, avremo che *C(A)* < *C(B)*; se *A* è l'evento di invio e *B* l'evento di ricezione dello stesso messaggio, allora *C(A)* < *C(B)*.
   
-  **Algoritmo di Lamport**: 
+  **Algoritmo di Lamport**: Per garantire il rispetto della proprietà *:
+  1. ogni processo *Pi* gestisce localmente un <int>contatore</int> *Ci* del tempo logico;
+  2. ogni evento del processo fa incrementare il contatore di 1 (*Ci*++);
+  3. ogni volta che il processo Pi invia un messaggio *m*, il contatore viene incrementato (*Ci*++) e successivamente al messaggio viene assegnato il timestamp *ts*(*m*)=*Ci*;
+  4. quando un processo *Pj* riceve un messaggio *m*, assegna al proprio contatore *Cj* un valore dato dal massimo tra *Cj* e *ts*(*m*), ovvero ```Cj = max{Cj, ts(m)}```, e successivamente lo incrementa di 1 (*Cj*++).
 </details>
 
-### 3. 
+### 3. Algoritmi di Sincronizzazione Distribuiti: Mutua Esclusione e Soluzioni Possibili (PRO e CONTRO)
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
+  Nei sistemi distribuiti è spesso necessario garantire che due processi non possano eseguire contemporaneamente alcune attività, ad esempio quelle che prevedono accesso a risorse condivise. Questo problema può essere risolto in maniera:
+  - *centralizzata*, delegando la gestione ad un processo <ins>coordinatore</ins> al quale tutti gli altri processi si rivolgono per l'utilizzo della risorsa;
+  - *decentralizzata*, sincronizzando i prrocessi mediante algoritmi la cui logica è distribuita tra i processi stessi (questo è generalmente un approccio più scalabile, in quanto avere un coordinatore singolo costituisce un collo di bottiglia).
   
+  Le soluzioni al problema della mutua esclusione distribuita si dividono inoltre in:
+  - *permission-based* (centralizzati o decentralizzati), nelle quali ogni processo che vuole eseguire la sezione critica (operazione mutuamente esclusiva) "<ins>richiede il permesso</ins>" di eseguire ad uno o più altri processi;
+  - *token-based* (sempre decentralizzati), in cui i processi si passano un <ins>token</ins> che concede l'autorizzazione ad eseguire la propria sezione critica.
+  
+  ##### Soluzione Centralizzata
+  La soluzione *centralizzata* prevede la presenza di un processo coordinatore che espone due primitive di <ins>richiesta</ins> e <ins>rilascio</ins> della risorsa. Ogni processo che vuole eseguire la propria sezione critica si rivolge al coordinatore per ottenere il *permesso*. Il coordinatore gestisce una richiesta alla volta, utilizzando una <ins>coda FIFO</ins>: se un processo richiede una risorsa che è attualmente utilizzata da un altro processo, viene messo in attesa in una coda, e risvegliato dal coordinatore stesso, quando la risorsa si libera di nuovo (ed è il suo turno nella coda).
+  - **Vantaggi**: è un <ins>algoritmo equo</ins> (è privo di *starvation*), ed è implementabile utilizzando <ins>solo 3 messaggi</ins> (richiesta, autorizzazione, rilascio) per ciascuna sezione critica.
+  - **Svantaggi**: è <ins>poco scalabile</ins>, in quanto al crescere del numero dei nodi il *coordinatore* può diventare un *collo di bottiglia*; è <ins>poco tollerante ai guasti</ins> e prevede un *Single Point of Failure*, in quanto se si guasta il coordinatore, l'intero sistema si blocca, e inolte, se un processo non ottiene una risposta, non può distinguere il motivo (autorizzazione non concessa o guasto).
+  
+  ##### Algoritmo di Ricart-Agrawala
+  L'algoritmo di *Ricart-Agrawala* è una soluzione *decentralizzata permission-based* che richiede, come requisito per il suo funzionamento, la presenza di un <ins>orologio logico sincronizzato</ins> (timestamp). Ad ogni processo sono associati 2 thread concorrenti: **main**, che esegue la sezione critica, e **receiver** che riceve le autorizzazioni.
+  
+  **Main**: quando un main vuole entrare nella sezione critica:
+  1. manda una richiesta d'autorizzazione (con il proprio PID e timestamp) a tutti gli altri nodi;
+  2. attende le autorizzazioni (```OK```) di tutti gli altri nodi;
+  3. esegue la sezione critica;
+  4. invia un ```OK``` a tutte le richieste in attesa.
+  
+**Receiver**: quando un receiver riceve una richiesta, esso può trovarsi in 3 possibili stati:
+1. **RELEASED**, se il processo non è interessato ad eseguire la sezione critica (ed il proprio main non ha inviato richieste), dunque <ins>risponde ```OK```</ins>;
+2. **WANTED**, se il processo vuole entrare nella sezione critica (dunque il proprio main è in attesa dell'autorizzazione ```OK```), allora <inst>confronta il timestamp</ins> della richiesta ricevuta *Tr* con quello della richiesta inviata *Ts*:
+	- se *Tr* < *Ts*, <ins>risponde con ```OK```</ins>;
+	- altrimenti (*Tr* ≥ *Ts*), non risponde e <ins>mette la richiesta ricevuta in coda</ins>;
+3. **HELD**, se sta eseguendo la sezione critica, nel qual caso <ins>la richiesta viene messa in coda</ins>.
+  
+  
+  + Esempio
+  
+  ##### Algoritmo Token-Ring
+  + Esempio
 </details>
 
-### 4. 
+### 4. Algoritmi di Sincronizzazione Distribuiti: Elezione del Coordinatore
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
