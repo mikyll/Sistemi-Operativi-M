@@ -1,8 +1,8 @@
 [[Index](https://github.com/mikyll/Sistemi-Operativi-M/tree/main/flashcard)]&nbsp;&nbsp;
-[[<<](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/01 - Virtualizzazione.md)]
-[[&nbsp;<&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/06 - Modello a Scambio di Messaggi.md).md)]
-[[&nbsp;>&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/10 - Algoritmi di Sincronizzazione Distribuiti.md)]
-[[>>](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/11 - HPC.md)]
+[[<<](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/01%20-%20Virtualizzazione.md)]
+[[&nbsp;<&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/06%20-%20Modello%20a%20Scambio%20di%20Messaggi.md)]
+[[&nbsp;>&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/10%20-%20Algoritmi%20di%20Sincronizzazione%20Distribuiti.md)]
+[[>>](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/11%20-%20HPC.md)]
 
 <h1 align="center">COMUNICAZIONE CON SINCRONIZZAZIONE ESTESA</h1>
 
