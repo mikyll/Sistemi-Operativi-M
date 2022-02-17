@@ -85,9 +85,26 @@
 	- se *Tr* < *Ts*, <ins>risponde con ```OK```</ins>;
 	- altrimenti (*Tr* ≥ *Ts*), non risponde e <ins>mette la richiesta ricevuta in coda</ins>;
 3. **HELD**, se sta eseguendo la sezione critica, nel qual caso <ins>la richiesta viene messa in coda</ins>.
+
+- **Vantaggi**: è <ins>molto scalabile</ins>.
+- **Svantaggi**: ha un <ins>maggiore costo di comunicazione</ins> per singolo partecipante, in quanto sono necessari 2\*(N-1) messaggi per ciascuna sezione critica (il processo in stato *WANTED* invia ```RICHIESTA``` e riceve ```OK``` da parte di tutti gli altri nodi); presenta <ins>poca tolleranza ai guasti</ins> in quanto presenta *N Points of Failure*, in quanto se un nodo va in crash, questo non risponderà più alle richieste, facendo rimanere i processi in attesa.
+
+**Soluzione al Problema dei Guasti**: si può modificare il protocollo, prevedendo un messaggio dopo l'invio della risposta:
+- ```OK```, in caso di autorizzazione;
+- ```ATTESA```, in caso il processo opposto si trovi in stato di *HELD*.
+
+In questo modo, basterà impostare un timeout nel richiedente per rilevare la presenza di guasti nel destinatario.
   
   ##### Algoritmo Token-Ring
-  + Esempio
+  L'algoritmo *Token-Ring* è una soluzione *decentralizzata token-based* che prevede che i processi siano collegati tra di loro secondo una topologia ad anello orientato, in cui ciascun processo conosce i suoi vicini, e si scambiano un messaggio (token) nel verso relativo all'ordine dei processi. Il token rappresenta il permesso unico di eseguire sezioni critiche.<br/>
+  Quando un processo riceve il token:
+  1. se si trova in stato **WANTED**, allora <ins>trattiene il token</ins> ed esegue la propria sezione critica, dopodiché (una volta terminata l'operazione) passa il token al processo successivo;
+  2. se si trova in stato **RELEASED**, <ins>passa direttamente il token</ins> al processo successivo nell'anello.
+  
+  - **Vantaggi**: è <ins>molto scalabile</ins>;
+  - **Svantaggi**: ha un <ins>costo di comunicazione variabile</ins> (il numero di messaggi per ogni sezione critica dipende dal numero dei nodi presenti, dunque è *potenzialmente infinito*); come per Ricart-Agrawala, <ins>non è tollerante ai guasti</ins> e presenta *N Points of Failure* e vi è la possibilità di perdere il token se il nodo che lo detiene va in crash.
+  
+  **Soluzione al Problema dei Guasti**: come per Ricart-Agrawala, si può modificare il protocollo per prevedere che ad ogni invio del token, venga restituita una risposta e, in caso questa non arrivi entro un timeout, il nodo viene considerato guasto, escluso dall'anello e si passa il token al successivo.
 </details>
 
 ### 4. Algoritmi di Sincronizzazione Distribuiti: Elezione del Coordinatore
@@ -100,7 +117,7 @@
 
 ### 5. Spiegare degli Esempi forniti dalla Prof
 
-##### Esempio Algoritmo di Ricart-Agrawala
+##### Esempio 1: Algoritmo di Ricart-Agrawala
   Abbiamo 5 processi:
   - *P1* in stato **HELD**;
   - *P2* in **RELEASED**;
@@ -182,15 +199,6 @@
 	</tr>
   </table>
 </details>
-
-### 6. 
-
-<details>
-  <summary><b>Visualizza risposta</b></summary>
-  
-  
-</details>
-
 
 <!--
 ### Come può risolversi il problema della mutua esclusione in un sistema distribuito (dopo aver parlato un po’ può chiedere di risolvere un esercizio descritto al momento)
