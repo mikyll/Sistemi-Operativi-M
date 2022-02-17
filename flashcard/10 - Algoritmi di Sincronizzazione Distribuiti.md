@@ -1,3 +1,9 @@
+[[Index](https://github.com/mikyll/Sistemi-Operativi-M/tree/main/flashcard)]&nbsp;&nbsp;
+[[<<](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/01%20-%20Virtualizzazione.md)]
+[[&nbsp;<&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/08%20-%20Comunicazione%20con%20Sincronizzazione%20Estesa.md)]
+[[&nbsp;>&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/11%20-%20HPC.md)]
+[[>>](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/11%20-%20HPC.md)]
+
 <h1 align="center">ALGORITMI DI SINCRONIZZAZIONE DISTRIBUITI</h1>
 
 ### 1. Caratteristiche di un Sistema Distribuito, Proprietà Desiderate e Sincronizzazione
