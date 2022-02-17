@@ -1,6 +1,6 @@
 <h1 align="center">ALGORITMI DI SINCRONIZZAZIONE DISTRIBUITI</h1>
 
-### 1. Caratteristiche di un Sistema Distribuito e Proprietà Desiderate
+### 1. Caratteristiche di un Sistema Distribuito, Proprietà Desiderate e Sincronizzazione
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
@@ -15,14 +15,31 @@
   **Speedup**: indicatore per misurare le *prestazioni* di un sistema parallelo/distribuito. Lo speedup per N nodi è dato dal rapporto tra il tempo di esecuzione dell'applicazione ottenuto con un solo nodo e quello ottenuti con N nodi, ovvero: ```speedup(N) = tempo(1) / tempo(N)```. Il caso ideale (sistema scalabile al 100%) è ```speedup(N) = N```.
   
   **Tolleranza ai Guasti**: un sistema distribuito si dice tollerante ai guasti se riesce ad *erogare i propri servizi anche in presenza di guasti* (temporanei, intermittenti o persistenti) in uno o più nodi. Un sistema tollerante ai guasti deve nascondere i problemi agli altri processi, ad esempio tramite ridondanza.
+  
+  **Algoritmi di Sincronizzazione**: come nel modello a memoria comune, anche nel modello a scambio di messaggi è importante poter disporre di algoritmi di sincronizzazione tra i processi concorrenti, che permettano di <ins>coordinare opportunamente i vari processi</ins>:
+  - *timing*, sincronizzazione dei clock e tempo logico;
+  - *mutua esclusione* distribuita;
+  - *elezione di coordinatori* di gruppi di processi.
+  
+  In ogni caso, è sempre desiderabile che tali algoritmi godano di scalabilità e tolleranza ai guasti (e vengono valutati anche in base a tali parametri).
 </details>
 
-### 2. Spiegare il Problema del Tempo e della Sincronizzazione nei Sistemi Distribuiti ed una Possibile Soluzione
+### 2. Spiegare il Problema della Gestione del Tempo nei Sistemi Distribuiti ed una Possibile Soluzione
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
+  In un sistema distribuito gli orologi di ogni nodo non sempre sono sincronizzati, dunque è possibile che l'ordine nel quale due eventi vengono registrati sia diverso da quello in cui sono effettivamente accaduti, e questo può generare problemi.<br/>
+  Per questo motivo, gli orologi utilizzati in applicazioni distribuite si dividono in **fisici**, che forniscono l'ora esatta, e **logici**, che permettono di associare un timestamp coerente con l'ordine in cui gli eventi si sono effettivamente verificati.
   
+  **Orologi Logici**: per implementare gli orologi logici, si definisce una relazione *happened-before* "→", tale che:
+  1. *A* e *B* sono eventi in uno stesso processo ed *A* si verifica prima di *B*, allora *A* → *B*;
+  2. *A* è l'evento di invio di un messaggio e *B* è l'evento di ricezione dello stesso, allora *A* → *B*;
+  3. vale la proprietà transitiva, ovvero se *A* → *B*, e *B* → *C*, allora *A* → *C*.
+  
+  Assumiamo quindi che ad ogni evento *e* venga associato un timestamp *C(e)* e che tutti i processi concordino su questo, è necessario che *A* → *B* se e solo se *C(A)* < *C(B)*. Dunque, se all'interno di un processo *A* precede *B*, avremo che *C(A)* < *C(B)*; se *A* è l'evento di invio e *B* l'evento di ricezione dello stesso messaggio, allora *C(A)* < *C(B)*.
+  
+  **Algoritmo di Lamport**: 
 </details>
 
 ### 3. 
