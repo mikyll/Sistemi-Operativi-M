@@ -108,16 +108,16 @@
   <img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Flusso%20Modello%20Bell-La%20Padula.png"/>
   
   Esempio di **difesa da un Trojan**, con modello Bell-La Padula:
-  S1 possiede un file F1 da proteggere, con permessi di lettura/scrittura che appartengono solo a lui (S1);
-  S2 è ostile e vuole rubarli, e possiede un file eseguibile CT (Cavallo di Troia), che ha installato nel sistema, assieme ad un file F2 che usa come "tasca posteriore".
-  ACL:
-  - S2 ha permessi di lettura/scrittura per F2 (tasca posteriore);
-  - S2 dà a S1 il permesso di scrittura su F2;
-  - S2 dà a S1 il permesso di esecuzione su CT;
-  - F1 (file da proteggere) è leggibile solo da S1.
+  *S1* possiede un file *F1* da proteggere, con permessi di lettura/scrittura che appartengono solo a lui (*S1*);
+  *S2* è ostile e vuole rubarli, e possiede un file eseguibile *CT* (Cavallo di Troia), che ha installato nel sistema, assieme ad un file *F2* che usa come "tasca posteriore".
+  Stato della ACL:
+  - *S2* ha permessi di lettura/scrittura per *F2* (tasca posteriore);
+  - *S2* dà a *S1* il permesso di scrittura su *F2*;
+  - *S2* dà a *S1* il permesso di esecuzione su *CT*;
+  - *F1* (file da proteggere) è leggibile solo da *S1*.
 
-  S2 induce S1 ad eseguire CT che, essendo eseguito a nome di S1, può leggere F1 e scrivere su F2. In quanto sia lettura che scrittura soddisfano i vincoli della ACL.<br/>
-  Tuttavia, se il sistema prevedesse il modello di sicurezza multilivello Bell-La Padula, e ci fossero ad esempio 2 livelli (*riservato*, per processi e file di S1, e *pubblico*, per processi e file di S2): il processo che esegue CT assumerebbe il livello di S1 (riservato), dunque potrebbe leggere il file F1 da proteggere, in quanto di pari livello (proprietà di semplice sicurezza rispettata); ma non potrebbe scrivere sul file F2, in quanto di livello inferiore (proprietà star violata). Dunque l'accesso, nonostante è consentito dalla ACL, viene negato.
+  *S2* induce *S1* ad eseguire *CT* che, essendo eseguito a nome di *S1*, può leggere *F1* e scrivere su *F2*. In quanto sia lettura che scrittura soddisfano i vincoli della ACL.<br/>
+  Tuttavia, se il sistema prevedesse il modello di sicurezza multilivello Bell-La Padula, e ci fossero ad esempio 2 livelli (*riservato*, per processi e file di *S1*, e *pubblico*, per processi e file di *S2*): il processo che esegue *CT* assumerebbe il livello di *S1* (riservato), dunque potrebbe leggere il file *F1* da proteggere, in quanto di pari livello (proprietà di semplice sicurezza rispettata); ma non potrebbe scrivere sul file *F2*, in quanto di livello inferiore (proprietà star violata). Dunque l'accesso, nonostante è consentito dalla ACL, viene negato.
   
   ##### Modello BIBA
   È progettato per garantire l'integrità dei dati, ma non la segretezza. Prevede anch'esso 2 regole:
