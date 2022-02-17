@@ -74,7 +74,7 @@
   L'algoritmo di *Ricart-Agrawala* è una soluzione *decentralizzata permission-based* che richiede, come requisito per il suo funzionamento, la presenza di un <ins>orologio logico sincronizzato (timestamp)</ins>. Ad ogni processo sono associati 2 thread concorrenti: **main**, che esegue la sezione critica, e **receiver** che riceve le autorizzazioni.
   
   **Main**: quando un main vuole entrare nella sezione critica:
-  1. manda una richiesta d'autorizzazione (con il proprio PID e timestamp) a tutti gli altri nodi;
+  1. manda una ```RICHIESTA``` d'autorizzazione (con il proprio PID e timestamp) a tutti gli altri nodi;
   2. attende le autorizzazioni (```OK```) di tutti gli altri nodi;
   3. esegue la sezione critica;
   4. invia un ```OK``` a tutte le richieste in attesa.
@@ -93,46 +93,69 @@
 <table>
 	<tr>
 		<td width="5%" align="center"><b>Stato</b></td>
-		<td align="center"><b><i>P1</i></b></td>
-		<td align="center"><b><i>P2</i></b></td>
-		<td align="center"><b><i>P3</i></b></td>
-		<td align="center"><b><i>P4</i></b></td>
-		<td align="center"><b><i>P5</i></b></td>
-		<td align="center"><b>IMG</b></td>
+		<td width="19%" align="center"><b><i>P1</i></b></td>
+		<td width="19%" align="center"><b><i>P2</i></b></td>
+		<td width="19%" align="center"><b><i>P3</i></b></td>
+		<td width="19%" align="center"><b><i>P4</i></b></td>
+		<td width="19%" align="center"><b><i>P5</i></b></td>
 	</tr>
 	<tr>
 		<td align="center">(1)</td>
 		<td align="center"><b>HELD</b><br/>sta eseguendo la propria sezione critica</td>
 		<td align="center"><b>RELEASED</b></td>
 		<td align="center"><b>WANTED</b><br/>
-			invia richiesta con <code>ts(m) = 3</code></td>
+			<ins>invia</ins> <code>RICHIESTA</code> con <b><code>ts(m) = 3</code></b></td>
 		<td align="center"><b>RELEASED</b></td>
 		<td align="center"><b>WANTED</b><br/>
-			invia richiesta con <code>ts(m) = 5</code></td>
-		<td align="center"> - </td>
+			<ins>invia</ins> <code>RICHIESTA</code> con <b><code>ts(m) = 5</code></b></td>
 	</tr>
 	<tr>
-		<td>(2)</td>
-		<td><b>HELD</b><br/>
-			riceve le richieste di <i>P3</i> e <i>P5</i> e le mette in coda</td>
-		<td><b>RELEASED</b><br/>
-			riceve le richieste di <i>P3</i> e <i>P5</i> e risponde <code>OK</code> a entrambi</td>
-		<td><b>WANTED</b><br/>
-			ts(m) = 3</td>
-		<td><b>RELEASED</b><br/>
-			riceve le richieste di <i>P3</i> e <i>P5</i> e risponde <code>OK</code> a entrambi</td>
-		<td><b>WANTED</b><br/>
-			ts(m) = 5</td>
-		<td> - </td>
+		<td align="center">(2)</td>
+		<td align="center"><b>HELD</b><br/>
+			riceve le richieste di <i>P3</i> e <i>P5</i> e le <ins>mette in coda</ins></td>
+		<td align="center"><b>RELEASED</b><br/>
+			riceve le richieste di <i>P3</i> e <i>P5</i> e <ins>risponde</ins> <code>OK</code> a entrambi</td>
+		<td align="center">
+			<b>WANTED <code>ts(m) = 3</code></b><br/>
+			1) riceve <code>OK</code> da <i>P2</i>, <i>P4</i>, <i>P5</i><br/>
+			2) riceve la richiesta di <i>P5</i> e la <ins>mette in coda</ins> poiché 3 < 5
+		</td>
+		<td align="center"><b>RELEASED</b><br/>
+			riceve le richieste di <i>P3</i> e <i>P5</i> e <ins>risponde</ins> <code>OK</code> a entrambi</td>
+		<td align="center">
+			<b>WANTED <code>ts(m) = 5</code></b><br/>
+			1) riceve <code>OK</code> da <i>P2</i>, <i>P4</i><br/>
+			2) riceve la richiesta di <i>P3</i> e <ins>risponde</ins> <code>OK</code> poiché 3 < 5
+		</td>
 	</tr>
 	<tr>
-		<td>(3)</td>
-		<td>HELD</td>
-		<td>RELEASED</td>
-		<td>WANTED, invia richiesta con ts(m) = 3</td>
-		<td>RELEASED</td>
-		<td>WANTED, invia richiesta con ts(m) = 5</td>
-		<td> - </td>
+		<td align="center">(3)</td>
+		<td align="center"><b>RELEASED</b><br/><ins>estrae dalla coda</ins> tutti i processi e <ins>invia</ins> <code>OK</code> a <i>P3</i> e <i>P5</i></td>
+		<td align="center"><b>RELEASED</b></td>
+		<td align="center">
+			<b>HELD</b><br/>
+			1) riceve <code>OK</code> da <i>P1</i><br/>
+			2) ha ottenuto tutte le autorizzazioni, entra in sezione critica
+		</td>
+		<td align="center"><b>RELEASED</b></td>
+		<td align="center">
+			<b>WANTED</b><br/>
+			1) riceve <code>OK</code> da <i>P1</i><br/>
+			2) gli manca ancora l'<code>OK</code> di <i>P3</i>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">(4)</td>
+		<td align="center"><b>RELEASED</b></td>
+		<td align="center"><b>RELEASED</b></td>
+		<td align="center"><b>RELEASED</b><br/><ins>estrae dalla coda</ins> tutti i processi e <ins>invia</ins> <code>OK</code> a <i>P5</i>
+		</td>
+		<td align="center"><b>RELEASED</b></td>
+		<td align="center">
+			<b>HELD</b><br/>
+			1) riceve <code>OK</code> da <i>P3</i><br/>
+			2) ha ottenuto tutte le autorizzazioni, entra in sezione critica
+		</td>
 	</tr>
   </table>
   ##### Algoritmo Token-Ring
