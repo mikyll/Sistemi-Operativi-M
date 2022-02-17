@@ -132,7 +132,7 @@
   - **Trusted Computing Base (TCB)**, è un elemento che <ins>contiene i livelli di sicurezza</ins> di soggetti (privilegi di sicurezza) e oggetti (classificazione rispetto alla sicurezza).
   
   I Sistemi Trusted devono rispettare le seguenti proprietà:
-  - **mediazione completa**, ovvero le regole di sicurezza devono essere applicate ad ogni accesso alle risorse, e non solo. Dunque, essendo questa un'operazionee piuttosto frequente, per motivi di efficienza è necessario che la soluzione venga implementata (almeno parzialmente) via HW;
+  - **mediazione completa**, ovvero le regole di sicurezza devono essere applicate ad ogni accesso alle risorse, e non solo. Dunque, essendo questa un'operazione piuttosto frequente, per motivi di efficienza è necessario che la soluzione venga implementata (almeno parzialmente) via HW;
   - **isolamento**, ovvero sia RM che TCB devono essere isolati e protetti rispetto a modifiche non autorizzate (anche ad esempio da parte del kernel del SO);
   - **verificabilità**, ovvero dev'essere possibile dimostrare formalmente che il RM esegua correttamente il suo compito (imponendo il rispetto delle regole di sicurezza, e fornendo mediazione completa ed isolamento). Questo solitamente è un requisito difficile da soddisfare in un sistema general-purpose.
   
