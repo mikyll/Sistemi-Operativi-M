@@ -136,7 +136,7 @@
   - **isolamento**, ovvero sia RM che TCB devono essere isolati e protetti rispetto a modifiche non autorizzate (anche ad esempio da parte del kernel del SO);
   - **verificabilità**, ovvero dev'essere possibile dimostrare formalmente che il RM esegua correttamente il suo compito (imponendo il rispetto delle regole di sicurezza, e fornendo mediazione completa ed isolamento). Questo solitamente è un requisito difficile da soddisfare in un sistema general-purpose.
   
-  **Audit File**: è una specie di file di log, che mantiene tutte le informazioni sulle operazioni eseguite più importanti e di interesse dal punto di vista della sicurezza del sistema, ad esempio modifiche autorizzate alla TCB o tentativi di violazione.
+  **Audit File**: è una specie di <ins>file di log</ins>, che mantiene tutte le informazioni sulle operazioni eseguite più importanti e di interesse dal punto di vista della sicurezza del sistema, ad esempio modifiche autorizzate alla TCB o tentativi di violazione.
   
   ###### Classificazione della Sicurezza dei Sistemi di Calcolo
   Secondo l'Orange Book (documento pubblicato dal Dipartimento della Difesa americano), la sicurezza di un sistema viene classificata in base a 4 categorie:
