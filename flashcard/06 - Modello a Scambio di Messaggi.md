@@ -1,3 +1,8 @@
+[[Index](https://github.com/mikyll/Sistemi-Operativi-M/tree/main/flashcard)]&nbsp;&nbsp;
+[[<<](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/01%20-%20Virtualizzazione.md)]
+[[&nbsp;<&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/05%20-%20Nucleo%20di%20un%20Sistema%20Multiprogrammato%20(Memoria%20Comune).md)]
+[[&nbsp;>&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/08%20-%20Comunicazione%20con%20Sincronizzazione%20Estesa.md)]
+[[>>](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/11%20-%20HPC.md)]
 
 <h1 align="center">MODELLO A SCAMBIO DI MESSAGGI</h1>
 
