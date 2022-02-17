@@ -42,14 +42,14 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  Un dominio di protezione definisce un insieme di coppie <oggetto, diritti di accesso>, che rappresenta l'ambiente di protezione nel quale un certo soggetto esegue. Il dominio di protezione è infatti univoco per ciascun soggetto, e in ogni istante della sua esecuzione, un soggetto (processo) è associato ad uno ed un solo dominio, e può accedere solo agli oggetti specificati nel suo dominio, con i relativi diritti.
+  Un dominio di protezione definisce un insieme di coppie <oggetto, diritti di accesso>, che rappresenta l'<ins>ambiente di protezione nel quale un certo soggetto esegue</ins>. Il dominio di protezione è infatti univoco per ciascun soggetto, e in ogni istante della sua esecuzione, un soggetto (processo) è associato ad uno ed un solo dominio, e può accedere solo agli oggetti specificati nel suo dominio, con i relativi diritti.
   
   L'associazione tra processo e dominio può essere:
   - **statica**, se rimane fissa durante l'intera esecuzione del processo. 
   - **dinamica**, se può variare nel corso dell'esecuzione del processo.
   Poiché a tempo di esecuzione, l'insieme globale delle risorse che un processo potrà usare può non essere conosciuto a priori, e l'insieme minimo delle risorse a lui necessarie cambia dinamicamente durante l'esecuzione, l'associazione statica non permette di realizzare il Principio del Minimo Privilegio. Al contrario, ciò è possibile con l'associazione dinamica, tuttavia occorre un meccanismo di cambio di dominio.
   
-  Esempio: cambio di dominio relativo all'esecuzione di system call (2 ring, protezione tra kernel e utente, ma non tra diversi utenti); cambio di dominio in UNIX, realizzato tramite il bit set-uid che, se abilitato, permette al processo che esegue il file di passare nel dominio del proprietario del file.
+  Esempi: cambio di dominio relativo all'esecuzione di system call (2 ring, protezione tra kernel e utente, ma non tra diversi utenti); cambio di dominio in UNIX, realizzato tramite il bit set-uid che, se abilitato, permette al processo che esegue il file di passare nel dominio del proprietario del file.
 </details>
 
 ### 4. Matrice degli Accessi e Com'è Possibile Rappresentarla Concretamente (PRO e CONTRO, e Possibile Soluzione)
@@ -57,7 +57,7 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  La matrice degli accessi permette di rappresentare, a livello astratto, lo <ins>stato di protezione</ins> di un sistema in un determinato istante, ad esempio utilizzando le righe per indicare i soggetti, e le colonne per gli oggetti, mentre i singoli elementi contengono i vari diritti di accesso. Offre ai meccanismi le informazioni che gli consentono di verificare il rispetto dei vincoli di accesso.
+  La matrice degli accessi permette di rappresentare, a livello astratto, lo <ins>stato di protezione</ins> di un sistema in un determinato istante: ad esempio si possono utilizzare le righe per indicare i soggetti e le colonne per gli oggetti, mentre i singoli elementi contengono i vari diritti di accesso. Offre ai meccanismi le informazioni che gli consentono di verificare il rispetto dei vincoli di accesso.
   
   Solitamente il numero dei soggetti e soprattutto degli oggetti tende ad essere molto grande (e i diritti di accesso generalmente sono sparsi). Dunque, la matrice degli accessi non può essere realizzata come un'unica struttura Ns x No, in quanto ciò non sarebbe ottimale per l'occupazione della memoria né per l'efficienza negli accessi. Per questo motivo, la realizzazione concreta dev'essere ottimizzata, ed esistono 2 approcci:
   - **Access Control List (ACL)**, si basa su una rappresentazione per <ins>colonne</ins> e prevede che ad ogni <ins>oggetto</ins> sia associata una lista di coppie <soggetto, insieme-dei-diritti> (o <soggetto, gruppo, insieme-dei-diritti>), solo per i soggetti con un insieme non vuoto di diritti per l'oggetto.
@@ -65,7 +65,7 @@
   La <ins>revoca</ins> di un diritto di accesso è molto <ins>semplice</ins> con ACL, in quanto basta fare riferimento all'oggetto coinvolto.
   - **Capability List (CL)**, si basa su una rappresentazione per <ins>righe</ins> e prevede che per ogni <ins>soggetto</ins> si abbia una lista di coppie <oggetto, insieme-dei-diritti>, che prendono nome di *capability* (capability = coppia).
   Per proteggere le CL da manomissioni, esse vengono memorizzate nello spazio del kernel e l'utente può far riferimento solo ad un puntatore che identifica la sua posizione nella lista.
-  La <ins>revoca</ins> di un diritto di accesso è più <ins>complesso</ins> perché è necessario verificare, per ogni dominio (soggetto), se contiene capability che fanno riferimento all'oggetto considerato.
+  La <ins>revoca</ins> di un diritto di accesso è più <ins>complessa</ins> perché è necessario verificare, per ogni dominio (soggetto), se contiene capability che fanno riferimento all'oggetto considerato.
   
   Entrambe le soluzioni presentano **problemi di efficienza**: con le ACL i diritti di accesso di un particolare soggetto sono sparsi nelle varie ACL; con CL, l'informazione relativa a tutti i diritti di accesso applicabili ad un certo oggetto è sparsa nelle varie CL.
   
