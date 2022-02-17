@@ -1,7 +1,7 @@
 [[Index](https://github.com/mikyll/Sistemi-Operativi-M/tree/main/flashcard)]&nbsp;&nbsp;
 [[<<](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/01%20-%20Virtualizzazione.md)]
-[[<](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/01%20-%20Virtualizzazione.md)]
-[[>](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/03%20-%20Programmazione%20Concorrente.md)]
+[[&nbsp;<&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/01%20-%20Virtualizzazione.md)]
+[[&nbsp;>&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/03%20-%20Programmazione%20Concorrente.md)]
 [[>>]()]
 
 <h1 align="center">PROTEZIONE</h1>
