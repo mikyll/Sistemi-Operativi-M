@@ -71,7 +71,7 @@
   - **Svantaggi**: è <ins>poco scalabile</ins>, in quanto al crescere del numero dei nodi il *coordinatore* può diventare un *collo di bottiglia*; è <ins>poco tollerante ai guasti</ins> e prevede un *Single Point of Failure*, in quanto se si guasta il coordinatore, l'intero sistema si blocca, e inolte, se un processo non ottiene una risposta, non può distinguere il motivo (autorizzazione non concessa o guasto).
   
   ##### Algoritmo di Ricart-Agrawala
-  L'algoritmo di *Ricart-Agrawala* è una soluzione *decentralizzata permission-based* che richiede, come requisito per il suo funzionamento, la presenza di un <ins>orologio logico sincronizzato</ins> (timestamp). Ad ogni processo sono associati 2 thread concorrenti: **main**, che esegue la sezione critica, e **receiver** che riceve le autorizzazioni.
+  L'algoritmo di *Ricart-Agrawala* è una soluzione *decentralizzata permission-based* che richiede, come requisito per il suo funzionamento, la presenza di un <ins>orologio logico sincronizzato (timestamp)</ins>. Ad ogni processo sono associati 2 thread concorrenti: **main**, che esegue la sezione critica, e **receiver** che riceve le autorizzazioni.
   
   **Main**: quando un main vuole entrare nella sezione critica:
   1. manda una richiesta d'autorizzazione (con il proprio PID e timestamp) a tutti gli altri nodi;
@@ -86,9 +86,55 @@
 	- altrimenti (*Tr* ≥ *Ts*), non risponde e <ins>mette la richiesta ricevuta in coda</ins>;
 3. **HELD**, se sta eseguendo la sezione critica, nel qual caso <ins>la richiesta viene messa in coda</ins>.
   
-  
-  + Esempio
-  
+  Esempio:<br/>
+  Abbiamo 5 processi: *P1* in stato **HELD**, *P2* in **RELEASED**, *P3* in **WANTED** con ```ts(m) = 3```, *P4* in **RELEASED**, *P5* in **WANTED** con ```ts(m) = 5```.
+  1. *P1* riceve le richieste di *P3* e *P5* e le mette in coda, in quanto si trova in stato HELD (sta attualmente eseguendo la sezione critica); *P2* risponde ```OK``` a *P3* e *P5*; *P3*
+
+<table>
+	<tr>
+		<td width="5%" align="center"><b>Stato</b></td>
+		<td align="center"><b><i>P1</i></b></td>
+		<td align="center"><b><i>P2</i></b></td>
+		<td align="center"><b><i>P3</i></b></td>
+		<td align="center"><b><i>P4</i></b></td>
+		<td align="center"><b><i>P5</i></b></td>
+		<td align="center"><b>IMG</b></td>
+	</tr>
+	<tr>
+		<td align="center">(1)</td>
+		<td align="center"><b>HELD</b><br/>sta eseguendo la propria sezione critica</td>
+		<td align="center"><b>RELEASED</b></td>
+		<td align="center"><b>WANTED</b><br/>
+			invia richiesta con <code>ts(m) = 3</code></td>
+		<td align="center"><b>RELEASED</b></td>
+		<td align="center"><b>WANTED</b><br/>
+			invia richiesta con <code>ts(m) = 5</code></td>
+		<td align="center"> - </td>
+	</tr>
+	<tr>
+		<td>(2)</td>
+		<td><b>HELD</b><br/>
+			riceve le richieste di <i>P3</i> e <i>P5</i> e le mette in coda</td>
+		<td><b>RELEASED</b><br/>
+			riceve le richieste di <i>P3</i> e <i>P5</i> e risponde <code>OK</code> a entrambi</td>
+		<td><b>WANTED</b><br/>
+			ts(m) = 3</td>
+		<td><b>RELEASED</b><br/>
+			riceve le richieste di <i>P3</i> e <i>P5</i> e risponde <code>OK</code> a entrambi</td>
+		<td><b>WANTED</b><br/>
+			ts(m) = 5</td>
+		<td> - </td>
+	</tr>
+	<tr>
+		<td>(3)</td>
+		<td>HELD</td>
+		<td>RELEASED</td>
+		<td>WANTED, invia richiesta con ts(m) = 3</td>
+		<td>RELEASED</td>
+		<td>WANTED, invia richiesta con ts(m) = 5</td>
+		<td> - </td>
+	</tr>
+  </table>
   ##### Algoritmo Token-Ring
   + Esempio
 </details>
