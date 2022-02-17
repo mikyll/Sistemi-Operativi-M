@@ -72,7 +72,7 @@
   **Soluzione Ibrida**: vengono combinati i due metodi. La ACL viene memorizzata in <ins>memoria persistente</ins> (secondaria) e, quando un soggetto tenta di accedere ad un oggetto per la prima volta, se il diritto invocato è presente nella ACL, viene restituita la CL relativa al soggetto richiedente, e salvata in <ins>memoria volatile</ins> (RAM). In questo modo il soggetto può accedere all'oggetto più volte senza dover analizzare nuovamente la ACL. Dopo l'ultimo accesso, la CL viene distrutta dalla memoria volatile.
 </details>
 
-### 5. Diritti di Accesso: Copy Flag (*), Owner, Control, Switch. È Possibile Capire Quale Politica Si Sta Utilizzando?
+### 5. Diritti di Accesso: Copy Flag (*), Owner, Control, Switch. È Possibile Capire Quale Politica si sta Utilizzando?
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
@@ -110,8 +110,9 @@
   - S2 dà a S1 il permesso di scrittura su F2;
   - S2 dà a S1 il permesso di esecuzione su CT;
   - F1 (file da proteggere) è leggibile solo da S1.
+
   S2 induce S1 ad eseguire CT che, essendo eseguito a nome di S1, può leggere F1 e scrivere su F2. In quanto sia lettura che scrittura soddisfano i vincoli della ACL.<br/>
-  Tuttavia, se il sistema prevedesse il modello di sicurezza multilivello Bell-La Padula, e ci fossero ad esempio 2 livelli (*riservato*, per processi e file di S1, e *pubblico*, per processi e file di S2), il processo che esegue CT assumerebbe il livello di S1 (riservato), dunque potrebbe leggere il file F1 da proteggere, in quanto di pari livello (proprietà di semplice sicurezza rispettata), ma non potrebbe scrivere sul file F2, in quanto di livello inferiore (proprietà star violata). Dunque l'accesso, nonostante è consentito dalla ACL, viene negato.
+  Tuttavia, se il sistema prevedesse il modello di sicurezza multilivello Bell-La Padula, e ci fossero ad esempio 2 livelli (*riservato*, per processi e file di S1, e *pubblico*, per processi e file di S2): il processo che esegue CT assumerebbe il livello di S1 (riservato), dunque potrebbe leggere il file F1 da proteggere, in quanto di pari livello (proprietà di semplice sicurezza rispettata); ma non potrebbe scrivere sul file F2, in quanto di livello inferiore (proprietà star violata). Dunque l'accesso, nonostante è consentito dalla ACL, viene negato.
   
   ##### Modello BIBA
   È progettato per garantire l'integrità dei dati, ma non la segretezza. Prevede anch'esso 2 regole:
