@@ -1,3 +1,9 @@
+[[Index](https://github.com/mikyll/Sistemi-Operativi-M/tree/main/flashcard)]&nbsp;&nbsp;
+[[<<](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/01 - Virtualizzazione.md)]
+[[&nbsp;<&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/06 - Modello a Scambio di Messaggi.md).md)]
+[[&nbsp;>&nbsp;](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/10 - Algoritmi di Sincronizzazione Distribuiti.md)]
+[[>>](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/flashcard/11 - HPC.md)]
+
 <h1 align="center">COMUNICAZIONE CON SINCRONIZZAZIONE ESTESA</h1>
 
 ### 1. Spiegare in Cosa Consiste la Comunicazione con Sincronizzazione Estesa
