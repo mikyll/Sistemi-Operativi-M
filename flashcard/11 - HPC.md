@@ -77,7 +77,7 @@
   <summary><b>Visualizza risposta</b></summary>
   
   Per ottenere i vantaggi del parallelismo, sfruttando efficacemente l'HW a disposizione, il programmatore deve trasformare i propri programmi seriali in codice parallelo. Per farlo è possibile utilizzare 2 approcci: parallelizzazione automatica (sfruttando ad esempio dei compilatori), che normalmente permettono di ottenere prestazioni non troppo soddisfacenti; parallelizzazione esplicita, utilizzando ad esempio dei linguaggi e librerie appositi per il calcolo parallelo.
-  A tal proposito esistono due modelli di interazione: scambio di messaggi (MPI) e memoria condivisa (OpenMP).
+  A tal proposito esistono due modelli di interazione: scambio di messaggi (*MPI*) e memoria condivisa (*OpenMP*).
   
   **MPI**: è uno <ins>standard</ins> che stabilisce un protocollo per la comunicazione fra processi in sistemi paralleli (*senza memoria condivisa*). Permette di eseguire più istanze di un programma in parallelo su più nodi.
   
