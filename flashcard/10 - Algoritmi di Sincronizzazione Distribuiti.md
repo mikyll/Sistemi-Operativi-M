@@ -45,8 +45,8 @@ In un sistema distribuito gli orologi di ogni nodo <ins>non sempre sono sincroni
   
   Assumiamo quindi che ad ogni evento *e* venga associato un timestamp *C(e)* e che tutti i processi concordino su questo, per cui vale la proprietà **[*]**: ```A → B ⟺ C(A) < C(B)```. Dunque, se all'interno di un processo *A* precede *B*, avremo che *C(A)* < *C(B)*; se *A* è l'evento di invio e *B* l'evento di ricezione dello stesso messaggio, allora *C(A)* < *C(B)*.
   
-  ##### Algoritmo di Lamport
-	L'algoritmo di *Lamport* fornisce una soluzione al problema della sincronizzazione dei processi in un contesto distribuito, basata sull'utilizzo di orologi logici, implementati tramite timestamp. In particolare, per garantire il rispetto della proprietà [*], l'algoritmo afferma che:
+##### Algoritmo di Lamport
+L'algoritmo di *Lamport* fornisce una soluzione al problema della sincronizzazione dei processi in un contesto distribuito, basata sull'utilizzo di orologi logici, implementati tramite timestamp. In particolare, per garantire il rispetto della proprietà [*], l'algoritmo afferma che:
   1. ogni processo *Pi* gestisce localmente un <int>contatore</int> *Ci* del tempo logico;
   2. ogni evento del processo fa incrementare il contatore di 1 (*Ci*++);
   3. ogni volta che il processo Pi invia un messaggio *m*, il contatore viene incrementato (*Ci*++) e successivamente al messaggio viene assegnato il timestamp *ts*(*m*)=*Ci*;
