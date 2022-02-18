@@ -79,17 +79,35 @@
   Per ottenere i vantaggi del parallelismo, sfruttando efficacemente l'HW a disposizione, il programmatore deve trasformare i propri programmi seriali in codice parallelo. Per farlo è possibile utilizzare 2 approcci: parallelizzazione automatica (sfruttando ad esempio dei compilatori), che normalmente permettono di ottenere prestazioni non troppo soddisfacenti; parallelizzazione esplicita, utilizzando ad esempio dei linguaggi e librerie appositi per il calcolo parallelo.
   A tal proposito esistono due modelli di interazione: scambio di messaggi (MPI) e memoria condivisa (OpenMP).
   
+  **MPI**: è uno <ins>standard</ins> che stabilisce un protocollo per la comunicazione fra processi in sistemi paralleli (*senza memoria condivisa*). Permette di eseguire più istanze di un programma in parallelo su più nodi.
+  
+  **OpenMPI**: è una <ins>libreria</ins> per applicazioni parallele in sistemi a *memoria condivisa*.
+  
+  <table>
+	<tr>
+		<td align="center" width="50%"><b>MPI</b></td>
+		<td align="center" width="50%"><b>OpenMPI</b></td>
+	</tr>
+	<tr>
+		<td align="center">Interazione basata su scambio di messaggi</td>
+		<td align="center">Interazione basata su memoria condivisa</td>
+	</tr>
+	<tr>
+		<td align="center">complessità d'uso</td>
+		<td align="center">semplicità d'uso</td>
+	</tr>
+	<tr>
+		<td align="center">load balancing a carico del programmatore</td>
+		<td align="center">load balancing semplice da realizzare</td>
+	</tr>
+	<tr>
+		<td align="center">elevata scalabilità</td>
+		<td align="center">scalabilità limitata al numero di CPU disponibili sul nodo utilizzato</td>
+	</tr>
+	<tr>
+		<td align="center">elevata portabilità (funziona anche su sistemi a memoria condivisa)</td>
+		<td align="center">compatibile solo con sistemi a memoria condivisa (multicore/multiprocessors)</td>
+	</tr>
+  </table>
   
 </details>
-
-<!--
-HPC: quali sono i limiti del modello Von Neumann, e come possono essere superati a livello architetturale. descrivere quali architetture della categorizzazione (Tassonomia) di Flynn  possono superare l’architettura di Von Neumann.
-
-come si chiama quando faccio variare i processori e mantengo costante il problema (modalità strong), cosa cambia con la modalità weak
-
-parallelismo livello di istruzione (pipeline(?))
-multithreading e hardware multithreading
-
-Architetture parallele -> come ottenere prestazioni migliori partendo dal modello Von Neumann (e problematiche) e VN esteso per poi arrivare a HPC
-IMPORTANTE: Spiegare il pipeline, dicendo che ogni fase è affidata ad un'unità funzionale diversa
--->
