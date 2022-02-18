@@ -55,20 +55,20 @@
   Per misurare le prestazioni di un sistema HPC si utilizza l'unità di misura del *FLOPS* (FLoating-point Operations Per Second, "operazioni in virgola mobile al secondo").<br/>
   Per valutare il vantaggio derivante dall'esecuzione di programmi paralleli in sistemi HPC si utilizzano alcune metriche: *speedup* ed *efficienza*.
   
-  Lo **Speedup** misura quanto è più veloce la versione parallela rispetto alla versione sequenziale (esprime il guadagno di un'applicazione parallela rispetto alla versione sequenziale). È pari a ```S = Tseq / Tpar```, dove *Tseq* è il tempo di esecuzione del programma nella versione sequenziale (su un solo nodo), e *Tpar* nella sua versione parallela.<br/>
+  Lo **Speedup** misura quanto è più veloce la versione parallela rispetto alla versione sequenziale (esprime il <ins>guadagno di un'applicazione parallela rispetto alla versione sequenziale</ins>). È pari a ```S = Tseq / Tpar```, dove *Tseq* è il tempo di esecuzione del programma nella versione sequenziale (su un solo nodo), e *Tpar* nella sua versione parallela.<br/>
   Il caso ideale è che ```S = p```, dove *p* è il numero di processori. Tuttavia, solitamente ci sono altri fattori da considerare nell'equazione, quali ad esempio lo scarto di tempo dovuto all'*overhead*, pertanto in generale si ha che ```S < p```.
   
-  L'**Efficienza** misura lo speedup per numero di processori utilizzati. È pari a ```E = S / p```, dove *S* è lo speedup, e *p* il numero di processori utilizzati. Il caso ideale è che ```E = 1```, mentre nei casi reali si ha che ```E < 1```.
+  L'**Efficienza** misura lo <ins>speedup per numero di processori utilizzati</ins>. È pari a ```E = S / p```, dove *S* è lo speedup, e *p* il numero di processori utilizzati. Il caso ideale è che ```E = 1```, mentre nei casi reali si ha che ```E < 1```.
   
   Un sistema si dice **scalabile** se mantiene la stessa efficienza al variare del numero di processori utilizzati e/o al variare della quantità di dati da elaborare.
   
-  La **Legge di Amdahl** considera che in generale non tutto il programma può essere parallelizzabile, dunque *Tpar* è dato da ```Tpar = r * Tseq + (1 - r) * Tseq / p```, dove *r* ∈ [0, 1] è una percentuale che esprime la frazione di tempo totale di esecuzione speso nella parte non parallelizzabile del programma. La Legge di Amdahl esprime lo speedup *S* come: ```S = Tseq / Tpar = 1 / (r + (1 - r) / p)``` e descrive l'andamento dello speedup al variare del numero di processori impiegati per la soluzione dello stesso problema. Se il numero dei processori tende a infinito, vediamo che la Legge di Amdahl ha un comportamento asintotico (per lim di *p* → ∞, *S* tende a 1/*r* senza mai toccarlo).
+  La **Legge di Amdahl** considera che <ins>in generale non tutto il programma può essere parallelizzabile</ins>, dunque *Tpar* è dato da ```Tpar = r * Tseq + (1 - r) * Tseq / p```, dove *r* ∈ [0, 1] è una percentuale che esprime la frazione di tempo totale di esecuzione speso nella parte non parallelizzabile del programma. La Legge di Amdahl esprime lo speedup *S* come: ```S = Tseq / Tpar = 1 / (r + (1 - r) / p)``` e descrive l'andamento dello speedup al variare del numero di processori impiegati per la soluzione dello stesso problema. Se il numero dei processori tende a infinito, vediamo che la Legge di Amdahl ha un comportamento asintotico (per lim di *p* → ∞, *S* tende a 1/*r* senza mai toccarlo).
   
-  **Scalabilità Strong**: valuta l'efficienza al crescere del numero dei nodi (mantenendo costante la dimensione del problema). Lavoro totale da eseguire costante, ma lavoro da eseguire sul singolo nodo diminuisce al crescere del numero dei nodi (bilanciamento del lavoro sui nodi).
+  **Scalabilità Strong**: valuta l'<ins>efficienza al crescere del numero dei nodi</ins> (<ins>mantenendo costante la dimensione del problema</ins>). Lavoro totale da eseguire costante, ma lavoro da eseguire sul singolo nodo diminuisce al crescere del numero dei nodi (bilanciamento del lavoro sui nodi).
   
-  **Scalabilità Weak**: valuta l'efficienza al variare al crescere delle dimensioni del problema (mantenendo costante il carico di lavoro per singolo nodo). Per valutare la scalabilità weak si usano speedup scalato e efficienza scalata.
+  **Scalabilità Weak**: valuta l'<ins>efficienza al variare al crescere delle dimensioni del problema</ins> (<ins>mantenendo costante il carico di lavoro per singolo nodo</ins>). Per valutare la scalabilità weak si usano speedup scalato e efficienza scalata.
   
-  La **Legge di Gustafson** afferma che, assegnando ad ogni processore un workload costante ```(1 - r)```, lo speedup cresce linearmente con il numero dei processori, dunque lo speedup *S* è dato da: ```S = r + (1 - r) * p```.
+  La **Legge di Gustafson** afferma che, <ins>assegnando ad ogni processore un workload costante</ins> ```(1 - r)```, lo <ins>speedup cresce linearmente con il numero dei processori</ins>, dunque lo speedup *S* è dato da: ```S = r + (1 - r) * p```.
 </details>
 
 ### 4. Confrontare MPI ed OpenMP
