@@ -35,7 +35,7 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  In un sistema distribuito gli orologi di ogni nodo non sempre sono sincronizzati, dunque è possibile che l'ordine nel quale due eventi vengono registrati sia diverso da quello in cui sono effettivamente accaduti, e questo può generare problemi.<br/>
+In un sistema distribuito gli orologi di ogni nodo <ins>non sempre sono sincronizzati</ins>, dunque è possibile che l'ordine nel quale due eventi vengono registrati sia diverso da quello in cui sono effettivamente accaduti, e questo può generare problemi.<br/>
   Per questo motivo, gli orologi utilizzati in applicazioni distribuite si dividono in **fisici**, che forniscono l'ora esatta, e **logici**, che permettono di associare un timestamp coerente con l'ordine in cui gli eventi si sono effettivamente verificati.
   
   **Orologi Logici**: per implementare gli orologi logici, si definisce una relazione *happened-before* "→", tale che:
@@ -43,10 +43,10 @@
   2. *A* è l'evento di invio di un messaggio e *B* è l'evento di ricezione dello stesso, allora *A* → *B*;
   3. vale la proprietà transitiva, ovvero se *A* → *B*, e *B* → *C*, allora *A* → *C*.
   
-  Assumiamo quindi che ad ogni evento *e* venga associato un timestamp *C(e)* e che tutti i processi concordino su questo, per cui vale la proprietà *: ```A → B ⟺ C(A) < C(B)```. Dunque, se all'interno di un processo *A* precede *B*, avremo che *C(A)* < *C(B)*; se *A* è l'evento di invio e *B* l'evento di ricezione dello stesso messaggio, allora *C(A)* < *C(B)*.
+  Assumiamo quindi che ad ogni evento *e* venga associato un timestamp *C(e)* e che tutti i processi concordino su questo, per cui vale la proprietà **[*]**: ```A → B ⟺ C(A) < C(B)```. Dunque, se all'interno di un processo *A* precede *B*, avremo che *C(A)* < *C(B)*; se *A* è l'evento di invio e *B* l'evento di ricezione dello stesso messaggio, allora *C(A)* < *C(B)*.
   
   ##### Algoritmo di Lamport
-  Per garantire il rispetto della proprietà *:
+  Per garantire il rispetto della proprietà [*]:
   1. ogni processo *Pi* gestisce localmente un <int>contatore</int> *Ci* del tempo logico;
   2. ogni evento del processo fa incrementare il contatore di 1 (*Ci*++);
   3. ogni volta che il processo Pi invia un messaggio *m*, il contatore viene incrementato (*Ci*++) e successivamente al messaggio viene assegnato il timestamp *ts*(*m*)=*Ci*;
