@@ -36,7 +36,7 @@
   <summary><b>Visualizza risposta</b></summary>
   
 In un sistema distribuito gli orologi di ogni nodo <ins>non sempre sono sincronizzati</ins>, dunque è possibile che l'ordine nel quale due eventi vengono registrati sia diverso da quello in cui sono effettivamente accaduti, e questo può generare problemi.<br/>
-  Per questo motivo, gli orologi utilizzati in applicazioni distribuite si dividono in **fisici**, che forniscono l'ora esatta, e **logici**, che permettono di associare un timestamp coerente con l'ordine in cui gli eventi si sono effettivamente verificati.
+  Per questo motivo, gli orologi utilizzati in applicazioni distribuite si dividono in **fisici**, che forniscono l'ora esatta, e **logici**, che permettono di associare un <ins>timestamp</ins> coerente con l'ordine in cui gli eventi si sono effettivamente verificati.
   
   **Orologi Logici**: per implementare gli orologi logici, si definisce una relazione *happened-before* "→", tale che:
   1. *A* e *B* sono eventi in uno stesso processo ed *A* si verifica prima di *B*, allora *A* → *B*;
