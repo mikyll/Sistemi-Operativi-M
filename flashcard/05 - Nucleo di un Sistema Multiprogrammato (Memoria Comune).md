@@ -187,7 +187,7 @@
   Ogni semaforo condiviso è rappresentato come:
   - un <ins>intero in memoria comune</ins>, protetto da un lock;
   - una <ins>coda locale per ogni nodo</ins>, contenente i descrittori dei processi locali sospesi nel semaforo;
-  - una <ins>coda globale di tutti i *rappresentanti* dei processi sospesi sul semaforo</ins> (il rappresentante di un processo identifica il nodo fisico su cui opera ed il descrittore contenuto nella memoria privata del nodo).
+  - una <ins>coda globale di tutti i *rappresentanti* dei processi sospesi sul semaforo</ins> (il rappresentante di un processo identifica il nodo fisico su cui opera ed il pid del processo).
   
   Una P sospensiva su un semaforo condiviso porta a inserire il rappresentante del processo chiamante nella coda globale ed il descrittore nella coda locale; una V, invece, estrae un processo dalla coda globale, ne comunica l'identità al nodo virtuale relativo (tramite interruzione, per garantire il rispetto della priorità), il quale risveglia il processo estraendo il descrittore dalla propria coda locale.
   
