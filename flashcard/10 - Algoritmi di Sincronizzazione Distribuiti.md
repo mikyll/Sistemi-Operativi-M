@@ -127,7 +127,7 @@ Ogni processo attivo risponde ad ogni messaggio ```ELEZIONE``` ricevuto.
   
 ##### Algoritmo ad Anello
 L'algoritmo di elezione ad *Anello* prevede che i processi siano collegati tramite una topologia logica ad anello orientato, in cui i processi sono posizionati in ordine in base al loro ID, che rappresenta anche la loro priorità. Quando un processo *Pk* rileva che il coordinatore non è più attivo (non risponde), organizza un'elezione:
-1. *Pk* invia un messaggio ```ELEZIONE``` contenente il suo ID al successore, bypassandolo, in caso sia in crash (si presuppone che un processo abbia gli strumenti per farlo);
+1. *Pk* invia un messaggio ```ELEZIONE``` contenente il suo ID al successore, bypassandolo in caso sia in crash (si presuppone che un processo abbia gli strumenti per farlo);
 2. quando un processo *Pi* riceve un messaggio ```ELEZIONE```:
 	- se il messaggio non contiene il suo ID (di *Pj*), aggiunge il suo ID al messaggio e lo spedisce al successivo;
 	- se il messaggio contiene il suo ID, significa che è stato compiuto un <ins>giro completo dell'anello</ins>, dunque *Pj* designa come coordinatore il processo avente l'ID più alto nel messaggio, e invia al successivo un messaggio ```COORDINATORE```, contenente l'ID del processo designato come nuovo coordinatore;
