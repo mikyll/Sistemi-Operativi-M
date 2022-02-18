@@ -45,7 +45,8 @@
   
   Assumiamo quindi che ad ogni evento *e* venga associato un timestamp *C(e)* e che tutti i processi concordino su questo, per cui vale la proprietà *: ```A → B ⟺ C(A) < C(B)```. Dunque, se all'interno di un processo *A* precede *B*, avremo che *C(A)* < *C(B)*; se *A* è l'evento di invio e *B* l'evento di ricezione dello stesso messaggio, allora *C(A)* < *C(B)*.
   
-  **Algoritmo di Lamport**: Per garantire il rispetto della proprietà *:
+  ##### Algoritmo di Lamport
+  Per garantire il rispetto della proprietà *:
   1. ogni processo *Pi* gestisce localmente un <int>contatore</int> *Ci* del tempo logico;
   2. ogni evento del processo fa incrementare il contatore di 1 (*Ci*++);
   3. ogni volta che il processo Pi invia un messaggio *m*, il contatore viene incrementato (*Ci*++) e successivamente al messaggio viene assegnato il timestamp *ts*(*m*)=*Ci*;
@@ -93,10 +94,10 @@
 - ```OK```, in caso di autorizzazione;
 - ```ATTESA```, in caso il processo opposto si trovi in stato di *HELD*.
 
-In questo modo, basterà impostare un timeout nel richiedente per rilevare la presenza di guasti nel destinatario.
+In questo modo, basterà impostare un <ins>timeout</ins> nel richiedente per rilevare la presenza di guasti nel destinatario.
   
   ##### Algoritmo Token-Ring
-  L'algoritmo *Token-Ring* è una soluzione *decentralizzata token-based* che prevede che i processi siano collegati tra di loro secondo una topologia ad anello orientato, in cui ciascun processo conosce i suoi vicini, e si scambiano un messaggio (token) nel verso relativo all'ordine dei processi. Il token rappresenta il permesso unico di eseguire sezioni critiche.<br/>
+  L'algoritmo *Token-Ring* è una soluzione *decentralizzata token-based* che prevede che i processi siano collegati tra di loro secondo una <ins>topologia ad anello orientato</ins>, in cui ciascun processo conosce i suoi vicini, e si scambiano un messaggio (token) nel verso relativo all'ordine dei processi. Il token rappresenta il permesso unico di eseguire sezioni critiche.<br/>
   Quando un processo riceve il token:
   1. se si trova in stato **WANTED**, allora <ins>trattiene il token</ins> ed esegue la propria sezione critica, dopodiché (una volta terminata l'operazione) passa il token al processo successivo;
   2. se si trova in stato **RELEASED**, <ins>passa direttamente il token</ins> al processo successivo nell'anello.
@@ -104,7 +105,7 @@ In questo modo, basterà impostare un timeout nel richiedente per rilevare la pr
   - **Vantaggi**: è <ins>molto scalabile</ins>;
   - **Svantaggi**: ha un <ins>costo di comunicazione variabile</ins> (il numero di messaggi per ogni sezione critica dipende dal numero dei nodi presenti, dunque è *potenzialmente infinito*); come per Ricart-Agrawala, <ins>non è tollerante ai guasti</ins> e presenta *N Points of Failure* e vi è la possibilità di perdere il token se il nodo che lo detiene va in crash.
   
-  **Soluzione al Problema dei Guasti**: come per Ricart-Agrawala, si può modificare il protocollo per prevedere che ad ogni invio del token, venga restituita una risposta e, in caso questa non arrivi entro un timeout, il nodo viene considerato guasto, escluso dall'anello e si passa il token al successivo.
+  **Soluzione al Problema dei Guasti**: come per Ricart-Agrawala, si può modificare il protocollo per prevedere che ad ogni invio del token, venga restituita una <ins>risposta</ins> e, in caso questa non arrivi entro un <ins>timeout</ins>, il nodo viene considerato guasto, escluso dall'anello e si passa il token al successivo.
 </details>
 
 ### 4. Algoritmi di Sincronizzazione Distribuiti: Elezione del Coordinatore
@@ -112,7 +113,25 @@ In questo modo, basterà impostare un timeout nel richiedente per rilevare la pr
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
+In alcuni algoritmi è previsto che un processo **coordinatore** rivesta un ruolo speciale nella sincronizzazione tra i vari nodi. La designazione del coordinatore può essere *statica*, se viene scelto prima dell'esecuzione, o *dinamica*, mediante un <ins>algoritmo di elezione</ins> a tempo di esecuzione. Quest'ultima permette, di cambiare coordinatore a runtime se quello attuale smette di rispondere (ad esempio a causa di un guasto).<br/>
+**Assunzioni di base**: ogni processo è identificato da un ID univoco; ogni processo conosce gli ID di tutti gli altri (ma non il loro stato).
+**Obbiettivo**: viene designato vincitore (nuovo coordinatore) il processo attivo con l'ID più alto.
+
+##### Algoritmo Bully
+L'algoritmo di elezione *Bully* prevede che quando un processo *Pk* (k = 1, ..., N) rileva che il coordinatore non è più attivo, organizzi un'elezione:
+1. *Pk* invia un messaggio ```ELEZIONE``` a tutti i processi con ID più alto del suo;
+2. se nessun processo risponde, *Pk* vince l'elezione e diventa il nuovo coordinatore, dunque comunica a tutti gli altri il nuovo ruolo inviando un messaggio ```COORDINATORE```;
+3. se un processo *Pj* (j > k) risponde, *Pj* prende il controllo dell'elezione, e *Pk* rinuncia, smettendo di rispondere ai successivi messaggi ```ELEZIONE```. 
+
+Ogni processo attivo risponde ad ogni messaggio ```ELEZIONE``` ricevuto.
   
+##### Algoritmo ad Anello
+L'algoritmo di elezione ad *Anello* prevede che i processi siano collegati tramite una topologia logica ad anello orientato, in cui i processi sono posizionati in ordine in base al loro ID, che rappresenta anche la loro priorità. Quando un processo *Pk* rileva che il coordinatore non è più attivo (non risponde), organizza un'elezione:
+1. *Pk* invia un messaggio ```ELEZIONE``` contenente il suo ID al successore, bypassandolo, in caso sia in crash (si presuppone che un processo abbia gli strumenti per farlo);
+2. quando un processo *Pi* riceve un messaggio ```ELEZIONE```:
+	- se il messaggio non contiene il suo ID (di *Pj*), aggiunge il suo ID al messaggio e lo spedisce al successivo;
+	- se il messaggio contiene il suo ID, significa che è stato compiuto un <ins>giro completo dell'anello</ins>, dunque *Pj* designa come coordinatore il processo avente l'ID più alto nel messaggio, e invia al successivo un messaggio ```COORDINATORE```, contenente l'ID del processo designato come nuovo coordinatore;
+3. quando un processo riceve un messaggio ```COORDINATORE```, notifica il risultato dell'elezione al successivo, che farà lo stesso con quello dopo, e così via.
 </details>
 
 ### 5. Spiegare degli Esempi forniti dalla Prof
@@ -199,25 +218,3 @@ In questo modo, basterà impostare un timeout nel richiedente per rilevare la pr
 	</tr>
   </table>
 </details>
-
-<!--
-### Come può risolversi il problema della mutua esclusione in un sistema distribuito (dopo aver parlato un po’ può chiedere di risolvere un esercizio descritto al momento)
-
-### algoritmi di sincronizzazione nei sistemi distribuiti: problema del tempo, come fare ad avere un unico riferimento temporale (orologio logico , algoritmo di Lamport)
-
-### Come può essere risolto il problema della mutua esclusione in un contesto distribuito?
-
-### sincronizzazione dei sistemi distribuiti in particolare come si risolve l’autoesclusione (soluzioni: centralizzata basata su processi, non centralizzata basata su processi, ?)
-
-### ESEMPIO: supponiamo di avere un gruppo di 5 nodi p1, p2, p3, p4, p5. p3 si trova in stato di held e p2 e p4 si trovano nello stato di release e gli altri nello stato di wanted). cosa succede? le richieste viaggiano a un tempo t, come reagiscono i processi che ricevono il segnale. 
-
-### quali sono i pro e i contro di uno decentralizzato e di uno centralizzato
-
-### sistemi distribuiti: Algoritmi di Elezione(bully)
-
-### Come può essere trattato il problema della mutua esclusione in un sistema distribuito (mutua esclusione distribuita, orologi logici, coordinamento attraverso un coordinatore eletto. approccio centralizzato, decentralizzato. permission based e token based. esempi centralizzato, Ricart Agrawala (con spiegazione di Lamport), Token ring)
-
-### Algoritmi di elezione cosa sono e descriverli (bully e ring) 
-
-### Mutua esclusione in un sistema distribuito (accesso contemporaneo a una risorsa da evitare, e utilizzare un sistema di tempo utilizzabile da tutti i nodi -> lamport. Alg permission based o token based, approccio centralizzato, ricart agrawala e token ring. esempio con un caso specifico richiesto da lei)
--->
