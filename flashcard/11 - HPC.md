@@ -23,7 +23,7 @@
   
   Il modello di Von Neumann descrive lo schema funzionale di un tradizionale sistema sequenziale. L'unica CPU è collegata alla memoria centrale da un mezzo di interconnessione (es: bus), e questa separazione costituisce una limitazione nella velocità di accesso a dati e istruzioni, che influisce sulla velocità di elaborazione del sistema.
   
-  **Von Neumann Bottleneck**: il bus che collega CPU e memoria centrale costituisce un collo di bottiglia. Infatti, questo limita la velocità di fetching di istruzioni e dati, che dipendono dalla velocità del bus, e limita conseguentemente la velocità di esecuzione.<br/>
+  **Von Neumann Bottleneck**: il <ins>bus che collega CPU e memoria centrale</ins> costituisce un collo di bottiglia. Infatti, questo limita la velocità di fetching di istruzioni e dati, che dipendono dalla velocità del bus, e limita conseguentemente la velocità di esecuzione.<br/>
   Per mitigare questo problema, è stato introdotto l'utilizzo di:
   - memorie *cache*;
   - *parallelismo di basso livello* (*ILP* e *HW multithreading*).
