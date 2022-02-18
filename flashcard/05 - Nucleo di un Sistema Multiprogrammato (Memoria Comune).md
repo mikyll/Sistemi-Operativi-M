@@ -156,6 +156,7 @@
   Soluzioni:
   - **Un solo lock**, ovvero viene associato al nucleo un lock per garantire la mutua esclusione delle funzioni del nucleo da parte di processi diversi. Tuttavia, in questo modo si <ins>limita il grado di parallelismo</ins>, escludendo a priori ogni possibilità di esecuzione contemporanea di funzioni del nucleo, che operano su strutture dati distinte (es: due semafori diversi).
   - **Lock multipli**, ovvero si individuano all'interno del nucleo diverse classi di sezioni critiche, ognuna associata ad una struttura dati separata e sufficientemente indipendente dalle altre (es: coda processi pronti, singoli semafori), e a ciascuna viene associato un lock distinto. In questo modo si <ins>incrementa il grado di parallelismo</ins>.
+
   Il modello SMP consente il <ins>load balancing</ins>, permettendo di schedulare equamente le varie richieste di processo su processori diversi. Tuttavia, in alcuni casi può essere vantaggioso assegnare un processo ad un determinato processore (usando la memoria privata del processore, in quanto se questa contiene già il codice del processo, il ripristino del contesto diventa più rapido), richiedendo però in questo caso una *coda dei processi pronti per nodo*, invece di una sola.
   
   ##### Modello a Nuclei Distinti
