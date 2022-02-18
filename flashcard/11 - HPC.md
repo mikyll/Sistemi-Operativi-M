@@ -71,7 +71,7 @@
   La **Legge di Gustafson** afferma che, assegnando ad ogni processore un workload costante ```(1 - r)```, lo speedup cresce linearmente con il numero dei processori, dunque lo speedup *S* è dato da: ```S = r + (1 - r) * p```.
 </details>
 
-### 4. Confrontare OpenMP e MPI
+### 4. Confrontare MPI ed OpenMP
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
