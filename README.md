@@ -2,6 +2,8 @@
 
 <p align="center">
   Appunti del corso Sistemi Operativi M (<a href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2021/468009">72947</a>), anno 2021-2022. A cura di <a href="https://github.com/mikyll">Michele Righi</a>, <a href="https://github.com/TryKatChup">Karina Chichifoi</a> e <a href="https://github.com/lnwor">Lorenzo Guerra</a>.
+	<br/>
+	<b>SPOILER: gli appunti sono incompleti, ma <ins>prove esame</ins> e <ins>flashcard</ins> sono utilissime.</b>
   <br/>
 	<br/>
 	<a href="https://github.com/mikyll/Sistemi-Operativi-M/tree/main/capitoli">Capitoli</a>
