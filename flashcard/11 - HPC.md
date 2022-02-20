@@ -36,8 +36,8 @@
   
   **HW Multithreading**: i processori moderni offrono parallelismo di alto livello (a livello di thread), mediante HW multithreading, che permette a più thread di condividere la stessa CPU usando una <ins>tecnica di sovrapposizione</ins> (duplicazione registri e context switch efficiente con supporto HW). Esistono 2 approcci:
   - **multithreading a grana fine** (fine-grained), secondo cui viene eseguito <ins>un context switch dopo ogni istruzione</ins>.
-	- *Vantaggio*: velocità thread bassa;
-	- *Svantaggio*: throughtput alto (ovvero si trasmettono più dati);
+	- *Svantaggio*: velocità thread bassa;
+	- *Vantaggio*: throughtput alto (ovvero si trasmettono più dati);
   - **multithreading a grana grossa** (coarse-grained), secondo cui <ins>il context switch avviene quando il thread corrente si trova in attesa</ins> (es: attesa del caricamento di informazioni dalla memoria centrale in seguito ad un cache miss).
 	- *Vantaggio*: velocità thread alta;
 	- *Svantaggio*: throughtput basso.
