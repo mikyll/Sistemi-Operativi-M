@@ -28,8 +28,8 @@ Esistono 3 possibili tipi di interazione fra processi:
 1. **Cooperazione**, comprende tutte le interazioni <ins>prevedibili e desiderate</ins>, che sono in qualche modo dettate dall'algoritmo (ovvero date dagli archi del grafo di precedenza ad ordinamento parziale). Si può esprimere in 2 modi, entrambi dei quali esprimono un *vincolo di precedenza*:
     - mediante <ins>segnali temporali</ins>, ovvero pura sincronizzazione;
     - mediante <ins>scambio di dati</ins>, ovvero con comunicazione.
-2. **Concorrenza**, consiste in un'interazione <ins>prevedibile ma non desiderata</ins>, in quanto non fa parte dell'algoritmo, ma è imposta dai limiti delle risorse a cui i processi devono accedere, ad esempio una risorsa che può essere acceduta solo in modo mutuamente esclusivo. In questo caso si prevede il concetto di *sezione critica*, ovvero la sequenza di istruzioni con cui un processo accede ad un oggetto condiviso mutuamente esclusivo. Ad una risorsa possono essere associate anche più di una sezione critica, di classi differenti.
-  3. **Interferenza**, consiste in un'interazione <ins>non prevedibile e non desiderata</ins> solitamente causata da *errori del programmatore* (es: deadlock).
+2. **Competizione**, consiste in un'interazione <ins>prevedibile ma non desiderata</ins>, in quanto non fa parte dell'algoritmo, ma è imposta dai limiti delle risorse a cui i processi devono accedere, ad esempio una risorsa che può essere acceduta solo in modo mutuamente esclusivo. In questo caso si prevede il concetto di *sezione critica*, ovvero la sequenza di istruzioni con cui un processo accede ad un oggetto condiviso mutuamente esclusivo. Ad una risorsa possono essere associate anche più di una sezione critica, di classi differenti.
+3. **Interferenza**, consiste in un'interazione <ins>non prevedibile e non desiderata</ins> solitamente causata da *errori del programmatore* (es: deadlock).
 </details>
 
 ### 3. Costrutti Linguistici per la Specifica della Concorrenza
