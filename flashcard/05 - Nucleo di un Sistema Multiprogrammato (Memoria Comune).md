@@ -144,7 +144,7 @@
   ```
 </details>
 
-### 4. Spiegare le Possibili Realizzazioni del Nucleo in Sistemi Multiprocessore ( SMP e Nuclei Distinti) e Confrontarle
+### 4. Spiegare le Possibili Realizzazioni del Nucleo in Sistemi Multiprocessore (SMP e Nuclei Distinti) e Confrontarle
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
@@ -157,16 +157,20 @@
   - **Un solo lock**, ovvero viene associato al nucleo un lock per garantire la mutua esclusione delle funzioni del nucleo da parte di processi diversi. Tuttavia, in questo modo si <ins>limita il grado di parallelismo</ins>, escludendo a priori ogni possibilità di esecuzione contemporanea di funzioni del nucleo, che operano su strutture dati distinte (es: due semafori diversi).
   - **Lock multipli**, ovvero si individuano all'interno del nucleo diverse classi di sezioni critiche, ognuna associata ad una struttura dati separata e sufficientemente indipendente dalle altre (es: coda processi pronti, singoli semafori), e a ciascuna viene associato un lock distinto. In questo modo si <ins>incrementa il grado di parallelismo</ins>.
 
-  Il modello SMP consente il <ins>load balancing</ins>, permettendo di schedulare equamente le varie richieste di processo su processori diversi. Tuttavia, in alcuni casi può essere vantaggioso assegnare un processo ad un determinato processore (usando la memoria privata del processore, in quanto se questa contiene già il codice del processo, il ripristino del contesto diventa più rapido), richiedendo però in questo caso una *coda dei processi pronti per nodo*, invece di una sola.
+  Il modello SMP consente il <ins>load balancing</ins>, permettendo di <ins>schedulare equamente i processi su processori diversi</ins>. Tuttavia, in alcuni casi può essere vantaggioso assegnare un processo ad un determinato processore (usando la memoria privata del processore, in quanto se questa contiene già il codice del processo, il ripristino del contesto diventa più rapido), richiedendo però in questo caso una *coda dei processi pronti per nodo*, invece di una sola.
   
   ##### Modello a Nuclei Distinti
-  Il modello a nuclei distinti prevede che vi siano più istanze del nucleo, raggruppate in una collezione, che eseguono in modo concorrente. Secondo questo modello, i processi che eseguono si possono dividere fra <ins>più nodi virtuali con poche interazioni reciproche</ins>. Ogni nodo virtuale è mappato su un nodo fisico (tutte le strutture del nucleo relative al nodo virtuale sono allocate nella memoria privata del nodo fisico) e tutte le interazioni locali ad un nodo virtuale possono essere eseguite indipendentemente e concorrentemente a quelle locali degli altri nodi. La memoria comune dell'architettura viene utilizzata solo per permettere a processi di nodi virtuali diversi di interagire.<br/>
-  Nel modello a kernel distinti <ins>un processo può eseguire solo sul nodo contenente il relativo descrittore</ins>, rendendo impossibile l'attuazione di politiche di load balancing.
+  Il modello a nuclei distinti prevede che vi siano più istanze del nucleo, raggruppate in una collezione, che eseguono in modo concorrente. Secondo questo modello, i processi che eseguono si possono dividere fra <ins>più nodi virtuali con poche interazioni reciproche</ins>. Ogni nodo virtuale è mappato su un nodo fisico (tutte le strutture del nucleo relative al *nodo virtuale* sono allocate nella memoria privata del nodo fisico) e tutte le interazioni locali ad un nodo virtuale possono essere eseguite indipendentemente e concorrentemente a quelle locali degli altri nodi. La memoria comune dell'architettura viene utilizzata solo per permettere a processi di nodi virtuali diversi di interagire.<br/>
+  Nel modello a kernel distinti <ins>un processo può essere schedulato solo sul nodo contenente il relativo descrittore</ins>, rendendo impossibile l'attuazione di politiche di load balancing.
   
   ##### Confronto SMP e Nuclei Distinti
-  **Grado di Parallelismo**: il modello a <ins>Nuclei Distinti</ins> è più vantaggioso, in quanto vi è un <ins>minor grado di accoppiamento tra le CPU, che garantisce maggiore scalabilità</ins>.
-  
-  **Gestione Ottimale delle Risorse Computazionali**: il modello <ins>SMP</ins> fornisce i presupposti per un migliore bilanciamento del carico tra le CPU (load balancing), poiché lo <ins>scheduler decide su quale CPU (fra tutte) allocare un processo</ins>. Al contrario, nel modello a Nuclei Distinti, ogni processo è vincolato ad essere schedulato sempre sullo stesso nodo.
+**SMP**:
+- *Vantaggi*: permette una <ins>gestione ottimale delle risorse computazionali</ins>, in quanto consente il bilanciamento del cariso fra le CPU dei vari nodi. Infatti, secondo questo modello lo scheduler può decidere su quale CPU (fra tutte) allocare un processo.
+- *Svantaggi*: il grado di parallelismo tra CPU è sfavorito.
+
+**Nuclei Distinti**:
+- *Vantaggi*: favorisce il <ins>grado di parallelismo tra CPU</ins>, in quanto il grado di accoppiamento tra questo è minore. Ciò rende questo modello <ins>più scalabile</ins>.
+- *Svantaggi*: vincola ogni processo ad essere schedulato sempre sullo stesso nodo, impedendo il bilanciamento di carico.
 </details>
 
 ### 5. Implementazione del Semaforo in Sistemi Multiprocessore + Implementazione del Semaforo, delle Relative Operazioni ed il Meccanismo di Segnalazione tra i Nuclei nel caso di Context Switch
