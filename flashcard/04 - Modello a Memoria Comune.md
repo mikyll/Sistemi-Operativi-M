@@ -98,7 +98,7 @@ Il semaforo viene associato ad una risorsa e, quando un processo vuole operare s
   
   **Problema del Rendez-Vous**: si considerino due processi *A* e *B* che devono eseguire rispettivamente *a1*, *a2* e *b1*, *b2*, con il vincolo che l'esecuzione di *a2* e *b2* richieda che siano state completate sia *a1* che *b1*.
   
-  **Soluzione**: per risolvere questo problema si possono introdurre due semafori evento (ovvero inizializzati a val = 0) S1 e S2. Il processo *A* esegue in sequenza ```a1; P(S1); V(S2); a2;```, mentre il processo B esegue in sequenza ```b1; P(S2); V(S1); b2;```. In questo modo il processo che termina per primo si blocca sulla P in attesa dell'altro processo, rispettando i vincoli di precedenza.
+  **Soluzione**: per risolvere questo problema si possono introdurre due semafori evento (ovvero inizializzati a val = 0) S1 e S2. Il processo *A* esegue in sequenza ```a1; V(S2); P(S1); a2;```, mentre il processo B esegue in sequenza ```b1; V(S1); P(S2); b2;```. In questo modo il processo che termina per primo si blocca sulla P in attesa dell'altro processo, rispettando i vincoli di precedenza.
   
   **Generalizzazione del Problema del Rendez-Vous**: se i processi sono N > 2, è necessaria una struttura più complessa, chiamata *barriera di sincronizzazione*.
   
