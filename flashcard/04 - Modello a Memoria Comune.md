@@ -138,7 +138,6 @@ Il semaforo viene associato ad una risorsa e, quando un processo vuole operare s
   - un semaforo evento <ins>barrier, inizializzato a 0</ins>;
   - un <ins>contatore done, inizializzato a 0</ins>, che rappresenta il numero di processi che hanno completato la prima operazione (*Pia*).
   
-  Ogni processo che termina l'operazione *Pia* richiede il mutex. Una volta ottenuto, incrementa done e, se `done == N` (ovvero tutti i processi hanno completato le rispettive operazioni *Pia*), chiama V(barrier). In seguito. compliche termina attende la V(barrier) eseguita dall'ultimo proecsso che ha completato la propria operazione, prima di chiamare le rispettive V(barrier)
   
   Implementazione in pseudo-C del processo i-esimo:
   ```C
@@ -164,29 +163,25 @@ Il semaforo viene associato ad una risorsa e, quando un processo vuole operare s
   
   Implementazione in pseudo-C, supponendo che le <ins>interruzioni</ins> siano <ins>disabilitate</ins> durante l'esecuzione di *P* e *V*, in modo da garantire l'atomicità:
   ```C
-  typedef struct {
+  typedef struct{
 	int c;
 	queue q;
   } semaphore;
   
-  void P(semaphore s)
-  {
-	if (s.c > 0)
-	{
-		s.c--;
-	} else {
-		// sospensione del processo corrente p, nella coda s.q
-	}
+  void P(semaphore s){
+    if (s.c > 0) {
+      s.c--;
+    } else {
+      // sospensione del processo corrente p, nella coda s.q
+    }
   }
-  void V(semaphore s)
-  {
-	if (!isEmpty(s.q))
-	{
-		// estrazione del primo processo p in attesa, dalla coda s.q
-		// risveglio del processo p
-	} else {
-		s.c++;
-	}
+  void V(semaphore s){
+    if (!isEmpty(s.q)){
+      // estrazione del primo processo p in attesa, dalla coda s.q
+      // risveglio del processo p
+    } else {
+      s.c++;
+    }
   }
   ```
   NB: l'implementazione di *P* e *V* è realizzata dal kernel della macchina concorrente e dipende dal tipo di architettura HW (monoprocessore, multiprocessore, ...) e da come il kernel rappresenta e gestisce i processi concorrenti.
