@@ -11,23 +11,23 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  Il nucleo (o kernel) è il modulo realizzato in SW, HW o FW che supporta il concetto di processo e realizza gli strumenti necessari per la loro gestione. È il livello più interno di qualunque sistema basato su processi ed è l'unico conscio dell'esistenza delle interruzioni (sono invisibili ai processi).<br/>
+  Il nucleo (o kernel) è il modulo realizzato in SW, HW o FW che supporta il concetto di processo e realizza gli strumenti necessari per la loro gestione e per la loro sincronizzazione. È il livello più interno di qualunque sistema basato su processi ed è l'unico conscio dell'esistenza delle interruzioni (sono invisibili ai processi).<br/>
   Caratteristiche fondamentali del nucleo:
-  - **efficienza**, in quanto condiziona l'intera struttura a processi;
+  - **efficienza**, in quanto condiziona l'intera struttura a processi (alcuni sistemi prevedono l'esecuzione di operazioni del nucleo su hardware o tramite microprogrammi);
   - **dimensioni ridotte**, in quanto le funzioni richieste al nucleo sono estremamente semplici;
-  - **separazione meccanismi e politiche**, il nucleo deve il più possibile contenere solo *meccanismi*, consente scegliere ed applicare diverse politiche di gestione a seconda del tipo di applicazione.
+  - **separazione meccanismi e politiche**, il nucleo deve il più possibile contenere solo *meccanismi*, consentendo ai processi (in base ai meccanismi offerti dal nucleo) di scegliere ed applicare diverse politiche di gestione a seconda del tipo di applicazione.
   
   Stati di un processo (in un sistema in cui il numero di processi è maggiore del numero delle unità di elaborazione):
-  - **esecuzione**, quando al processo è assegnata l'unità di elaborazione;
-  - **pronto**, quando al processo è revocata l'unità di elaborazione;
-  - **bloccato**, quando il processo non è attivo (P sospensiva).
+  - **esecuzione** (running), quando al processo è assegnata l'unità di elaborazione;
+  - **pronto** (ready), quando al processo è revocata l'unità di elaborazione;
+  - **bloccato** (waiting), quando il processo non è attivo (P sospensiva).
   Quando un processo perde il controllo del processore, il suo <ins>contesto</ins> (ovvero il *contenuto dei registri del processore*) viene salvato nel <ins>descrittore</ins> (un'*area di memoria associata al processo*).
   
   Le funzioni fondamentali del nucleo riguardano la gestione delle transizioni di stato dei processi, in particolare:
-  1. Gestire il <ins>salvataggio ed il ripristino dei contesti dei processi</ins>, ovvero trasferire le informazioni dai registri al descrittore, quando esso passa dallo stato di esecuzione allo stato di pronto o bloccato.
+  1. Gestire il <ins>salvataggio ed il ripristino dei contesti dei processi</ins>, ovvero trasferire le informazioni dai registri della CPU al descrittore, quando esso passa dallo stato di esecuzione allo stato di pronto o bloccato.
   2. Effettuare lo <ins>scheduling della CPU</ins>, ovvero scegliere a quale processo assegnare l'unità di elaborazione.
-  3. Gestire le <ins>interruzioni dei dispositivi</ins> esterni.
-  4. Realizzare i <ins>meccanismi di sincronizzazione</ins>.
+  3. Gestire le <ins>interruzioni dei dispositivi</ins> esterni, traducendo i processi coinvolti da bloccati a pronti.
+  4. Realizzare i <ins>meccanismi di sincronizzazione tra processi</ins>.
 </details>
 
 ### 2. Spiegare Cos'è il Context Switch e Quali Funzioni deve Implementare il Nucleo per Realizzarlo
@@ -42,40 +42,35 @@
   Il cambio di contesto permette di effettuare:
   - **Salvataggio_stato**, prevede il salvataggio del contesto del processo in esecuzione (informazioni contenute nei registri del processore) nel suo descrittore (area di memoria), e l'inserimento del descrittore nella coda dei processi bloccati o dei processi pronti.
   ```C
-  void Salvataggio_stato()
-  {
-	int j;
-	j = processo_in_esecuzione;
-	descrittori[j].contesto = <valori_registri_CPU>;
+  void Salvataggio_stato() {
+    int j;
+    j = processo_in_esecuzione;
+    descrittori[j].contesto = <valori_registri_CPU>;
   }
   ```
-  - **Assegnazione_CPU**, prevede la rimozione del processo a maggior priorità dalla coda dei processi pronti ed il caricamento dell'identificatore di tale processo nel registro contenente il processo in esecuzione.
+  - **Assegnazione_CPU**, prevede la rimozione del processo a maggior priorità dalla coda dei processi pronti e il caricamento dell'identificatore di tale processo nel registro contenente il processo in esecuzione.
   ```C
-  void Assegnazione_CPU() // scheduling: algoritmo con priorità
-  {
-	int k = 0, j;
-	while (coda_processi_pronti[k].primo == -1) // -1 se l'elemento è l'ultimo (o la coda è vuota)
-	{
-		k++;
+  void Assegnazione_CPU() {// scheduling: algoritmo con priorità
+    int k = 0, j;
+    while (coda_processi_pronti[k].primo == -1) { // -1 se l'elemento è l'ultimo (o la coda è vuota)
+		  k++;
 	}
-	j = Prelievo(coda_processi_pronti[k]);
-	processo_in_esecuzione = j;
+    j = Prelievo(coda_processi_pronti[k]);
+    processo_in_esecuzione = j;
   }
   ```
   - **Ripristino_stato**, prevede il caricamento del contesto del nuovo processo nei registri del processore.
   ```C
-  void Ripristino_stato()
-  {
-	int j;
-	j = processo_in_esecuzione;
-	<registro-temp> = descrittori[j].servizio.delta_t;
-	<registri-CPU> = descrittori[j].contesto;
+  void Ripristino_stato() {
+    int j;
+    j = processo_in_esecuzione;
+    <registro-temp> = descrittori[j].servizio.delta_t;
+    <registri-CPU> = descrittori[j].contesto;
   }
   ```
   Dunque il meccanismo di **cambio di contesto** si presenta come segue:
   ```C
-  void Cambio_di_Contesto()
-  {
+  void Cambio_di_Contesto() {
 	int j, k;
 	Salvataggio_stato();
 	j = processo_in_esecuzione;
@@ -104,11 +99,9 @@
   
   typedef int semaforo; // ID del semaforo nella lista 'semafori'
   
-  void P(semaforo s)
-  {
+  void P(semaforo s) {
 	int j, k;
-	if (semafori[s].contatore == 0)
-	{
+	if (semafori[s].contatore == 0) {
 		Salvataggio_stato();
 		j = processo_in_esecuzione;
 		k = descrittori[j].servizio.priorità;
@@ -119,20 +112,17 @@
 	else semafori[s].contatore--;
   }
   
-  void V(semaforo s)
-  {
+  void V(semaforo s) {
 	int j, k, p, q = 0; // j, k: processi; p, q: indici priorità
 	while (semafori[s].coda[q].primo == -1 && q < min_priorità)
 		q++;
-	if (semafori[s].coda[q].primo != -1)
-	{
+	if (semafori[s].coda[q].primo != -1) {
 		k = Prelievo(semafori[s].coda[q];
 		j = processo_in_esecuzione;
 		p = descrittori[j].servizio.priorità;
 		if (p < q) // il processo in esecuzione è prioritario
 			Inserimento(k, coda_processi_pronti[q]);
-		else // preemption
-		{
+		else { // preemption
 			Salvataggio_stato();
 			Inserimento(j, coda_processi_pronti[p]);
 			processo_in_esecuzione = k;
@@ -165,7 +155,7 @@
   
   ##### Confronto SMP e Nuclei Distinti
 **SMP**:
-- *Vantaggi*: permette una <ins>gestione ottimale delle risorse computazionali</ins>, in quanto consente il bilanciamento del cariso fra le CPU dei vari nodi. Infatti, secondo questo modello lo scheduler può decidere su quale CPU (fra tutte) allocare un processo.
+- *Vantaggi*: permette una <ins>gestione ottimale delle risorse computazionali</ins>, in quanto consente il bilanciamento del carico fra le CPU dei vari nodi. Infatti, secondo questo modello lo scheduler può decidere su quale CPU (fra tutte) allocare un processo.
 - *Svantaggi*: il grado di parallelismo tra CPU è sfavorito.
 
 **Nuclei Distinti**:
@@ -197,8 +187,7 @@
   
   Implementazione in pseudo-C:
   ```C
-  void P(semaphore s)
-  {
+  void P(semaphore s) {
 	if (is_private(s)) {
 		// P come nel caso monoprocessore
 	} else {
@@ -209,8 +198,7 @@
 	}
   }
   
-  void V(semaphore s)
-  {
+  void V(semaphore s) {
 	if (is_private(s)) {
 		// P come nel caso monoprocessore
 	} else {
