@@ -11,12 +11,31 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  Nel modello a memoria comune ogni interazione tra i processi avviene tramite oggetti contenuti in memoria comune. Ogni applicazione è vista come un insieme di componenti *attivi* (processi) e componenti *passivi* (risorse). I processi possono avere diritto di accesso sulle risorse, di cui necessitano per portare a termine il loro compito. Una risorsa può essere dedicata o condivisa, ed allocata staticamente o dinamicamente.
+  Nel modello a memoria comune ogni interazione tra i processi avviene tramite oggetti contenuti in memoria comune. Ogni applicazione è vista come un insieme di componenti *attivi* (processi) e componenti *passivi* (risorse). I processi possono avere diritto di accesso sulle risorse, di cui necessitano per portare a termine il loro compito. 
+
+  È presente un **gestore delle risorse** che definisce, per ogni istante t, l'insieme SR(t) dei processi che, all'instante t, hanno diritto di operare su R e i cui compiti sono:
+  - mantenere aggiornato l'insieme `SR(t)`, cioè lo stato di allocazione della risorsa;
+  - fornire i meccanismi che il processo può utilizzare per acquisire il permesso di operare sulla risorsa e di far parte dell'insieme `SR(t)`, per rilasciare tale diritto quando non è più necessario;
+  - implementare la strategia di allocazione di risorsa, ovvero stabilire quale processo, quando e per quanto tempo può utilizzare tale risorsa. 
+
+  Una risorsa può essere:
+  - **dedicata**: se la cardinalità `SR(t) ≤ 1` (uno o zero processi utilizzano quella risorsa all'istante `t`)
+  - **condivisa**: in caso contrario
+  - **allocata staticamente**: se `SR(t)` è una costante, quindi l'insieme dei processi che possono utilizzare tale risorsa rimane lo stesso per qualsiasi istante `t`.
+  - **allocata dinamicamente**: se `SR(t)` è in funzione del tempo. È necessario prevedere un gestore che implementa le funzioni di _richiesta_ e _rilascio_ di una determinata risorsa.
+
+  Il modello a memoria comune prevede che `R` sia allocata come **risorsa condivisa**, e deve garantire che l'accesso alla risorsa `R` avvenga in modo _non divisibile_. A tal scopo le funzioni di accesso alla risorsa devono essere programmate come una _classe di sezioni critiche_, utilizzando i meccanismi di sincronizzazione offerti dal linguaggio di programmazione e supportati dalla macchina concorrente.
+
+
+  **Regione Critica Condizionale**: formalismo che consente di *esprimere* qualunque vincolo di sincronizzazione. Si esprime come: 
   
-  **Regione Critica Condizionale**: formalismo che consente di *esprimere* qualunque vincolo di sincronizzazione. Si esprime come: ```region R << Sa; when(C) Sb; >>```, dove R è la risorsa condivisa, Sa ed Sb sono istruzioni, e C una condizione da verificare.<br/>
-  Il corpo (tra virgolette) rappresenta una sezione critica che dev'essere eseguita in mutua esclusione, e consiste in un'operazione su R. Una volta terminata Sa viene valutata la condizione C:
-  - se è *vera* si prosegue con Sb;
-  - se è *falsa* si <ins>attende</ins> che C diventi vera.
+  ```
+  region R << Sa; when(C) Sb; >>
+  ``` 
+  dove `R` è la risorsa condivisa, `Sa` ed `Sb` sono istruzioni, e `C` una condizione da verificare.<br/>
+  Il corpo (tra virgolette) consiste in un'operazione sulla risorsa `R` e rappresenta una sezione critica che deve essere eseguita in mutua esclusione con le altre operazioni definite su `R`. Una volta terminata `Sa` viene valutata la condizione `C`:
+  - se è *vera* si prosegue con `Sb`;
+  - se è *falsa* si <ins>attende</ins> che `C` diventi vera. Quando `C` diventa vera, allora si prosegue con `Sb`.
 </details>
 
 ### 2. Semaforo: Definizione e Proprietà
@@ -35,9 +54,20 @@ Il semaforo viene associato ad una risorsa e, quando un processo vuole operare s
   - se il valore del semaforo è positivo, il processo lo decrementa, esegue le sue operazioni, dopodiché chiama una V (up/rilascio);
   - altrimenti (se il valore del semaforo è 0), si mette in attesa finché un altro processo, che sta attualmente usando la risorsa gestita dal semaforo, non chiama una V, incrementandone il valore.
   
-  **Proprietà del Semaforo**: dato un semaforo ```S```, siano ```val``` il suo valore (intero non negativo), ```I``` il valore ≥0 a cui viene inizializzato, ```nv``` il numero di volte che l'operazione V(S) è stata eseguita, ```np``` il numero di volte che P(S) è stata eseguita.
+  **Proprietà del Semaforo**: dato un semaforo ```S```, siano ```val``` il suo valore (intero non negativo), ```I``` il valore `≥0` a cui viene inizializzato, ```nv``` il numero di volte che l'operazione V(S) è stata eseguita, ```np``` il numero di volte che P(S) è stata eseguita.
   
-  **Relazione di Invarianza**: ad ogni istante è possibile esprimere il valore del semaforo come ```val = I + nv - np```, da cui (poiché val ≥0) I + nv - np ≥ 0, dunque: ```I + nv ≥ np``` (Relazione di Invarianza).<br/>
+  **Relazione di Invarianza**: ad ogni istante è possibile esprimere il valore del semaforo come 
+  
+  ```val = I + nv - np``` 
+  
+  da cui (poiché val `≥0`) 
+  
+  ```I + nv - np ≥ 0``` 
+  
+  dunque: 
+  
+  ```I + nv ≥ np``` (Relazione di Invarianza).<br/>
+
   La relazione di invarianza è <ins>sempre soddisfatta</ins> per ogni semaforo.
 </details>
 
@@ -54,24 +84,24 @@ Il semaforo viene associato ad una risorsa e, quando un processo vuole operare s
   2. non devono verificarsi deadlock;
   3. un processo che non sta eseguendo una sezione critica non deve impedire agli altri di eseguire la stessa sezione critica (o sezioni della stessa classe).
   
-  ###### Dimostrazione di 1
+  #### Dimostrazione di 1
   La tesi di mutua esclusione equivale a dire che il <ins>numero di processi nella sezione critica</ins> Nsez è maggiore o uguale a 0, e minore o uguale a 1, ovvero ```Nsez ≥ 0 e 1 ≥ Nsez```.
   
   Dato che è necessaria una P per entrare nella sezione critica, ed una V per uscire, si ha che il numero dei processi nella sezione critica è dato dal numero di volte in cui è stata eseguita una P, meno il numero di volte in cui è stata eseguita una v, ovvero: ```Nsez = np - nv```.<br/>
-  Ma dalla Relazione di Invarianza sappiamo che (I = 1): 1 + nv ≥ np, dunque 1 ≥ np - nv, ovvero ```1 ≥ Nsez```.<br/>
-  Inoltre, poiché il protocollo impone che P(mutex) preceda V(mutex), sappiamo che in qualunque istante dell'esecuzione ```np ≥ nv```, dunque np - nv ≥ 0, ovvero ```Nsez ≥ 0```. □
+  Ma dalla Relazione di Invarianza sappiamo che (I = 1): ```1 + nv ≥ np```, dunque ```1 ≥ np - nv```, ovvero ```1 ≥ Nsez```.<br/>
+  Inoltre, poiché il protocollo impone che P(mutex) preceda V(mutex), sappiamo che in qualunque istante dell'esecuzione ```np ≥ nv```, dunque ```np - nv ≥ 0```, ovvero ```Nsez ≥ 0```. □
   
-  ###### Dimostrazione di 2
+  #### Dimostrazione di 2
   La tesi è l'assenza di deadlock, che dimostriamo per <ins>assurdo</ins>. Se ci fosse un deadlock:
   1. tutti i processi sarebbero in attesa su P(mutex), portando il contatore del semaforo a 0, dunque ```val = 0```;
   2. nessun processo sarebbe nella sezione critica, ovvero ```Nsez = np - nv = 0```.
   
-  Sapendo che val = I + nv - np, sostituendo otteniamo val = 1 - (np - nv), ovvero ```val = 1 - Nsez```, ma se val = 0 e Nsez = 0, otteniamo ```0 = 1 - 0```, che è impossibile (assurdo). □
+  Sapendo che `val = I + nv - np`, sostituendo otteniamo ```val = 1 - (np - nv)```, ovvero ```val = 1 - Nsez```, ma se `val = 0` e `Nsez = 0`, otteniamo ```0 = 1 - 0```, che è impossibile (assurdo). □
   
-  ###### Dimostrazione di 3
+  #### Dimostrazione di 3
   La tesi prevede che non ci siano processi in sezione critica, ovvero ```Nsez = 0```.
   
-  Sostituendo nella relazione di invarianza otteniamo che: ```val = 1 - 0 = 1```, ovvero <ins>P non è bloccante</ins> (in quanto la P si blocca solo se val = 0). □
+  Sostituendo nella relazione di invarianza otteniamo che: ```val = 1 - 0 = 1```, ovvero <ins>P non è bloccante</ins> (in quanto la P si blocca solo se `val = 0`). □
 </details>
 
 ### 4. Semaforo Evento + Dimostrazione
@@ -83,12 +113,12 @@ Il semaforo viene associato ad una risorsa e, quando un processo vuole operare s
   Dato un processo *p* che esegue un'operazione *a*, si vuole che *a* possa essere eseguita solo dopo che un altro processo *q* abbia eseguito un'operazione *b*.
   Il semaforo evento S è <ins>inizializzato a 0</ins> e segue il <ins>protocollo: prima di eseguire *a* il processo *p* esegue P(S); il processo *q* dopo aver eseguito *b* esegue V(S)</ins>.
   
-  **Ipotesi**: il semaforo è inizializzato a 0, ed i 2 processi seguono il protocollo definito ```p: P(S); a;  q: b; V(S);```.
+  **Ipotesi**: il semaforo è inizializzato a 0, e i 2 processi seguono il protocollo definito ```p: P(S); a;  q: b; V(S);```.
   **Tesi**: *a* viene eseguita sempre prima di *b*.
   
   ###### Dimostrazione
   Dimostriamo la tesi per assurdo. Supponiamo che sia possibile che *a* venga eseguita in un istante precedente a quello in cui viene eseguita *b*. In questo modo avremmo che è stata eseguita una V(S) ma non una P(S), ovvero ```nv = 1``` e ```np = 0```.<br/>
-  Ma per la relazione di invarianza, sappiamo che I + nv ≥ np, ovvero ```0 + 0 ≥ 1```, che è impossibile (assurdo). □
+  Ma per la relazione di invarianza, sappiamo che `I + nv ≥ np`, ovvero ```0 + 0 ≥ 1```, che è impossibile (assurdo). □
 </details>
 
 ### 5. Problema del Rendez-Vous + Barriera di Sincronizzazione
@@ -106,9 +136,8 @@ Il semaforo viene associato ad una risorsa e, quando un processo vuole operare s
   La barriera è composta da:
   - un semaforo binario <ins>mutex, inizializzato a 1</ins>;
   - un semaforo evento <ins>barrier, inizializzato a 0</ins>;
-  - un <ins>contatore done, inizializzato a 0</ins>, che rappresenta il numerod i processi che hanno completato la prima operazione (*Pia*).
+  - un <ins>contatore done, inizializzato a 0</ins>, che rappresenta il numero di processi che hanno completato la prima operazione (*Pia*).
   
-  Ogni processo che termina l'operazione *Pia* richiede il mutex. Una volta ottenuto, incrementa done e, se done == N (ovvero tutti i processi hanno completato le rispettive operazioni *Pia*), chiama V(barrier). In seguito compliche termina attende la V(barrier) eseguita dall'ultimo proecsso che ha completato la propria operazione, prima di chiamare le rispettive V(barrier
   
   Implementazione in pseudo-C del processo i-esimo:
   ```C
@@ -116,7 +145,7 @@ Il semaforo viene associato ad una risorsa e, quando un processo vuole operare s
   P(mutex);
   done++;
   if(done == N)
-	V(barrier);
+	  V(barrier);
   V(mutex);
   P(barrier);
   V(barrier);
@@ -134,29 +163,25 @@ Il semaforo viene associato ad una risorsa e, quando un processo vuole operare s
   
   Implementazione in pseudo-C, supponendo che le <ins>interruzioni</ins> siano <ins>disabilitate</ins> durante l'esecuzione di *P* e *V*, in modo da garantire l'atomicità:
   ```C
-  typedef struct {
+  typedef struct{
 	int c;
 	queue q;
   } semaphore;
   
-  void P(semaphore s)
-  {
-	if (s.c > 0)
-	{
-		s.c--;
-	} else {
-		// sospensione del processo corrente p, nella coda s.q
-	}
+  void P(semaphore s){
+    if (s.c > 0) {
+      s.c--;
+    } else {
+      // sospensione del processo corrente p, nella coda s.q
+    }
   }
-  void V(semaphore s)
-  {
-	if (!isEmpty(s.q))
-	{
-		// estrazione del primo processo p in attesa, dalla coda s.q
-		// risveglio del processo p
-	} else {
-		s.c++;
-	}
+  void V(semaphore s){
+    if (!isEmpty(s.q)){
+      // estrazione del primo processo p in attesa, dalla coda s.q
+      // risveglio del processo p
+    } else {
+      s.c++;
+    }
   }
   ```
   NB: l'implementazione di *P* e *V* è realizzata dal kernel della macchina concorrente e dipende dal tipo di architettura HW (monoprocessore, multiprocessore, ...) e da come il kernel rappresenta e gestisce i processi concorrenti.
