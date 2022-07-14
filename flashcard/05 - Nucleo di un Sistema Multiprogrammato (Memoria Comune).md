@@ -149,7 +149,7 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  Il SO che esegue in un'architettura multiprocessore deve gestire una molteplicità di CPU, ognuna delle quali può accedere alla stessa memoria condivisa. Vi sono 2 modelli: *SMP* ed a *Nuclei Distinti*.
+  Il SO che esegue in un'architettura multiprocessore deve gestire una molteplicità di CPU, ognuna delle quali può accedere alla stessa memoria condivisa. Vi sono 2 modelli: *SMP* e a *Nuclei Distinti*.
   
   ##### Modello SMP
   Nel modello SMP (Symmetric Multi Processing) vi è un'<ins>unica copia del nucleo</ins> del Sistema Operativo, allocata <ins>nella memoria comune</ins>, che si occupa di tutte le risorse disponibili, comprese le CPU. Ogni processo può essere allocato su una qualunque CPU. È possibile che processi che eseguono su CPU diverse richiedano contemporaneamente funzioni del nucleo, ovvero vi è *competizione tra CPU* nell'esecuzione del nucleo, dunque vi è <ins>necessità di sincronizzazione</ins>.

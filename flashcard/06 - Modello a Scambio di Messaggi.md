@@ -13,7 +13,7 @@
   
   Nel modello a scambio di messaggi:
   - ogni processo può accedere esclusivamente alle <ins>risorse allocate nella propria memoria locale/privata</ins>;
-  - ogni risorsa del sistema è accessibile direttamente ad un solo processo (<ins>gestore</ins>);
+  - ogni risorsa del sistema è accessibile direttamente da un solo processo (<ins>gestore</ins>);
   - se una risorsa è necessaria a più processi, ciascuno di questi (client) dovrà <ins>delegare l'unico processo in grado di operarvi</ins> (server/gestore), il quale restituirà successivamente i risultati;
   - il meccanismo di base per qualunque tipo di interazione fra i processi è lo <ins>scambio di messaggi</ins>.
   
@@ -36,7 +36,7 @@
   Proprietà:
   - la <ins>carenza espressiva</ins> rende difficile la verifica dei programmi, in quanto la ricezione del messaggio può avvenire in un istante successivo all'invio e, di conseguenza, il messaggio ricevuto non contiene informazioni attribuibili allo stato attuale del mittente;
   - <ins>favorisce il grado di concorrenza/parallelismo</ins>, in quanto l'invio di un messaggio non costituisce un punto di sincronizzazione per mittente e destinatario;
-  - <ins>serve un buffer di capacità limitata</ins>, in quanto un buffer di dimensioni illimitate non è concretamente realizzabile e, per mantenere inalterata la semantica, bisogna sospendere il processo mittente se il buffer è pieno).
+  - <ins>serve un buffer di capacità limitata</ins>, in quanto un buffer di dimensioni illimitate non è concretamente realizzabile e, per mantenere inalterata la semantica, bisogna sospendere il processo mittente se il buffer è pieno.
   
   **Comunicazione Sincrona** (o rendez-vous semplice): <ins>il primo processo</ins> che esegue l'operazione di comunicazione (invio o ricezione) <ins>si sospende</ins>, in attesa che l'altro sia pronto ad eseguire l'operazione corrispondente.<br/>
   Proprietà:
@@ -46,6 +46,7 @@
   
   **Comunicazione con Sincronizzazione Estesa** (o rendez-vous esteso): è semanticamente analogo alla chiamata di procedura remota (<ins>RPC</ins>), in quanto ogni messaggio inviato rappresenta una richiesta al destinatario dell'esecuzione di una certa azione. Il mittente rimane in attesa dopo l'invio della richiesta e si sblocca quando riceve la risposta (con gli eventuali risultati).<br/>
   Proprietà:
+  - <ins>sfrutta il modello client/server</ins>;
   - <ins>elevata espressività</ins> (verificabilità dei programmi);
   - <ins>riduzione del grado di parallelismo</ins>.
 </details>
@@ -55,7 +56,7 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  La **Send** è una primitiva di comunicazione che esprime l'invio di un messaggio ad un canale identificato univocamente. Può essere <ins>asincrona</ins> (canale bufferizzato) o <ins>sincrona</ins> (buffer di capacità nulla), nel qual caso il processo attende che il ricevente esegua la receive prima di proseguire la propria esecuzione.
+  La **Send** è una primitiva di comunicazione che esprime l'invio di un messaggio ad un canale identificato univocamente. Può essere <ins>asincrona</ins> (canale bufferizzato) o <ins>sincrona</ins> (buffer di capacità nulla), ovvero il processo attende che il ricevente esegua la receive prima di proseguire la propria esecuzione.
   
   La **Receive** è una primitiva di comunicazione che esprime la lettura di un messaggio da un canale identificato univocamente, salvandone il contenuto in una variabile. È <ins>bloccante</ins> (sospende il processo che la esegue) se sul canale non ci sono messaggi da leggere.
   
@@ -70,7 +71,9 @@
   <summary><b>Visualizza risposta</b></summary>
   
   Supponiamo di avere un processo server che fornisce diversi servizi, ognuno dei quali viene attivato in seguito alla ricezione di un messaggio su un canale diverso, da parte di un processo client.
+
   **Problema**: poiché ci sono più canali, il server deve ciclicamente eseguire una receive su ciascun canale, per verificare lo stato delle richieste. Tuttavia, poiché la receive ha semantica bloccante, il <ins>server potrebbe bloccarsi</ins> leggendo da un canale, <ins>mentre sono presenti messaggi in attesa di essere letti su altri canali</ins>.
+  
   **Soluzione**: si potrebbe realizzare una <ins>receive con semantica non bloccante</ins>. Il server, prima di eseguire la receive da un canale, ne controlla lo stato:
   - se sono presenti messaggi, ne legge uno;
   - altrimenti, se nel canale non sono presenti messaggi, passa al successivo.
@@ -93,7 +96,7 @@
   
   Il comando con guardia permette di realizzare un meccanismo di ricezione ideale.<br/>
   Sintassi: ```<guardia> -> <istruzione>;```<br/>
-  dove ```<guardia>``` è costituita dalla coppia ```(<espressione_booleana>, <receive>)```.<br/>
+  dove ```<guardia>``` è costituita dalla coppia ```(<espressione_booleana> ; <receive>)```.<br/>
   L'espressione boooleana viene detta **guardia logica**, mentre l'operazione di receive viene detta **guardia d'ingresso** ed ha semantica <ins>bloccante</ins>.
   
   La valutazione di una guardia può fornire 3 diversi valori:
@@ -106,12 +109,35 @@
   2. in caso di *guardia ritardata*, il processo si sospende finché non arriva un messaggio sul canale, dopodiché verrà eseguita la receive e successivamente l'istruzione;
   3. in caso di *guardia valida*, il processo esegue la receive e successivamente l'istruzione.
   
-  **Comando con Guardia Alternativo** (select): racchiude un numero arbitrario di comandi con guardia semplici. Esso valuta le guardie di tutti i rami e si possono verificare 3 casi:
+  **Comando con Guardia Alternativo** (`select`): racchiude un numero arbitrario di comandi con guardia semplici. Esso valuta le guardie di tutti i rami e si possono verificare 3 casi:
   1. se *tutte le guardie sono fallite*, il comando termina;
   2. se *tutte le guardie non fallite sono ritardate*, il processo in esecuzione si sospende in attesa che arrivi un messaggio, dopodiché verrà eseguita la receive relativa e successivamente l'istruzione;
-  3. se *una o più guardie sono valide*, viene scelto in modo non deterministo uno dei rami con guardia valida, di cui viene eseguita la relativa receive e successivamente l'istruzione.
+  3. se *una o più guardie sono valide*: 
+     - viene scelto in modo <ins>non deterministico</ins> uno dei rami con guardia valida;
+     - viene eseguita la relativa receive;
+     - viene eseguita successivamente l'istruzione;
+     - l'esecuzione dell'intero comando alternativo termina.
   
   NB: la scelta del ramo fra quelli con guardia valida è non deterministica per non imporre una politica preferenziale tra i vari casi.
+
+  Sintassi del comando con guardia alternativo:
+  ```C
+  select {
+    [ ] <guardia_1> -> <istruzione_1>;
+    [ ] <guardia_2> -> <istruzione_2>;
+    ...
+    [ ] <guardia_n> -> <istruzione_n>;
+  }  
+  ```
   
   **Comando con Guardia Ripetitivo**: ha un comportamento analogo al caso "alternativo", ma il ciclo ricomincia tutte le volte che viene eseguita un'istruzione, terminando solo se tutte le guardie sono fallite.
+  
+  Sintassi del comando con guardia ripetitivo:
+  ```C
+  do {
+    [ ] <guardia_1> -> <istruzione_1>;
+    ...
+    [ ] <guardia_n> -> <istruzione_n>;
+  }
+  ```
 </details>
