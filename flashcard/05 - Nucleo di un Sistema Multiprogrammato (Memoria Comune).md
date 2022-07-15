@@ -159,7 +159,7 @@
 - *Svantaggi*: il grado di parallelismo tra CPU è sfavorito.
 
 **Nuclei Distinti**:
-- *Vantaggi*: favorisce il <ins>grado di parallelismo tra CPU</ins>, in quanto il grado di accoppiamento tra questo è minore. Ciò rende questo modello <ins>più scalabile</ins>.
+- *Vantaggi*: favorisce il <ins>grado di parallelismo tra CPU</ins>, in quanto il grado di accoppiamento tra queste è minore. Ciò rende questo modello <ins>più scalabile</ins>.
 - *Svantaggi*: vincola ogni processo ad essere schedulato sempre sullo stesso nodo, impedendo il bilanciamento di carico.
 </details>
 
@@ -171,7 +171,7 @@
   
   ##### Modello SMP
   In SMP i semafori sono realizzati proteggendo gli accessi ai contatori e alla coda dei processi pronti mediante lock. Se si usa un lock per ogni risorsa, due operazioni <ins>P su semafori diversi possono operare contemporaneamente solo se non sono sospensive</ins>, in quanto i semafori hanno *lock diversi*, ma la *coda dei processi pronti* è una risorsa *condivisa*, altrimenti devono operare in sequenza.<br/>
-  Esempio: se vi è scheduling pre-emptive con priorità, una V può portare in esecuzione un processo con priorità superiore a quella di uno dei tanti in esecuzione (anche in altre CPU). Dunque, occorre che il nucleo revochi l'accesso alla CPU di uno di questi ultimi e lo assegni al processo più prioritario appena riattivato. È quindi necessario che il nucleo mantenga l'informazione del processo a più bassa priorità in esecuzione e su quale esso operi, rendendo inoltre necessario l'invio di interrupt HW alle varie CPU.
+  Esempio: se vi è scheduling pre-emptive con priorità, una V può portare in esecuzione un processo con priorità superiore a quella di uno dei tanti in esecuzione (anche in altre CPU). Dunque, occorre che il nucleo revochi l'accesso alla CPU di uno di questi ultimi e la assegni al processo più prioritario appena riattivato. È quindi necessario che il nucleo mantenga l'informazione del processo a più bassa priorità in esecuzione e su quale CPU esso operi, rendendo inoltre necessario l'invio di interrupt HW alle varie CPU.
   
   ##### Modello a Nuclei Distinti
   Nel modello a Nuclei Distinti, poiché solo le interazioni tra processi appartenenti a nodi virtuali diversi utilizzano la memoria comune, si distinguono i semafori tra:
@@ -181,7 +181,7 @@
   Ogni semaforo condiviso è rappresentato come:
   - un <ins>intero in memoria comune</ins>, protetto da un lock;
   - una <ins>coda locale per ogni nodo</ins>, contenente i descrittori dei processi locali sospesi nel semaforo;
-  - una <ins>coda globale di tutti i *rappresentanti* dei processi sospesi sul semaforo</ins> (il rappresentante di un processo identifica il nodo fisico su cui opera ed il pid del processo).
+  - una <ins>coda globale di tutti i *rappresentanti* dei processi sospesi sul semaforo</ins> (il rappresentante di un processo identifica il nodo fisico su cui opera e il pid del processo).
   
   Una P sospensiva su un semaforo condiviso porta a inserire il rappresentante del processo chiamante nella coda globale ed il descrittore nella coda locale; una V, invece, estrae un processo dalla coda globale, ne comunica l'identità al nodo virtuale relativo (tramite interruzione, per garantire il rispetto della priorità), il quale risveglia il processo estraendo il descrittore dalla propria coda locale.
   

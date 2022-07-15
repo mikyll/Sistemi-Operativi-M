@@ -10,12 +10,24 @@
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
+
+  Il Virtual Machine Monitor (VMM, o Hypervisor) consente di la condivisione da parte di più macchine virtuali della stessa piattaforma hardware. Gestisce le interazioni tra le macchine virtuali e l’hardware sottostante, in modo da garantire:
+
+  - isolamento tra le macchine virtuali;
+  - stabilità del sistema.
   
-  Generalmente, il VMM deve offrire alle diverse VM le risorse (virtuali) necessarie al loro funzionamento: CPU, memoria, dispositivi I/O.
-  I principali *requisiti* realizzativi del VMM possono essere riassunti in 3 punti fondamentali:
-  1. **Ambiente di esecuzione identico** a quello della macchina reale. Gli stessi programmi che eseguono sulla macchina reale (non virtualizzata) possono eseguire anche sulla macchina virtualizzata.
-  2. **Elevata efficienza** nell'esecuzione dei programmi. Quando possibile il VMM deve permettere alle VM guest l'esecuzione diretta delle istruzioni non privilegiate.
-  3. **Stabilità e sicurezza** dell'intero sistema. Il VMM deve rimanere sempre nel pieno controllo delle risorse HW e le VM guest non possono eseguire le istruzioni privilegiate.
+  Il VMM deve quindi offrire le risorse virtuali necessarie per il funzionamento delle macchine virtuali, tra cui:
+  - CPU
+  - memoria (RAM)
+  - dispositivi di I/O.
+  
+  A tal scopo sono necessari diversi requisiti per la realizzazione del VMM.
+  
+  1. Ambiente di esecuzione dei programmi praticamente identico a quello della macchina reale: garantire che gli stessi programmi che funzionano su architetture non virtualizzate possano essere eseguiti nelle VM senza modifiche.
+  
+  2. Garantire una elevata efficienza nell’esecuzione dei programmi: le istruzioni non privilegiate devono venire eseguite direttamente in hardware senza coinvolgere il VMM.
+  
+  3. Garantire la sicurezza e la stabilità dell’intero sistema: i programmi in esecuzione sulle macchine virtuali non possono effettuare l’accesso in modo privilegiato all’hardware.
 </details>
 
 ### 2. Compiti di un VMM
@@ -23,7 +35,7 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
   
-  Il VMM è l'unico mediatore tra HW e SW, e ha il compito di consentire la condivisione di una singola macchina HW a più VM guest, realizzando per ciascuna una sandbox al fine di garantire isolamento e stabilità (del sistema e delle singole VM). Nel caso di un VMM di sistema dev'essere l'unico componente ad avere il pieno controllo dell'HW e a poter eseguire le istruzioni privilegiate (unico componente ad eseguire a ring 0).
+  Il VMM è l'unico mediatore tra HW e SW, e ha il compito di consentire la condivisione di una singola macchina HW a più VM guest, realizzando per ciascuna una sandbox al fine di garantire isolamento e stabilità (del sistema e delle singole VM). Nel caso di un VMM di sistema dev'essere l'unico componente ad avere il pieno controllo dell'HW e a poter eseguire le istruzioni privilegiate (unico componente ad eseguire al ring 0).
   Ha il compito di gestione delle VM: creazione, spegnimento/accensione, eliminazione, migrazione live.
 </details>
 
@@ -41,7 +53,40 @@ I diversi tipi di VMM si classificano in base a due parametri:
     - **Paravirtualizzazione** - il VMM presenta alle VM guest un'interfaccia "virtuale", differente da quella fornita dall'HW (<ins>hypercall API</ins>). È una delle possibili soluzioni software che vengono adottate quando l'HW non fornisce supporto nativo alla virtualizzazione. È il caso di XEN.
 </details>
 
-### 4. Problemi nella Realizzazione del VMM e Come Risolverli
+
+### 4. Effettuare un confronto tra virtualizzazione di sistema e ospitata, con schema.
+
+<details>
+  <summary><b>Visualizza risposta</b></summary>
+
+In base a dove è collocato il Virtual Machine Monitor si hanno due tipo di virtualizzazione:
+
+- VMM di sistema;
+- VMM ospitati.
+
+Nel caso di **VMM di sistema** le funzionalità di virtualizzazione vengono integrate in un sistema operativo leggero (il VMM), posto direttamente sopra l’hardware dell’elaboratore. Per garantire un corretto funzionamento del VMM, occorre disporre di tutti i driver necessari per pilotare le periferiche.
+Si hanno due macro componenti importanti:
+- **Host**: piattaforma di base sulla quale si realizzano le macchine virtuali. Include la macchina fisica e il VMM;
+- **Guest**: le macchine virtuali, che includono applicazioni e sistema operativo.
+Esempi di VMM di sistema sono kvm, xen, VMware svsphere e Microsoft HyperV.
+
+<p align="center">
+  <img src="./imgs/VMM-sistema.png">
+</p>
+
+Nel caso invece di **VMM ospitato**, si installa il VMM come un’applicazione sopra un sistema operativo esistente. Il VMM opera nello spazio utente e accede all'hardware tramite system call del sistema operativo su cui viene installato.
+<p align="center">
+  <img width="460" height="300" src="./imgs/VMM-ospitato.png">
+</p>
+
+I vantaggi sono i seguenti:
+- L’installazione del VMM è più semplice (dato è come un applicazione).
+- Si può fare riferimento al sistema operativo sottostante per la gestione delle periferiche e si possono utilizzare altri servizi del SO, come lo scheduling e la gestione dei dispositivi.
+Uno svantaggio risulta nelle performance, peggiori rispetto al VMM di sistema. Un esempio di prodotti con VMM ospitato sono VirtualBox, User Mode Linux e VMware Fusion/player.
+
+</details>
+
+### 5. Problemi nella Realizzazione del VMM e Come Risolverli
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
@@ -54,7 +99,7 @@ I diversi tipi di VMM si classificano in base a due parametri:
   3. Si possono verificare problemi dovuti al **ring aliasing**, quando alcune istruzioni non privilegiate permettono di accedere in lettura ad alcuni registri la cui gestione dovrebbe essere riservata al VMM, con *possibili inconsistenze*. Ad esempio il registro CS contiene il current privilege level (CPL) e un SO potrebbe leggere un valore diverso rispetto a quello in cui pensa di eseguire.
 </details>
 
-### 5. Supporto HW alla Virtualizzazione
+### 6. Supporto HW alla Virtualizzazione
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
@@ -62,21 +107,68 @@ I diversi tipi di VMM si classificano in base a due parametri:
   L'architettura di una CPU si dice **naturalmente virtualizzabile** se <ins>prevede l'invio di trap allo stato supervisor</ins> (ring 0) ogni volta che un livello di protezione differente tenta di eseguire istruzioni privilegiate. In questo caso la realizzazione del VMM è semplificata, in quanto l'approccio trap&emulate ha il support dell'HW, e vi è supporto all'esecuzione diretta (le istruzioni non privilegiate vengono eseguite direttamente dalle VM guest).
 </details>
 
-### 6. Realizzazione VMM in Architetture Non Virtualizzabili: FTB e Paravirtualizzazione, PRO e CONTRO
+### 7. Realizzazione VMM in Architetture Non Virtualizzabili: FTB e Paravirtualizzazione, PRO e CONTRO
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
-  
-Se l'architettura del processore non prevede supporto nativo alla virtualizzazione, è necessario ricorrere a <ins>soluzioni software</ins>. Tra queste, le principali sono:
-1. **Fast Binary Translation (FTB)**, si basa sulla compilazione dinamica. Il VMM legge dinamicamente (a runtime) blocchi di istruzioni chiamate dalle VM guest, e <ins>sostituisce le chiamate ad istruzioni privilegiate con chiamate al VMM</ins>, ottenendo lo stesso significato semantico. Come per la compilazione dinamica, vi è la possibilità di salvare in cache i blocchi tradotti, per riutilizzi futuri.
-    - *Vantaggi*: ogni VM guest usa la stessa interfaccia fornita dall'architettura fisica, dunque è una copia esatta della macchina reale (Virtualizzazione Pura: non è necessario il porting del Sistema Operativo).
+
+L’architettura della CPU si dice naturalmente virtualizzabile se prevede l’invio di trap allo stato supervisore per ogni istruzione privilegiata invocata da un livello di protezione diverso dal supervisore.
+
+Se l’architettura della CPU è naturalmente virtualizzabile la realizzazione del VMM è semplificata: per ogni trap generato dal tentativo di esecuzione di istruzione privilegiata dal guest viene eseguita una routine di emulazione (seguendo l’approccio trap&emulate). 
+
+È inoltre presente il supporto nativo all’esecuzione diretta (ad esempio Intel VT, AMD-V).
+Non tutte le architetture sono naturalmente virtualizzabili: alcune istruzioni privilegiate di questa architettura invocate a livello user non provocano una trap, ma:
+
+- vengono ignorate non consentendo l’intervento trasparente del VMM,
+- in alcuni casi provocano il crash del sistema.
+
+Se il processore non fornisce il supporto alla virtualizzazione, si utilizzano delle soluzioni software apposite, come fast binary translation e paravirtualizzazione.
+
+1. **Fast Binary Translation (FTB)**, si basa sulla compilazione dinamica. Il VMM legge dinamicamente (a runtime) blocchi di istruzioni chiamati dalle VM guest, e <ins>sostituisce le chiamate ad istruzioni privilegiate con chiamate al VMM</ins>, ottenendo lo stesso significato semantico. Come per la compilazione dinamica, vi è la possibilità di salvare in cache i blocchi tradotti, per riutilizzi futuri.
+    - *Vantaggi*: ogni VM guest usa la stessa interfaccia fornita dall'architettura fisica, dunque è una copia esatta della macchina reale (virtualizzazione pura: non è necessario il porting del Sistema Operativo).
     - *Svantaggi*: la traduzione dinamica è costosa, dunque le prestazioni ne risentono, e la struttura del VMM è più complessa, in quanto deve realizzare anche il layer relativo alla traduzione binaria.
-2. **Paravirtualizzazione**, il VMM offre alle VM guest un'interfaccia differente (<ins>hypercall API</ins>) rispetto a quella fornita dalla macchina fisica, per l'accesso alle risorse. I SO guest quando vogliono eseguire istruzioni privilegiate, eseguono direttamente le hypercall, senza generare interruzioni.
-    - *Vantaggi*: prestazioni migliori e VMM semplificato.
+  
+2. **Paravirtualizzazione**, il VMM offre alle VM guest un'interfaccia differente (<ins>hypercall API</ins>) rispetto a quella fornita dalla macchina fisica, per l'accesso alle risorse. I SO guest quando vogliono eseguire istruzioni privilegiate, eseguono direttamente le hypercall, senza generare interruzioni.I kernel dei sistemi operativi guest devono essere modificati in modo da avere accesso all’intefaccia del
+particolare VMM. Si ha una struttura del VMM semplificata, poiché non si deve occupare della traduzione dinamica dei tentativi di operazioni privilegiate dei guest.
+Un esempio di architettura che utilizza la paravirtualizzazione è Xen.
+    - *Vantaggi*: prestazioni migliori rispetto a fast binary translation e VMM semplificato.
     - *Svantaggi*: necessità di effettuare il porting dei SO guest (operazione preclusa a sistemi operativi proprietari, ad esempio famiglia Windows).
 </details>
 
-### 7. Migrazione di VM
+### 8. Illustrare i meccanismi di protezione introdotti nell’architettura x86
+
+<details>
+  <summary><b>Visualizza risposta</b></summary>
+
+La protezione viene introdotta a partire dalla seconda generazione dell’architettura x86: viene effettuata una distinzione tra sistema operativo (che possiede controllo assoluto sulla macchina fisica sottostante) e le applicazioni (che interagiscono con le risorse fisiche effettuando una richiesta al sistema operativo e implementando il concetto di ring di protezione.
+
+Viene utilizzato il registro **CS**, i cui due bit meno significativi vengono riservati per rappresentare il livello corrente di privilegio (**CPL**, Current Privilege Level). Sono possibili 4 ring, di cui:
+
+- **Ring 0**: possiede i maggiori privilegi ed è destinato al kernel del sistema operativo.
+- **Ring 3**: possiede i minori privilegi ed è quindi destinato alle applicazioni utente.
+
+Normalmente si utilizzano comunemente soltanti il ring 0 e il ring 3, mentre gli altri due sono utilizzati in rari casi (e.g. IBM OS2), per mantenere la massima portabilità dei sistemi operativi verso processori con solo 2 ring di protezione. Per garantire protezione della CPU non è permesso a ring diversi dallo 0 di eseguire le istruzioni privilegiate e normalmente destinate solo al kernel del sistema operativo, in quanto sono critiche e potenzialmente pericolose.
+
+Una qualsiasi violazione di questo comportamento può provocare un’eccezione, con immediato passaggio al sistema operativo, in grado di catturarla e gestirla opportunamente e terminando ad esempio l’applicazione in esecuzione.
+
+Per garantire protezione della memoria si guarda il descrittore di ciascun segmento, presente in una tabella GDT o LDT: in particolare, nel descrittore sono indicati il livello di protezione richiesto **PL** e i vari permessi di accesso (r, w, x).
+
+Se il valore di CPL è maggiore del valore del PL del segmento di codice che contiene l’istruzione invocata,
+allora si ha una violazione dei vincoli di protezione, che provoca un’eccezione.
+
+Per risolvere il problema del ring deprivileging viene dedicato il ring 0 al VMM e conseguentemente i sistemi operativi guest vengono collocati in ring a privilegi ridotti. Vengono comunemente utilizzate due tecniche:
+
+- `0/1/3`: Consiste nello spostare il sistema operativo dal ring 0, dove nativamente dovrebbe trovarsi, al ring
+1 a privilegio ridotto, lasciando le applicazioni nel ring 3 e installando il VMM sul ring 0. Questa tecnica
+non è però compatibile con sistemi operativi a 64 bit. 
+
+- `0/3/3`: Consiste nello spostare il sistema operativo
+direttamente al ring applicativo, e cioè il 3, insieme alle applicazioni stesse, installando sul ring 0, come nella
+tecnica precedente, il VMM (ring compression)
+
+</details>
+
+### 9. Migrazione di VM
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
@@ -95,7 +187,7 @@ Se l'architettura del processore non prevede supporto nativo alla virtualizzazio
   Alternative a pre-copy: post-copy (riduce tempo totale di migrazione e consumo di banda, ma ha downtime piuttosto elevato).
 </details>
 
-### 8. XEN: Architettura, Virtualizzazione Memoria (Paginazione, Memory Split, Balloon Process)
+### 10. XEN: Architettura, Virtualizzazione Memoria (Paginazione, Memory Split, Balloon Process)
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
@@ -110,7 +202,7 @@ Se l'architettura del processore non prevede supporto nativo alla virtualizzazio
   **Balloon Process**: Poiché la paginazione è completamente a carico delle VM guest, serve un meccanismo che <ins>consente al VMM di reclamare pagine di memoria meno utilizzate dalle altre VM</ins>. Per questo motivo, su ogni VM guest è sempre in esecuzione un balloon process che comunica col VMM e, in caso di necessità, può essere chiamato per *gonfiarsi* e richiedere al proprio SO delle pagine, fornendole successivamente al VMM.
 </details>
 
-### 9. XEN: Virtualizzazione CPU, Virtualizzazione Driver, Virtualizzazione delle Interruzioni, Migrazione
+### 11. XEN: Virtualizzazione CPU, Virtualizzazione Driver, Virtualizzazione delle Interruzioni, Migrazione
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
