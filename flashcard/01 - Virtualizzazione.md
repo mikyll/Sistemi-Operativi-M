@@ -111,13 +111,27 @@ Uno svantaggio risulta nelle performance, peggiori rispetto al VMM di sistema. U
 
 <details>
   <summary><b>Visualizza risposta</b></summary>
-  
-Se l'architettura del processore non prevede supporto nativo alla virtualizzazione, è necessario ricorrere a <ins>soluzioni software</ins>. Tra queste, le principali sono:
-1. **Fast Binary Translation (FTB)**, si basa sulla compilazione dinamica. Il VMM legge dinamicamente (a runtime) blocchi di istruzioni chiamate dalle VM guest, e <ins>sostituisce le chiamate ad istruzioni privilegiate con chiamate al VMM</ins>, ottenendo lo stesso significato semantico. Come per la compilazione dinamica, vi è la possibilità di salvare in cache i blocchi tradotti, per riutilizzi futuri.
-    - *Vantaggi*: ogni VM guest usa la stessa interfaccia fornita dall'architettura fisica, dunque è una copia esatta della macchina reale (Virtualizzazione Pura: non è necessario il porting del Sistema Operativo).
+
+L’architettura della CPU si dice naturalmente virtualizzabile se prevede l’invio di trap allo stato supervisore per ogni istruzione privilegiata invocata da un livello di protezione diverso dal supervisore.
+
+Se l’architettura della CPU è naturalmente virtualizzabile la realizzazione del VMM è semplificata: per ogni trap generato dal tentativo di esecuzione di istruzione privilegiata dal guest viene eseguita una routine di emulazione (seguendo l’approccio trap&emulate). 
+
+È inoltre presente il supporto nativo all’esecuzione diretta (ad esempio Intel VT, AMD-V).
+Non tutte le architetture sono naturalmente virtualizzabili: alcune istruzioni privilegiate di questa architettura invocate a livello user non provocano una trap, ma:
+
+- vengono ignorate non consentendo l’intervento trasparente del VMM,
+- in alcuni casi provocano il crash del sistema.
+
+Se il processore non fornisce il supporto alla virtualizzazione, si utilizzano delle soluzioni software apposite, come fast binary translation e paravirtualizzazione.
+
+1. **Fast Binary Translation (FTB)**, si basa sulla compilazione dinamica. Il VMM legge dinamicamente (a runtime) blocchi di istruzioni chiamati dalle VM guest, e <ins>sostituisce le chiamate ad istruzioni privilegiate con chiamate al VMM</ins>, ottenendo lo stesso significato semantico. Come per la compilazione dinamica, vi è la possibilità di salvare in cache i blocchi tradotti, per riutilizzi futuri.
+    - *Vantaggi*: ogni VM guest usa la stessa interfaccia fornita dall'architettura fisica, dunque è una copia esatta della macchina reale (virtualizzazione pura: non è necessario il porting del Sistema Operativo).
     - *Svantaggi*: la traduzione dinamica è costosa, dunque le prestazioni ne risentono, e la struttura del VMM è più complessa, in quanto deve realizzare anche il layer relativo alla traduzione binaria.
-2. **Paravirtualizzazione**, il VMM offre alle VM guest un'interfaccia differente (<ins>hypercall API</ins>) rispetto a quella fornita dalla macchina fisica, per l'accesso alle risorse. I SO guest quando vogliono eseguire istruzioni privilegiate, eseguono direttamente le hypercall, senza generare interruzioni.
-    - *Vantaggi*: prestazioni migliori e VMM semplificato.
+  
+2. **Paravirtualizzazione**, il VMM offre alle VM guest un'interfaccia differente (<ins>hypercall API</ins>) rispetto a quella fornita dalla macchina fisica, per l'accesso alle risorse. I SO guest quando vogliono eseguire istruzioni privilegiate, eseguono direttamente le hypercall, senza generare interruzioni.I kernel dei sistemi operativi guest devono essere modificati in modo da avere accesso all’intefaccia del
+particolare VMM. Si ha una struttura del VMM semplificata, poiché non si deve occupare della traduzione dinamica dei tentativi di operazioni privilegiate dei guest.
+Un esempio di architettura che utilizza la paravirtualizzazione è Xen.
+    - *Vantaggi*: prestazioni migliori rispetto a fast binary translation e VMM semplificato.
     - *Svantaggi*: necessità di effettuare il porting dei SO guest (operazione preclusa a sistemi operativi proprietari, ad esempio famiglia Windows).
 </details>
 
