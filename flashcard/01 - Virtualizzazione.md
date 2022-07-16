@@ -11,7 +11,7 @@
 <details>
   <summary><b>Visualizza risposta</b></summary>
 
-  Il Virtual Machine Monitor (VMM, o Hypervisor) consente di la condivisione da parte di più macchine virtuali della stessa piattaforma hardware. Gestisce le interazioni tra le macchine virtuali e l’hardware sottostante, in modo da garantire:
+  Il Virtual Machine Monitor (VMM, o Hypervisor) consente la condivisione da parte di più macchine virtuali della stessa piattaforma hardware. Gestisce le interazioni tra le macchine virtuali e l’hardware sottostante, in modo da garantire:
 
   - isolamento tra le macchine virtuali;
   - stabilità del sistema.
@@ -80,7 +80,7 @@ Nel caso invece di **VMM ospitato**, si installa il VMM come un’applicazione s
 </p>
 
 I vantaggi sono i seguenti:
-- L’installazione del VMM è più semplice (dato è come un applicazione).
+- L’installazione del VMM è più semplice (dato è come un'applicazione).
 - Si può fare riferimento al sistema operativo sottostante per la gestione delle periferiche e si possono utilizzare altri servizi del SO, come lo scheduling e la gestione dei dispositivi.
 Uno svantaggio risulta nelle performance, peggiori rispetto al VMM di sistema. Un esempio di prodotti con VMM ospitato sono VirtualBox, User Mode Linux e VMware Fusion/player.
 
@@ -175,7 +175,7 @@ tecnica precedente, il VMM (ring compression)
   
   Specialmente nei datacenter che forniscono server virtualizzati, la migrazione è utile per una gestione agile delle VM. In particolare è utile per far fronte a: variazioni dinamiche del carico (dunque è possibile effettuare load balancing), manutenzione online dei nodi, gestione finalizzata al risparmio energetico, disaster recovery.
   La migrazione Live permette di spostare una VM da un nodo fisico ad un altro senza doverla spegnere, permettendo di mantenere attivi i servizi da essa forniti. Solitamente si cerca di minimizzare downtime (tempo in cui la macchina non risponde alle richieste degli utenti), tempo totale di migrazione e consumo di banda.
-  Migrazione Live tramite Precopy: ha l'obbiettivo di minimizzare il downtime .
+  Migrazione Live tramite Precopy: ha l'obbiettivo di minimizzare il downtime.
   1. *Individuazione* dei nodi coinvolti nella migrazione (sorgente e destinazione);
   2. Allocazione ed *inizializzazione* di una VM container sul nodo di destinazione;
   3. **Pre-copia iterativa** delle pagine:
