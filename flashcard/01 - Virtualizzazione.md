@@ -80,7 +80,7 @@ Nel caso invece di **VMM ospitato**, si installa il VMM come un’applicazione s
 </p>
 
 I vantaggi sono i seguenti:
-- L’installazione del VMM è più semplice (dato è come un'applicazione).
+- L’installazione del VMM è più semplice (dato che è come un'applicazione).
 - Si può fare riferimento al sistema operativo sottostante per la gestione delle periferiche e si possono utilizzare altri servizi del SO, come lo scheduling e la gestione dei dispositivi.
 Uno svantaggio risulta nelle performance, peggiori rispetto al VMM di sistema. Un esempio di prodotti con VMM ospitato sono VirtualBox, User Mode Linux e VMware Fusion/player.
 
