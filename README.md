@@ -216,7 +216,8 @@
 </details>
 
 <!-- Lezione 2021/09/21-->
-## 01 - Virtualizzazione [![Vai al Capitolo Singolo](gfx/file-moved_dark.svg)](capitoli/01%20-%20Virtualizzazione.md "Vai al Capitolo Singolo")
+<h2>01 - Virtualizzazione <a href="capitoli/01%20-%20Virtualizzazione.md#gh-light-mode-only"><img title="Vai al Capitolo Singolo" src="gfx/file-moved_dark.svg#gh-light-mode-only"></a><a href="capitoli/01%20-%20Virtualizzazione.md#gh-dark-mode-only"><img title="Vai al Capitolo Singolo" src="gfx/file-moved_light.svg#gh-dark-mode-only"></a></h2>
+
 La virtualizzazione è una tecnologia oggi usatissima. Virtualizzare un sistema di elaborazione (costituito da un insieme di risorse hardware e software) significa presentare all'utilizzatore una visione delle risorse diversa da quella attuale (ad esempio duplicazione della memoria). Questo obbiettivo viene raggiunto mediante un livello intermedio, un layer che svolge appunto il ruolo di intermediario tra utilizzatore (vista logica) e sistema (vista fisica). Solitamente l'intermediario è software, ma talvolta può avere un supporto hardware specifico. Esso permette di eseguire più macchine virtuali su una stessa architettura e ognuna di queste vede le proprie risorse, indipendentemente dalle altre, e da quelle effettive ("reali").\
 Poiché le Macchine Virtuali (VM) devono funzionare in modo indipendente senza causare problemi al sistema, la gestione delle risorse dev'essere realizzata in modo appropriato: questo compito è affidato al Virtual Machine Monitor (VMM, detto anche Hypervisor), cha ha compiti molto simili a quelli di un Sistema Operativo (SO), motivo per cui viene trattato in questo corso).
 
@@ -476,8 +477,8 @@ La gestione delle interruzioni viene virtualizzata in modo molto semplice: ogni 
 #### Migrazione Live
 Il comando di migrazione viene eseguito da un demone di migrazione che si trova nel domain 0 del server di origine della macchina da migrare. La soluzione è basata sulla precopy e le pagine da migrare vengono compresse per ridurre l'occupazione di banda.
 
+<h2>02 - Protezione <a href="capitoli/02%20-%20Protezione.md#gh-light-mode-only"><img title="Vai al Capitolo Singolo" src="gfx/file-moved_dark.svg#gh-light-mode-only"></a><a href="capitoli/02%20-%20Protezione.md#gh-dark-mode-only"><img title="Vai al Capitolo Singolo" src="gfx/file-moved_light.svg#gh-dark-mode-only"></a></h2>
 
-## 02 - Protezione [![Vai al Capitolo Singolo](gfx/file-moved_dark.svg)](capitoli/02%20-%20Protezione.md "Vai al Capitolo Singolo")
 **Sicurezza**: riguarda l'insieme delle *tecniche per regolamentare l'accesso* degli utenti al sistema di elaborazione. La sicurezza impedisce accessi non autorizzati al sistema e i conseguenti tentativi dolosi di alterazione e distruzione dei dati. La sicurezza riguarda l'interfaccia del sistema verso il mondo esterno. Le tecnologie di sicurezza di un sistema informatico realizzano meccanismi per l'identificazione, l'autenticazione e l'autorizzazione di utenti "fidati".\
 **Protezione**: *insieme di attività volte a garantire il controllo dell'accesso* alle risorse logiche e fisiche da parte degli utenti autorizzati all'uso di un sistema di calcolo. Rispetto alla sicurezza ha un campo d'azione più interno al sistema. Per rendere un sistema "sicuro" è necessario stabilire per ogni utente autorizzato quali siano le risorse a cui può accedere e con quali operazioni può farlo. Ciò viene stabilito dal sistema di protezione tramite le tecniche di controllo degli accessi.
 
@@ -764,7 +765,8 @@ verifica da parte del RM.
 
 
 <!-- lezione 2021/10/05 -->
-## 03 - Programmazione Concorrente [![Vai al Capitolo Singolo](gfx/file-moved_dark.svg)](capitoli/03%20-%20Programmazione%20Concorrente.md "Vai al Capitolo Singolo")
+<h2>03 - Programmazione Concorrente <a href="capitoli/03%20-%20Programmazione%20Concorrente.md#gh-light-mode-only"><img title="Vai al Capitolo Singolo" src="gfx/file-moved_dark.svg#gh-light-mode-only"></a><a href="capitoli/03%20-%20Programmazione%20Concorrente.md#gh-dark-mode-only"><img title="Vai al Capitolo Singolo" src="gfx/file-moved_light.svg#gh-dark-mode-only"></a></h2>
+
 La *programmazione concorrente* è l'insieme delle tecniche, metodologie e strumenti per il support all'esecuzione di sistemi software composti da *insiemi di attività svolte simultaneamente*.
 
 ### Cenni Storici
@@ -1055,5 +1057,4 @@ L'interazione tra processi può avvenire sostanzialmente secondo due modelli:
 - modello a *memoria comune* (ambiente globale, memoria condivisa). In questo caso, la macchina astratta aderisce al modello multiprocessore, cioé offre ai programmi (che sono gli utilizzatori di tale macchina) un "modello" basato su un insieme di unità virtuali di elaborazione, ciascuna per l'esecuzione di un diverso processo, che condividono la stessa memoria. I processi possono vedere e accedere alle stesse aree di memoria.
 - modello a *scambio di messaggi* (ambiente locale, memoria distribuita). In questo caso, i processori non condivisono memoria gli uni con gli altri, ma ognuno fa riferimento alla propria "memoria privata".
 
-## 04 - Modello a Memoria Comune [![Vai al Capitolo Singolo](gfx/file-moved_dark.svg)](capitoli/04%20-%20Modello%20a%20Memoria%20Comune.md "Vai al Capitolo Singolo")
-
+<h2>04 - Modello a Memoria Comune <a href="capitoli/04%20-%20Modello%20a%20Memoria%20Comune.md#gh-light-mode-only"><img title="Vai al Capitolo Singolo" src="gfx/file-moved_dark.svg#gh-light-mode-only"></a><a href="capitoli/04%20-%20Modello%20a%20Memoria%20Comune.md#gh-dark-mode-only"><img title="Vai al Capitolo Singolo" src="gfx/file-moved_light.svg#gh-dark-mode-only"></a></h2>
