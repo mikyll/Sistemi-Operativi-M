@@ -6,13 +6,11 @@
 	<b>SPOILER: gli appunti sono incompleti, ma <ins>prove esame</ins> e <ins>flashcard</ins> sono molto utili.</b>
   <br/>
 	<br/>
-	<a href="https://github.com/mikyll/Sistemi-Operativi-M/tree/main/capitoli">Capitoli</a>
+	<a href="capitoli">Capitoli</a>
 	·
-	<a href="https://github.com/mikyll/Sistemi-Operativi-M/tree/main/prove esame">Prove Esame</a>
+	<a href="prove esame">Prove Esame</a>
 	·
-	<a href="https://github.com/mikyll/Sistemi-Operativi-M/tree/main/flashcard">Flashcards</a>
-	·
-	<a href="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/prove esame/2014-07-14%20-%20Airbolo/sol2_airbolo_madonna_che_meme_questo.go">Meme</a>
+	<a href="flashcard">Flashcard</a>
 	·
 	<a href="https://github.com/mikyll/Sistemi-Operativi-M/issues">Report a bug</a>
 </p>
@@ -218,7 +216,7 @@
 </details>
 
 <!-- Lezione 2021/09/21-->
-## 01 - Virtualizzazione [![Vai al Capitolo Singolo](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/icon-document.png)](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/capitoli/01%20-%20Virtualizzazione.md "Vai al Capitolo Singolo")
+## 01 - Virtualizzazione [![Vai al Capitolo Singolo](gfx/file-moved_dark.svg)](capitoli/01%20-%20Virtualizzazione.md "Vai al Capitolo Singolo")
 La virtualizzazione è una tecnologia oggi usatissima. Virtualizzare un sistema di elaborazione (costituito da un insieme di risorse hardware e software) significa presentare all'utilizzatore una visione delle risorse diversa da quella attuale (ad esempio duplicazione della memoria). Questo obbiettivo viene raggiunto mediante un livello intermedio, un layer che svolge appunto il ruolo di intermediario tra utilizzatore (vista logica) e sistema (vista fisica). Solitamente l'intermediario è software, ma talvolta può avere un supporto hardware specifico. Esso permette di eseguire più macchine virtuali su una stessa architettura e ognuna di queste vede le proprie risorse, indipendentemente dalle altre, e da quelle effettive ("reali").\
 Poiché le Macchine Virtuali (VM) devono funzionare in modo indipendente senza causare problemi al sistema, la gestione delle risorse dev'essere realizzata in modo appropriato: questo compito è affidato al Virtual Machine Monitor (VMM, detto anche Hypervisor), cha ha compiti molto simili a quelli di un Sistema Operativo (SO), motivo per cui viene trattato in questo corso).
 
@@ -277,12 +275,12 @@ In un sistema di virtualizzazione esistono due tipi di "componenti": l'**host** 
 #### VMM di Sistema
 Si trova direttamente sopra l'hardware e consiste in un Sistema Operativo molto leggero che realizza le funzionalità di virtualizzazione (es: kvm, xen). A meno che non ci sia abbastanza spazio libero sul disco e vi sia la possibilità di impostare un multiboot, per installare un VMM di sistema è necessario eliminare il Sistema Operativo preesistente.
 
-<img width="60%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/01%20-%20Virtualizzazione/VMM%20di%20Sistema.png" alt="VMM di Sistema"/>
+<img width="60%" src="gfx/01%20-%20Virtualizzazione/VMM%20di%20Sistema.png" alt="VMM di Sistema"/>
 
 #### VMM Ospitato
 Viene installato come una normale applicazione sul Sistema Operativo preesistente, opera nello spazio utente ed accede all'hardware tramite le system call del SO (es. VirtualBox). È più semplice da installare e per la gestione delle periferiche può fare riferimento al Sistema Operativo sottostante, ma ha performance peggiori.
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/01%20-%20Virtualizzazione/VMM%20Ospitato.png" alt="VMM Ospitato"/>
+<img width="50%" src="gfx/01%20-%20Virtualizzazione/VMM%20Ospitato.png" alt="VMM Ospitato"/>
 
 ```
 NB: d'ora in poi faremo sempre riferimento a VMM di sistema.
@@ -325,14 +323,14 @@ Sfrutta un'idea simile alla compilazione dinamica: il VMM scansiona il codice de
 **Vantaggi**: ogni VM è una esatta replica della macchina fisica, dunque è possibile installare gli stessi SO di architetture senza virtualizzazione nativa.\
 **Svantaggi**: la traduzione dinamica è costosa.
 
-<img width="40%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/01%20-%20Virtualizzazione/Fast%20Binary%20Translation.png" alt="Fast Binary Translation"/>
+<img width="40%" src="gfx/01%20-%20Virtualizzazione/Fast%20Binary%20Translation.png" alt="Fast Binary Translation"/>
 
 ##### Paravirtualizzazione
 È l'approccio più diffuso al giorno d'oggi, oltre a FBT. Il VMM (hypervisor) offre ai SO guest un'interfaccia virtuale (hypercall API) alla quale i SO guest devono fare riferimento per avere accesso alle risorse. Le istruzioni non privilegiate vengono eseguite direttamente dai SO guest, mentre per le istruzioni privilegiate, eseguono delle hypercall. ```NB: così come il *Sistema* Operativo fornisce delle *system* call, l'*Hyper*visor fornisce delle *hyper* call.``` Ciò consente  di eseguire istruzioni privilegiate chiamando direttamente la relativa hyper call, senza dover generare interrupt al VMM. Xen utilizza questa tecnica.\
 **Vantaggi**: la struttura del VMM è semplificata e si ottengono prestazioni migliori, in quanto non si ha il ritardo dovuto alla compilazione di FTB.\
 **Svantaggi**: vi è la necessità di porting dei SO guest (i kernel devono essere resi compatibili, soluzione che è preclusa a molti sistemi operativi proprietari, fra cui Windows).
 
-<img width="34%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/01%20-%20Virtualizzazione/Paravirtualizzazione.png" alt="Paravirtualizzazione"/>
+<img width="34%" src="gfx/01%20-%20Virtualizzazione/Paravirtualizzazione.png" alt="Paravirtualizzazione"/>
 
 ### Architetture virtualizzabili
 Con **virtualizzazione pura**, si intende un'architettura che non costringe l'amministratore (o l'utente) a installare nella macchina virtuale un kernel modificato (che non sia l'originale del Sistema Operativo), dunque è il caso di architetture con supporto nativo alla virtualizzazione, ma anche FTB, in quanto anche lì non c'è bisogno di modificare il kernel.\
@@ -369,7 +367,7 @@ Una macchina virtuale può trovarsi nei seguenti stati:
 suspend: il VMM salva lo stato della VM in memoria secondaria, mettendola in stand by;
 resume: il VMM ripristina lo stato della VM in memoria centrale (lo stato è quello in cui si trovava quando è stata sospesa). Questa operazione può avvenire su un nodo diverso da quello della suspend.
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/01%20-%20Virtualizzazione/Stati%20di%20una%20VM.png" alt="Stati di una VM"/>
+<img width="50%" src="gfx/01%20-%20Virtualizzazione/Stati%20di%20una%20VM.png" alt="Stati di una VM"/>
 
 #### Migrazione di una VM
 È una funzionalità necessaria soprattutto nei datacenter, per una gestione agile delle VM, a fronte di:
@@ -463,11 +461,11 @@ ma può convenire concentrarli tutti nel domain 0, sia perché siamo certi che q
 na non si sposterà mai da lì, essendo ancorata all'hardware, sia per motivi di portabilità.
 ```
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/01%20-%20Virtualizzazione/Driver.png" alt="Front-end and Back-end Drivers"/>
+<img width="50%" src="gfx/01%20-%20Virtualizzazione/Driver.png" alt="Front-end and Back-end Drivers"/>
 
 Ovviamente, per consentire la comunicazione tra back-end driver e front-end driver, serve un meccanismo che gestica le richieste. Questo viene realizzato tramite delle strutture chiamate asynchronous I/O rings (buffer FIFO circolari) in cui ogni elemento è una specie di descrittore che rappresenta una particolare richiesta. Le richieste di accesso ad un particolare device vengono fatte dal guest tramite il front-end che deposita la richiesta nel ring relativo, mentre dall'altra parte c'è il back-end che le preleva e le gestisce.
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/01%20-%20Virtualizzazione/Asynchronous%20IO%20Ring.png" alt="Structure of Asynchronous I/O Rings"/>
+<img width="50%" src="gfx/01%20-%20Virtualizzazione/Asynchronous%20IO%20Ring.png" alt="Structure of Asynchronous I/O Rings"/>
 
 **Vantaggi**: il driver viene scorporato in due parti, svingolando la VM dal particolare server fisico in cui risiede (il front-end driver della VM rimane lo stesso anche se questa viene spostata su un altro nodo), garantendo *portabilità*; inoltre, mantenendo i driver fuori dall'hypervisor, si ha che esso è più semplificato e leggero.\
 **Svantaggi**: il meccanismo di comunicazione fra i due tipi di driver appesantisce l'accesso ai dispositivi.
@@ -479,7 +477,7 @@ La gestione delle interruzioni viene virtualizzata in modo molto semplice: ogni 
 Il comando di migrazione viene eseguito da un demone di migrazione che si trova nel domain 0 del server di origine della macchina da migrare. La soluzione è basata sulla precopy e le pagine da migrare vengono compresse per ridurre l'occupazione di banda.
 
 
-## 02 - Protezione [![Vai al Capitolo Singolo](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/icon-document.png)](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/capitoli/02%20-%20Protezione.md "Vai al Capitolo Singolo")
+## 02 - Protezione [![Vai al Capitolo Singolo](gfx/file-moved_dark.svg)](capitoli/02%20-%20Protezione.md "Vai al Capitolo Singolo")
 **Sicurezza**: riguarda l'insieme delle *tecniche per regolamentare l'accesso* degli utenti al sistema di elaborazione. La sicurezza impedisce accessi non autorizzati al sistema e i conseguenti tentativi dolosi di alterazione e distruzione dei dati. La sicurezza riguarda l'interfaccia del sistema verso il mondo esterno. Le tecnologie di sicurezza di un sistema informatico realizzano meccanismi per l'identificazione, l'autenticazione e l'autorizzazione di utenti "fidati".\
 **Protezione**: *insieme di attività volte a garantire il controllo dell'accesso* alle risorse logiche e fisiche da parte degli utenti autorizzati all'uso di un sistema di calcolo. Rispetto alla sicurezza ha un campo d'azione più interno al sistema. Per rendere un sistema "sicuro" è necessario stabilire per ogni utente autorizzato quali siano le risorse a cui può accedere e con quali operazioni può farlo. Ciò viene stabilito dal sistema di protezione tramite le tecniche di controllo degli accessi.
 
@@ -568,7 +566,7 @@ Questo modello stabilisce quali sono i comandi che consentono una modifica dello
 La possibilità di copiare un diritto di accesso per un oggetto da un dominio ad un altro nella matrice di accesso è indicata con un asterisco * (*copy flag*).
 Un soggetto *Sa* può trasferire un diritto di accesso *a* (ad esempio 'read') per un oggetto *Ox* ad un altro soggetto *Sb* solo se *Sa* ha accesso a *Ox* con il diritto *a* e tale diritto ha il copy flag (ovvero solo se nella tabella delle matrici, l'elemento *Sa*\\*Ox* contiene *a*\*, ad esempio read*)
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Copy%20Flag.png" alt="Matrice degli Accessi e Copy Flag"/>
+<img width="50%" src="gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Copy%20Flag.png" alt="Matrice degli Accessi e Copy Flag"/>
 
 L'operazione di propagazione può essere realizzata in due modi:
 - **trasferimento** del diritto, il soggetto iniziale perde il diritto di accesso, che viene spostato al nuovo soggetto;
@@ -580,14 +578,14 @@ Il diritto *owner* realizza il concetto di "proprietario di una risorsa" (oggett
 In una matrice degli accessi, ciò si traduce nella presenza, in ciascuna colonna, di una ed una sola cella nella quale è presente un diritto owner. Per ogni risorsa (dunque per ogni colonna) ci dev'essere un solo soggetto che ne è il proprietario. Ciò significa che tale soggetto ha un ruolo privilegiato nei confronti di quella risorsa ed è l'unico soggetto capace di revocare o concedere diritti di accesso su quella risorsa ad altri soggetti.
 Ad esempio, se *S2* ha il diritto 'owner' su *O2* allora può revocare il diritto 'execute' su *O2* al soggetto *S1*, oppure anche a se stesso.
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Owner.png" alt="Matrice degli Accessi e Diritto Owner"/>
+<img width="50%" src="gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Owner.png" alt="Matrice degli Accessi e Diritto Owner"/>
 
 ##### Diritto Control
 Il diritto *control* permette di revocare un qualunque diritto di accesso, riferendosi non ad un oggetto ma ad un altro soggetto.
 Se la cella della colonna di un soggetto ha il diritto control, autorizza l'owner a modificare la riga associata a tale soggetto.\
 Ad esempio, se *S1* ha il diritto di 'control' su *S2* e *S2* ha il diritto di 'write' su *O3*, allora *S1* può revocare il diritto di write di *S2* su *O3*.
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Control.png" alt="Matrice degli Accessi e Diritto Control"/>
+<img width="50%" src="gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Control.png" alt="Matrice degli Accessi e Diritto Control"/>
 
 ```
 NB: In un sistema MAC, avremmo l'entità centrale che è l'unica autorizzata a stabilire
@@ -603,7 +601,7 @@ Uno dei modi possibili per garantire il rispetto del Principio del Privilegio Mi
 A tal proposito, esiste un diritto speciale chiamato *switch*: esercitando questo diritto, il processo che esegue nel dominio di un certo soggetto, può passare ad un nuovo dominio.
 Ad esempio, se il soggetto *S2* ha bisogno del diritto 'write' sull'oggetto O3, ma possiede solo 'read', se possiede il diritto di 'switch' *S1* può passare nel dominio di *S1* per acquistare il diritto di 'write' e accedere a tale risorsa in scrittura.
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Switch.png" alt="Matrice degli Accessi e Diritto Switch"/>
+<img width="50%" src="gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Switch.png" alt="Matrice degli Accessi e Diritto Switch"/>
 
 Nel mondo UNIX il diritto di switch è implementato tramite il bit set-uid: se tale bit è settato, il processo che esegue il file può ottenere il dominio del soggetto proprietario.
 
@@ -634,7 +632,7 @@ Tipicamente i gruppi esistono per una questione di differenziazione dei ruoli, c
 Ne viene associata una a ciascun soggetto ed ha una struttura composta da un insieme di elementi, ognuno dei quali contiene l'indicazione dell'oggetto ed i diritti di accesso che quel soggetto, al quale la CL è associata, può esercitare su quell'oggetto. Chiaramente non avrà tanti elementi quanti sono le colonne della matrice degli accessi, in quanto come detto è una matrice sparsa.
 Nella pratica, spesso l'oggetto viene identificato tramite un descrittore ed ovviamente i diritti, che spesso vengono rappresentati in modo compatto tramite una sequenza di bit.
 
-<img width="60%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Struttura%20Capability%20List.png" alt="Struttura Tipica di una Capability List"/>
+<img width="60%" src="gfx/02%20-%20Protezione/Struttura%20Capability%20List.png" alt="Struttura Tipica di una Capability List"/>
 
 In generale è importante (anche per le ACL), che le informazioni relative alla protezione vengano protette a loro volta da manomissioni. Ci sono vari modi:
 - limitazione degli accessi in scrittura al solo kernel del Sistema Operativo (si sfrutta la protezione a livello hardware, oppure i modi di esecuzione del processore: kernel mode / user mode). In questo modo l'utente fa riferimento ad un puntatore (capability) che identifica la sua posizione nella lista appartenente allo spazio del kernel (soluzione simile all'uso di file descriptor in UNIX);
@@ -710,7 +708,7 @@ Vi sono 2 regole di sicurezza, che caratterizzano il modello, che stabiliscono i
 2. **proprità \* (star)**: un processo in esecuzione a livello di sicurezza k può **scrivere** solo oggetti al suo livello o superiori.
 Il flusso delle informazioni è dunque dal basso verso l'alto.
 
-<img width="60%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Flusso%20Modello%20Bell-La%20Padula.png" alt="Flusso delle Informazioni nel Modello Bell-La Padula"/>
+<img width="60%" src="gfx/02%20-%20Protezione/Flusso%20Modello%20Bell-La%20Padula.png" alt="Flusso delle Informazioni nel Modello Bell-La Padula"/>
 
 **Esempio di difesa contro Trojan per modello Bell-La Padula**: Bell-La Padula serve a impedire attacchi come questo. Supponiamo che i livelli di sicurezza siano 2: riservato e pubblico.
 Se facciamo in modo che gli utenti siano classificati, nonostante l'ACL consenta l'accesso in scrittura, la politica di sicurezza lo impedisce (NB: la politica di sicurezza ha precedenza sui meccanismi di protezione).
@@ -766,7 +764,7 @@ verifica da parte del RM.
 
 
 <!-- lezione 2021/10/05 -->
-## 03 - Programmazione Concorrente [![Vai al Capitolo Singolo](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/icon-document.png)](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/capitoli/03%20-%20Programmazione%20Concorrente.md "Vai al Capitolo Singolo")
+## 03 - Programmazione Concorrente [![Vai al Capitolo Singolo](gfx/file-moved_dark.svg)](capitoli/03%20-%20Programmazione%20Concorrente.md "Vai al Capitolo Singolo")
 La *programmazione concorrente* è l'insieme delle tecniche, metodologie e strumenti per il support all'esecuzione di sistemi software composti da *insiemi di attività svolte simultaneamente*.
 
 ### Cenni Storici
@@ -793,12 +791,12 @@ Queste decisioni dipendono da:
 #### Single Processor
 Si ha un solo processore che possiede delle memorie ad accesso rapido (tipicamente 2 cache) ed una memoria primaria. Non sono necessari ulteriori layer di comunicazione con altre unità di calcolo, in quanto ne è presente solo una.
 
-<img width="20%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Single%20Processor.png" alt="Single Processor"/>
+<img width="20%" src="gfx/03%20-%20Programmazione%20Concorrente/Single%20Processor.png" alt="Single Processor"/>
 
 #### Shared-Memory Multiprocessors
 Si tratta di un'architettura costituita da diversi nodi, ciascuno dei quali ha una propria unità di calcolo (microprocessore) e delle memorie ad accesso rapido (cache). Ogni nodo ha la possibilità di accedere a qualunque parte della memoria, grazie alla **rete di interconnessione**. È il più comune al giorno d'oggi.
 
-<img width="45%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Shared-Memory%20Multiprocessors.png" alt="Shared-Memory Multiprocessors"/>
+<img width="45%" src="gfx/03%20-%20Programmazione%20Concorrente/Shared-Memory%20Multiprocessors.png" alt="Shared-Memory Multiprocessors"/>
 
 Possiamo distinguere due modelli di sistemi multiprocessore:
 **UMA (Uniform Memory Access)**: sistemi a multiprocessore con un numero ridotto di processori (da 2 a circa 30). Sono caratterizzati da un'interconnessione realizzata tipicamente da memory bus o crossbar switch; *tempo di accesso alla memoria uniforme* (indipendentemente dal processore e dalla cella di memoria da accedere, il tempo di accesso rimane costante); sono chiamati anche SMP (Symmetric MultiProcessors).\
@@ -808,7 +806,7 @@ Possiamo distinguere due modelli di sistemi multiprocessore:
 Nelle architetture con memoria distribuita ogni processore accede alla propria memoria che non è condivisa tra i nodi di elaborazione. La memoria è quindi specifica del processore a cui è associata ed un'unità di elaborazione non può fare riferimento alla memoria di un altro nodo. In questo tipo di architettura i nodi possono essere singoli processori o multiprocessori a memoria condivisa.\
 Rientrano in questa categoria i *Multicomputers* ed i *Network Systems*.
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Distributed-Memory.png" alt="Distributed-Memory"/>
+<img width="50%" src="gfx/03%20-%20Programmazione%20Concorrente/Distributed-Memory.png" alt="Distributed-Memory"/>
 
 ##### Multicomputers
 Modello in cui i nodi e la rete sono *fisicamente vicini*, ovvero nella stessa struttura fisica. La rete di interconnessione offre un cammino di comunicazione tra i processi ad alta velocità e larghezza di banda. Ad esempio i Cluster ed i sistemi ad alto parallelismo (HPC). I multicomputer sono fatti per essere aggregati in una stessa struttura fisica.
@@ -831,7 +829,7 @@ La classificazione dei sistemi di calcolo più utilizzata è la *Tassonomia di F
 	- **Single Data Stream**, l'architettura è in grado di elaborare un singolo flusso sequenziale di dati;
 	- **Multiple Data Streams**, l'architettura è in grado di processare più flussi di dati paralleli.
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Tassonomia%20di%20Flynn%20(1972)%20(1).png" alt="Tassonomia di Flynn (1972) (1)"/><img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Tassonomia%20di%20Flynn%20(1972)%20(2).png" alt="Tassonomia di Flynn (1972) (2)"/>
+<img width="50%" src="gfx/03%20-%20Programmazione%20Concorrente/Tassonomia%20di%20Flynn%20(1972)%20(1).png" alt="Tassonomia di Flynn (1972) (1)"/><img width="50%" src="gfx/03%20-%20Programmazione%20Concorrente/Tassonomia%20di%20Flynn%20(1972)%20(2).png" alt="Tassonomia di Flynn (1972) (2)"/>
 
 **SISD - Single Instruction (stream), Single Data (stream)**: sistemi monoprocessore che fanno riferimento all'architettura classica della macchina di Von Newman. Come dice il nome è in grado di gestire un singolo flusso di istruzioni (un programma) alla volta, su un singolo flusso di dati.
 
@@ -896,12 +894,12 @@ Con *processo sequenziale* si intende il caso in cui l'insieme degli eventi che 
 
 **Grafo di Precedenza**: è uno schema che permette di rappresentare, tramite un formalismo, la traccia del programma. Ogni nodo rappresenta un singolo evento durante l'esecuzione del programma, ogni arco rappresenta la *precedenza temporale* tra un nodo ed il successivo. Nel caso di un algoritmo strettamente sequenziale, il grafo di precedenza che lo rappresenta si dice ad **ordinamento totale** (qualunque coppia di nodi venga presa nel grafo, questa coppia è sempre ordinata).
 
-<img width="60%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Esempio%20MCD%20(algoritmo).png" alt="Algoritmo MCD"/> <img width="11%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Esempio%20MCD%20(grafo).png" alt="Grafo MCD"/>
+<img width="60%" src="gfx/03%20-%20Programmazione%20Concorrente/Esempio%20MCD%20(algoritmo).png" alt="Algoritmo MCD"/> <img width="11%" src="gfx/03%20-%20Programmazione%20Concorrente/Esempio%20MCD%20(grafo).png" alt="Grafo MCD"/>
 
 #### Processo Non Sequenziale
 Con *processo non sequenziale* si intende il caso in cui l'insieme degli eventi che lo descrive è ordinato secondo una relazione d'ordine parziale. In altre parole, un processo si dice non sequenziale se il grafo di precedenza che lo descrive non è ordinato in modo totale, ma è caratterizzato da un **ordinamento parziale**.
 
-<img width="40%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Esempio%20Elaborazione%20File%20(algoritmo).png" alt="Algoritmo Elaborazione File"/> <img width="9%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Esempio%20Elaborazione%20File%20(grafo).png" alt="Grafo Elaborazione File"/>
+<img width="40%" src="gfx/03%20-%20Programmazione%20Concorrente/Esempio%20Elaborazione%20File%20(algoritmo).png" alt="Algoritmo Elaborazione File"/> <img width="9%" src="gfx/03%20-%20Programmazione%20Concorrente/Esempio%20Elaborazione%20File%20(grafo).png" alt="Grafo Elaborazione File"/>
 
 L'esecuzione di un processo non sequenziale richiede:
 - innanzitutto che o a livello software o hardware l'*elaboratore* sia *non sequenziale*, ovvero ci dia la possibilità di eseguire operazioni simultanee;
@@ -912,7 +910,7 @@ L'esecuzione di un processo non sequenziale richiede:
 - sistemei multielaboratori (a)
 - sistemi monoelaboratori (b)
 
-<img width="60%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Elaboratori%20Non%20Sequenziali.png" alt="Elaboratori Non Sequenziali"/>
+<img width="60%" src="gfx/03%20-%20Programmazione%20Concorrente/Elaboratori%20Non%20Sequenziali.png" alt="Elaboratori Non Sequenziali"/>
 
 ###### Linguaggi Concorrenti
 I linguaggi concorrenti (o non sequenziali) hanno la caratteristica comune di consentire, a livello di programma, la descrizione di un insieme di attività concorrenti, tramite moduli che possono essere eseguiti in parallelo (es: processi sequenziali).\
@@ -956,12 +954,12 @@ Le **proprietà di un linguaggio di programmazione concorrente** sono:
 - devono essere presenti strumenti linguistici per specificare le interazioni che dinamicamente possono verificarsi tra i vari processi.
 
 ### Architettura di una Macchina Concorrente
-<img width="70%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Architettura%20Macchina%20Concorrente%20(1).png" alt="Architettura Macchina Concorrente (1)"/>
+<img width="70%" src="gfx/03%20-%20Programmazione%20Concorrente/Architettura%20Macchina%20Concorrente%20(1).png" alt="Architettura Macchina Concorrente (1)"/>
 	
 M offre un certo numero di unità di elaborazione virtuali, che però non sempre sono in numero sufficiente per supportare l'esecuzione contemporanea dei processi di un programma concorrente.\
 M è una macchina astratta ottenuta tramite tecniche software (o hardware) basandosi su una macchina fisica M' generalmente più semplice (con un numero di unità di elaborazione solitamente minore del numero dei processi).
 
-<img width="60%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Architettura%20Macchina%20Concorrente%20(2).png" alt="Architettura Macchina Concorrente (2)"/>
+<img width="60%" src="gfx/03%20-%20Programmazione%20Concorrente/Architettura%20Macchina%20Concorrente%20(2).png" alt="Architettura Macchina Concorrente (2)"/>
 
 Al proprio interno M contiene ciò che dev'essere messo in atto quando viene richiesta l'esecuzione di processi concorrenti e tutto ciò che riguarda l'interazione (sincronizzazione con scambio di informazioni).\
 Il nucleo corrisponde al supporto a tempo di esecuzione del compilatore di un linguaggio concorrente e comprende sempre due funzionalità base:
@@ -1000,7 +998,7 @@ attendere, mentre nella wait no, di conseguenza quest'ultima si mette in attesa 
 terminazione di uno qualunque dei processi figli.
 ```
 
-<img width="70%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Fork%20Join.png" alt="Fork/Join"/>
+<img width="70%" src="gfx/03%20-%20Programmazione%20Concorrente/Fork%20Join.png" alt="Fork/Join"/>
 
 #### Cobegin/Coend
 Questo modello trae ispirazione dalla programmazione strutturata, permettendo di esprimere la concorrenza tramite opportuni blocchi da inserire nel codice di opportuni programmi concorrenti. Si basa su due primitive fondamentali: *cobegin* e *coend*.
@@ -1015,7 +1013,7 @@ za possono essere espressi tramite fork/join ma non tutti possono essere espress
 cobegin/coend.
 ```
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/03%20-%20Programmazione%20Concorrente/Cobegin%20Coend.png" alt="Cobegin/Coend"/>
+<img width="50%" src="gfx/03%20-%20Programmazione%20Concorrente/Cobegin%20Coend.png" alt="Cobegin/Coend"/>
 
 ### Proprietà dei Programmi
 I seguenti concetti permettono di specificare cosa succede quando il programma viene eseguito, di conseguenza sono utili per verificare la correttezza dei programmi realizzati.
@@ -1057,5 +1055,5 @@ L'interazione tra processi può avvenire sostanzialmente secondo due modelli:
 - modello a *memoria comune* (ambiente globale, memoria condivisa). In questo caso, la macchina astratta aderisce al modello multiprocessore, cioé offre ai programmi (che sono gli utilizzatori di tale macchina) un "modello" basato su un insieme di unità virtuali di elaborazione, ciascuna per l'esecuzione di un diverso processo, che condividono la stessa memoria. I processi possono vedere e accedere alle stesse aree di memoria.
 - modello a *scambio di messaggi* (ambiente locale, memoria distribuita). In questo caso, i processori non condivisono memoria gli uni con gli altri, ma ognuno fa riferimento alla propria "memoria privata".
 
-## 04 - Modello a Memoria Comune [![Vai al Capitolo Singolo](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/icon-document.png)](https://github.com/mikyll/Sistemi-Operativi-M/blob/main/capitoli/04%20-%20Modello%20a%20Memoria%20Comune.md "Vai al Capitolo Singolo")
+## 04 - Modello a Memoria Comune [![Vai al Capitolo Singolo](gfx/file-moved_dark.svg)](capitoli/04%20-%20Modello%20a%20Memoria%20Comune.md "Vai al Capitolo Singolo")
 
