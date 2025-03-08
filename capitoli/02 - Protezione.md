@@ -144,7 +144,7 @@ Questo modello stabilisce quali sono i comandi che consentono una modifica dello
 La possibilità di copiare un diritto di accesso per un oggetto da un dominio ad un altro nella matrice di accesso è indicata con un asterisco * (*copy flag*).
 Un soggetto *Sa* può trasferire un diritto di accesso *a* (ad esempio 'read') per un oggetto *Ox* ad un altro soggetto *Sb* solo se *Sa* ha accesso a *Ox* con il diritto *a* e tale diritto ha il copy flag (ovvero solo se nella tabella delle matrici, l'elemento *Sa*\\*Ox* contiene *a*\*, ad esempio read*)
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Copy%20Flag.png" alt="Matrice degli Accessi e Copy Flag"/>
+<img width="50%" src="../gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Copy%20Flag.png" alt="Matrice degli Accessi e Copy Flag"/>
 
 L'operazione di propagazione può essere realizzata in due modi:
 - **trasferimento** del diritto, il soggetto iniziale perde il diritto di accesso, che viene spostato al nuovo soggetto;
@@ -156,14 +156,14 @@ Il diritto *owner* realizza il concetto di "proprietario di una risorsa" (oggett
 In una matrice degli accessi, ciò si traduce nella presenza, in ciascuna colonna, di una ed una sola cella nella quale è presente un diritto owner. Per ogni risorsa (dunque per ogni colonna) ci dev'essere un solo soggetto che ne è il proprietario. Ciò significa che tale soggetto ha un ruolo privilegiato nei confronti di quella risorsa ed è l'unico soggetto capace di revocare o concedere diritti di accesso su quella risorsa ad altri soggetti.
 Ad esempio, se *S2* ha il diritto 'owner' su *O2* allora può revocare il diritto 'execute' su *O* al soggetto *S1*.
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Owner.png" alt="Matrice degli Accessi e Diritto Owner"/>
+<img width="50%" src="../gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Owner.png" alt="Matrice degli Accessi e Diritto Owner"/>
 
 ##### Diritto Control
 Il diritto *control* permette di revocare un qualunque diritto di accesso, riferendosi non ad un oggetto ma ad un altro soggetto.
 Se la cella della colonna di un soggetto ha il diritto control, autorizza l'owner a modificare la riga associata a tale soggetto.\
 Ad esempio, se *S1* ha il diritto di 'control' su *S2* e *S2* ha il diritto di 'write' su *O3*, allora *S1* può revocare il diritto di write di *S2* su *O3*.
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Control.png" alt="Matrice degli Accessi e Diritto Control"/>
+<img width="50%" src="../gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Control.png" alt="Matrice degli Accessi e Diritto Control"/>
 
 ```
 NB: In un sistema MAC, avremmo l'entità centrale che è l'unica autorizzata a stabilire
@@ -179,7 +179,7 @@ Uno dei modi possibili per garantire il rispetto del Principio del Privilegio Mi
 A tal proposito, esiste un diritto speciale chiamato *switch*: esercitando questo diritto, il processo che esegue nel dominio di un certo soggetto, può passare ad un nuovo dominio.
 Ad esempio, se il soggetto *S2* ha bisogno del diritto 'write' sull'oggetto O3, ma possiede solo 'read', se possiede il diritto di 'switch' *S1* può passare nel dominio di *S1* per acquistare il diritto di 'write' e accedere a tale risorsa in scrittura.
 
-<img width="50%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Switch.png" alt="Matrice degli Accessi e Diritto Switch"/>
+<img width="50%" src="../gfx/02%20-%20Protezione/Matrice%20degli%20Accessi%20Switch.png" alt="Matrice degli Accessi e Diritto Switch"/>
 
 Nel mondo UNIX il diritto di switch è implementato tramite il bit set-uid: se tale bit è settato, il processo che esegue il file può ottenere il dominio del soggetto proprietario.
 
@@ -210,7 +210,7 @@ Tipicamente i gruppi esistono per una questione di differenziazione dei ruoli, c
 Ne viene associata una a ciascun soggetto ed ha una struttura composta da un insieme di elementi, ognuno dei quali contiene l'indicazione dell'oggetto ed i diritti di accesso che quel soggetto, al quale la CL è associata, può esercitare su quell'oggetto. Chiaramente non avrà tanti elementi quanti sono le colonne della matrice degli accessi, in quanto come detto è una matrice sparsa.
 Nella pratica, spesso l'oggetto viene identificato tramite un descrittore ed ovviamente i diritti, che spesso vengono rappresentati in modo compatto tramite una sequenza di bit.
 
-<img width="60%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Struttura%20Capability%20List.png" alt="Struttura Tipica di una Capability List"/>
+<img width="60%" src="../gfx/02%20-%20Protezione/Struttura%20Capability%20List.png" alt="Struttura Tipica di una Capability List"/>
 
 In generale è importante (anche per le ACL), che le informazioni relative alla protezione vengano protette a loro volta da manomissioni. Ci sono vari modi:
 - limitazione degli accessi in scrittura al solo kernel del Sistema Operativo (si sfrutta la protezione a livello hardware, oppure i modi di esecuzione del processore: kernel mode / user mode). In questo modo l'utente fa riferimento ad un puntatore (capability) che identifica la sua posizione nella lista appartenente allo spazio del kernel (soluzione simile all'uso di file descriptor in UNIX);
@@ -286,7 +286,7 @@ Vi sono 2 regole di sicurezza, che caratterizzano il modello, che stabiliscono i
 2. **proprità \* (star)**: un processo in esecuzione a livello di sicurezza k può **scrivere** solo oggetti al suo livello o superiori.
 Il flusso delle informazioni è dunque dal basso verso l'alto.
 
-<img width="60%" src="https://github.com/mikyll/Sistemi-Operativi-M/blob/main/gfx/02%20-%20Protezione/Flusso%20Modello%20Bell-La%20Padula.png" alt="Flusso delle Informazioni nel Modello Bell-La Padula"/>
+<img width="60%" src="../gfx/02%20-%20Protezione/Flusso%20Modello%20Bell-La%20Padula.png" alt="Flusso delle Informazioni nel Modello Bell-La Padula"/>
 
 **Esempio di difesa contro Trojan per modello Bell-La Padula**: Bell-La Padula serve a impedire attacchi come questo. Supponiamo che i livelli di sicurezza siano 2: riservato e pubblico.
 Se facciamo in modo che gli utenti siano classificati, nonostante l'ACL consenta l'accesso in scrittura, la politica di sicurezza lo impedisce (NB: la politica di sicurezza ha precedenza sui meccanismi di protezione).
